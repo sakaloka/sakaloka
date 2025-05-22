@@ -1,0 +1,29 @@
+import LoginPage from "../pages/auth/login/login-page";
+import RegisterPage from "../pages/auth/register/register-page";
+import DestinationDetailPage from "../pages/destination/destination-detail/destination-detail-page";
+import DestinationPage from "../pages/destination/destination/destination-page";
+import EventDetailPage from "../pages/event/event-detail/event-detail-page";
+import EventPage from "../pages/event/event/event-page";
+import HomePage from "../pages/home/home-page";
+import LandingPage from "../pages/landing/landing-page";
+import ProfilePage from "../pages/profile/profile-page";
+import { checkAuthenticatedRoute, checkUnauthenticatedRouteOnly } from "../utils/auth";
+
+export const routes = {
+  '/login': () => checkUnauthenticatedRouteOnly(new LoginPage()),
+  '/register': () => checkUnauthenticatedRouteOnly(new RegisterPage()),
+  // '/': () => {
+  //   const isLogin = !!getAccessToken();
+  //   return isLogin ? new HomePage() : new LandingPage();
+  // },
+
+  // !!NOTE: kalau auth page (login, register) udah jadi, tinggal tambahin function kaya hash login di atas,
+  // misalnya utk destinasi: checkAuthenticatedRoute(new DestinationPage())
+  // jadi page destinasi hanya untuk aunthenticated user (sudah login)
+  '/destinations': () => new DestinationPage(),
+  '/destinations/:id': () => new DestinationDetailPage(),
+  '/events': () => new EventPage(),
+  '/events/:id': () => new EventDetailPage(),
+  '/bookmark': () => new BookmarkPage(),
+  '/profile': () => new ProfilePage(),
+};
