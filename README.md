@@ -35,8 +35,8 @@ SakaLoka adalah platform peta pintar berbasis AI yang menghadirkan rekomendasi a
 
 ## Scripts
 
-- `npm run build`: Membuat build production menggunakan Webpack.
-- `npm run dev`: Menjalankan server development menggunakan Webpack Dev Server.
+- `npm run build`: Membuat build production menggunakan Vite.
+- `npm run dev`: Menjalankan server development menggunakan Vite Dev Server.
 - `npm run preview`: Menjalankan server HTTP untuk build yang sudah dibuat.
 - `npm run prettier`: Memeriksa format kode menggunakan Prettier.
 - `npm run prettier:write`: Memformat ulang kode menggunakan Prettier.
