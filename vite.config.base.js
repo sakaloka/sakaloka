@@ -1,5 +1,4 @@
 import { resolve } from 'path';
-import tailwindcss from '@tailwindcss/vite';
 
 export default {
   root: 'src',
@@ -12,5 +11,5 @@ export default {
       '@': resolve(__dirname, 'src'),
     },
   },
-  plugins: [tailwindcss()],
+  plugins: [],
 };
