@@ -1,6 +1,4 @@
-import {
-  generateLoaderAbsoluteTemplate,
-} from '../../templates';
+import { generateLoaderAbsoluteTemplate } from '../../templates';
 import BookmarkPresenter from './bookmark-presenter';
 import Database from '../../data/database';
 import Map from '../../utils/map';

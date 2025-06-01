@@ -11,7 +11,7 @@ export default class App {
 
   constructor({ content, drawerNavigation, drawerButton, skipLinkButton }) {
     this.#content = content;
-    this.#drawerButton = drawerButton;
+    this.#drawerButton = drawerButton;  
     this.#drawerNavigation = drawerNavigation;
     this.#skipLinkButton = skipLinkButton;
 

@@ -1,5 +1,5 @@
 import { getActiveRoute } from '../routes/url-parser';
-import { ACCESS_TOKEN_KEY } from '../config';
+import { USER_KEY, ACCESS_TOKEN_KEY } from '../config';
 
 export function getAccessToken() {
   try {
@@ -16,9 +16,10 @@ export function getAccessToken() {
   }
 }
 
-export function putAccessToken(token) {
+export function putAccessToken(token, loginResult) {
   try {
     localStorage.setItem(ACCESS_TOKEN_KEY, token);
+    localStorage.setItem(USER_KEY, JSON.stringify(loginResult));
     return true;
   } catch (error) {
     console.error('putAccessToken: error:', error);
@@ -28,6 +29,7 @@ export function putAccessToken(token) {
 
 export function removeAccessToken() {
   try {
+    localStorage.removeItem(USER_KEY);
     localStorage.removeItem(ACCESS_TOKEN_KEY);
     return true;
   } catch (error) {
@@ -50,7 +52,7 @@ export function checkUnauthenticatedRouteOnly(page) {
   return page;
 }
 
-export function checkAuthenticatedRoute(page) {
+/* export function checkAuthenticatedRoute(page) {
   const isLogin = !!getAccessToken();
   console.log('isLogin', isLogin);
   console.log('getAccessToken()', getAccessToken());
@@ -60,6 +62,18 @@ export function checkAuthenticatedRoute(page) {
     return null;
   }
 
+  return page;
+} */
+
+export function checkAuthenticatedRoute(page) {
+  const isLogin = !!getAccessToken();
+  if (!isLogin) {
+    location.hash = '/login';
+    return {
+      render: async () => '',
+      afterRender: async () => {}
+    };
+  }
   return page;
 }
 

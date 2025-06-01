@@ -1,6 +1,7 @@
-export const ACCESS_TOKEN_KEY = '';
+export const USER_KEY = 'user';
+export const ACCESS_TOKEN_KEY = 'accessToken';
 
-export const BASE_URL = '';
+export const BASE_URL = 'http://localhost:9000';
 
 export const MAP_SERVICE_API_KEY = '';
 
