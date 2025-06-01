@@ -13,26 +13,15 @@ export default class LoginPresenter {
     try {
       console.log('[Login] Kirim data:', { email, password });
 
-      // ganti pas ada API
-      // const response = await this.#model.login(email, password);
-
-      // 👇 Simulasi response (mock)
-      const response = {
-        status: true,
-        message: 'Login berhasil (mock)',
-        data: {
-          accessToken: 'mock-token-abc123',
-        },
-      };
-
-      const token = response?.data?.accessToken || response?.accessToken || response?.token;
+      const response = await this.#model.login({ email, password });
+      const token = response?.loginResult?.token;
+      const user = response?.loginResult;
 
       if (!token) {
         throw new Error('Token tidak tersedia dari server.');
       }
 
-      console.log('[Login] Token:', token);
-      this.#authModel.putAccessToken(token);
+      this.#authModel.putAccessToken(token, user);
 
       this.#view.loginSuccessfully(response.message);
     } catch (error) {

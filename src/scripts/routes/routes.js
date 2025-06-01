@@ -23,10 +23,10 @@ export const routes = {
   // !!NOTE: kalau auth page (login, register) udah jadi, tinggal tambahin function kaya hash login di atas,
   // misalnya utk destinasi: checkAuthenticatedRoute(new DestinationPage())
   // jadi page destinasi hanya untuk aunthenticated user (sudah login)
-  '/destinations': () => new DestinationPage(),
-  '/destinations/:id': () => new DestinationDetailPage(),
-  '/events': () => checkUnauthenticatedRouteOnly (new EventPage()),
-  '/events/:id': () => new EventDetailPage(),
-  '/bookmark': () => new BookmarkPage(),
-  '/profile': () => checkUnauthenticatedRouteOnly (new ProfilePage()),
+  '/destinations': () => checkAuthenticatedRoute(new DestinationPage()),
+  '/destinations/:id': () => checkAuthenticatedRoute(new DestinationDetailPage()),
+  '/events': () => checkAuthenticatedRoute(new EventPage()),
+  '/events/:id': () => checkAuthenticatedRoute(new EventDetailPage()),
+  '/bookmark': () => checkAuthenticatedRoute(new BookmarkPage()),
+  '/profile': () => checkAuthenticatedRoute(new ProfilePage()),
 };

@@ -11,33 +11,22 @@ export default class RegisterPresenter {
 
   async register({ name, email, password }) {
     try {
-      console.log('[Register] Simulasi kirim data ke API:');
-      console.log({ name, email, password });
-
-      // Nanti pas ada API, ganti blok ini
-      // const response = await this.#model.register({ name, email, password });
-      const response = {
-        status: true,
-        message: 'Simulasi register berhasil',
-        data: {
-          accessToken: 'dummy-token-abc123',
-        },
-      };
-
-      console.log('[Register] Simulasi respon dari server:', response);
-
-      const token = response?.data?.accessToken || response?.accessToken || response?.token;
-
-      if (!token) {
-        throw new Error('Token tidak tersedia (simulasi).');
+      const response = await this.#model.register({ name, email, password });
+      
+      if (response.ok) {
+        const response = await this.#model.login({ email, password });
+        const token = response?.loginResult?.token;
+        const user = response?.loginResult;
+  
+        if (!token) {
+          throw new Error('Token tidak tersedia dari server.');
+        }
+  
+        this.#authModel.putAccessToken(token, user);
+  
+        // Tampilkan sukses
+        this.#view.registerSuccessfully('Registrasi berhasil! (simulasi)');
       }
-
-      // Simulasi simpan token
-      console.log('[Register] Token yang disimpan:', token);
-      this.#authModel.putAccessToken(token); 
-
-      // Tampilkan sukses
-      this.#view.registerSuccessfully('Registrasi berhasil! (simulasi)');
     } catch (error) {
       const msg = error?.message || 'Registrasi gagal. (simulasi)';
       console.error('[Register Error]', msg);
