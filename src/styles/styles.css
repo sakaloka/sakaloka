@@ -1,6 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
+@theme {
+  --color-primary: #483434;
+  --color-secondary-100: #D7E4C0;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -240,7 +245,6 @@ header {
 
 /* MAIN */
 .main-content {
-  display: flex;
   min-height: 70vh;
   height: 100%;
   flex-grow: 1;
@@ -254,6 +258,22 @@ header {
   text-align: center;
   font-size: 2.5rem;
   padding-block: 50px 40px;
+}
+
+#landing section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5rem;
+  height: 100vh;
+  justify-content: center;
+}
+
+.content {
+  margin-top: rem;
+  flex-grow: 1;
+  height: max-content;
+  width: 100%;
 }
 
 /* !!NOTE: STYLE LAIN DISINI, FOOTER TERAKHIR */
@@ -640,6 +660,27 @@ header {
 .alert.show {
   display: block;
   opacity: 1;
+}
+
+/* BUTTON */
+button {
+  padding: 0.5rem 2rem;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: #5D4343;
+  color: var(--primary-text-color);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-color);
+}
+
+.btn-secondary {
+  background-color: #D7E4C0;
+
 }
 
 /* FOOTER */
