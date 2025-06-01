@@ -4,6 +4,8 @@
 @theme {
   --color-primary: #483434;
   --color-secondary-100: #D7E4C0;
+  --color-secondary-200: #C3CFAE;
+  --color-neutral-1000: #333333;
 }
 
 * {
@@ -260,22 +262,6 @@ header {
   padding-block: 50px 40px;
 }
 
-#landing section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 5rem;
-  height: 100vh;
-  justify-content: center;
-}
-
-.content {
-  margin-top: rem;
-  flex-grow: 1;
-  height: max-content;
-  width: 100%;
-}
-
 /* !!NOTE: STYLE LAIN DISINI, FOOTER TERAKHIR */
 
 /* LOGIN */
@@ -486,6 +472,38 @@ header {
   background-color: #3c2b2b;
 }
 
+/* LANDING */
+#landing section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5rem;
+  height: 100vh;
+  justify-content: center;
+}
+
+#landing section h2 {
+  margin-bottom: 1rem;
+}
+
+.content {
+  flex-grow: 1;
+  height: max-content;
+  width: 100%;
+  align-content: center;
+}
+
+.feat-items {
+  padding: 1rem;
+}
+
+.question-items {
+  padding: 1rem;
+  gap: 0.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
 /* PROFILE */
 .profile-page {
   width: 100%;
@@ -664,9 +682,12 @@ header {
 
 /* BUTTON */
 button {
+  cursor: pointer;
+}
+
+.btn {
   padding: 0.5rem 2rem;
   border-radius: 12px;
-  cursor: pointer;
 }
 
 .btn-primary {
