@@ -32,7 +32,7 @@ export function generateUnauthenticatedNavigationListTemplate () {
 }
   
 export function generateAuthenticatedNavigationListTemplate () {
-  const user = localStorage.getItem('user');
+  const user = JSON.parse(localStorage.getItem('user'));
   const name = user?.name;
   return `
     <li><a href="#/home">Beranda</a></li>
