@@ -15,6 +15,7 @@ export const routes = {
   '/register': () => checkUnauthenticatedRouteOnly(new RegisterPage()),
   '/personal-option': () => checkUnauthenticatedRouteOnly(new PersonalOptionPage()),
   '/home': () => checkUnauthenticatedRouteOnly(new HomePage()),
+  '/landing': () => new LandingPage(),
   // '/': () => {
   //   const isLogin = !!getAccessToken();
   //   return isLogin ? new HomePage() : new LandingPage();
