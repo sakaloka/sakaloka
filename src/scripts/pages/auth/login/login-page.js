@@ -47,7 +47,7 @@ export default class LoginPage {
 
   loginSuccessfully(message) {
     alert(message);
-    location.hash = '/';
+    location.hash = '/home';
   }
 
   loginFailed(message) {

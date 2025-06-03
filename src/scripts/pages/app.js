@@ -49,18 +49,22 @@ export default class App {
     const isLogin = !!getAccessToken();
     const navlist = this.#drawerNavigation.children.namedItem('navlist');
     const headerContainer = document.getElementById('header-container');
+    const brandImage = document.getElementById('brand-image');
     
     // Unauthenticated User
     if (!isLogin) {
       headerContainer.classList.add('unauthenticated-nav');
+      brandImage.src = '/images/logo-primary.png'
       navlist.innerHTML = generateUnauthenticatedNavigationListTemplate();
       return;
     }
     
+    brandImage.src = '/images/logo.png'
     headerContainer.classList.remove('unauthenticated-nav');
     navlist.innerHTML = generateAuthenticatedNavigationListTemplate();
 
-    document.getElementById('user-toggle').addEventListener('click', () => {
+    const toggleUserButton = document.getElementById('user-toggle');
+    toggleUserButton.addEventListener('click', () => {
       const dropdown = document.getElementById('user-dropdown');
       dropdown.classList.toggle('hidden');
     });
@@ -73,22 +77,20 @@ export default class App {
         getLogout();
 
         // Redirect
-        location.hash = '/landing';
+        location.hash = '/';
+        location.reload();
       }
     });
   }
   async renderPage() {
     const url = getActiveRoute();
     const route = routes[url];
-    const isLogin = getAccessToken();
 
     // Get page instance
     const page = route();
 
     const transition = transitionHelper({
       updateDOM: async () => {
-        const header = document.getElementById('header');
-        
         this.#content.innerHTML = await page.render();
         console.log('isi halaman', await page.render());
         page.afterRender();

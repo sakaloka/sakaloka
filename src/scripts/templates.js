@@ -1,14 +1,14 @@
 export function generateTopDestinationItems(name, location, imageSrc) {
   return `
-    <div class="destination-items flex flex-col bg-neutral-200 text-black rounded-lg p-6 items-start gap-4 h-full">
+    <div class="destination-items flex flex-col bg-neutral-200 text-black rounded-lg items-start gap-4 h-full">
       <div class="w-full h-48 overflow-hidden rounded-md">
         <img src="${imageSrc}" alt="${name}" class="w-full h-full object-cover" />
       </div>
       <div class="destination-desc text-left">
         <h3 class="font-bold text-lg">${name}</h3>
-        <div class="flex w-full items-center gap-1">
+        <div class="flex w-full items-center gap-2">
           <i class="fas fa-map-marker-alt"></i>
-          <p class="mt-1 text-sm">${location}</p>
+          <p class="text-sm">${location}</p>
         </div>
       </div>
     </div>
@@ -35,9 +35,11 @@ export function generateAuthenticatedNavigationListTemplate () {
   const user = JSON.parse(localStorage.getItem('user'));
   const name = user?.name;
   return `
-    <li><a href="#/">Beranda</a></li>
-    <li><a href="#/destinations">Destinasi</a></li>
-    <li><a href="#/events">Acara Budaya</a></li>
+    <div class="flex grow w-full justify-center">
+      <li><a href="#/home">Beranda</a></li>
+      <li><a href="#/destinations">Destinasi</a></li>
+      <li><a href="#/events">Acara Budaya</a></li>
+    </div>
     <li class="relative">
       <button id="user-toggle" class="flex gap-2 btn btn-outline-light">
         ${name}

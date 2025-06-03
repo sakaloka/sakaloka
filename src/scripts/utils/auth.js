@@ -45,7 +45,7 @@ export function checkUnauthenticatedRouteOnly(page) {
   const isLogin = !!getAccessToken();
 
   if (unauthenticatedRoutesOnly.includes(url) && isLogin) {
-    location.hash = '/';
+    location.hash = '/home';
     return null;
   }
 
@@ -58,7 +58,7 @@ export function checkAuthenticatedRoute(page) {
   console.log('getAccessToken()', getAccessToken());
 
   if (!isLogin) {
-    location.hash = '/landing';
+    location.hash = '/';
     return null;
   }
 

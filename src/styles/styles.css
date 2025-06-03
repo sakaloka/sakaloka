@@ -11,8 +11,6 @@
 }
 
 * {
-  margin: 0;
-  padding: 0;
   font-family: 'Inter', sans-serif;
   box-sizing: border-box;
 }
@@ -133,6 +131,10 @@ i.loader-button {
   animation: rotation 1s linear infinite;
 }
 
+.justify-evenly {
+  justify-content: space-evenly;
+}
+
 /* BRAND */
 .brand-name__link {
   display: flex;
@@ -179,6 +181,7 @@ header {
 #header-container {
   background-color: var(--color-primary);
   color: var(--primary-text-color);
+  padding-block: 1rem;
 }
 
 #header-container.unauthenticated-nav {
