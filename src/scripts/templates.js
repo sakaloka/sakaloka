@@ -32,17 +32,21 @@ export function generateUnauthenticatedNavigationListTemplate () {
 }
   
 export function generateAuthenticatedNavigationListTemplate () {
-  const user = localStorage.getItem('user');
+  const user = JSON.parse(localStorage.getItem('user'));
   const name = user?.name;
   return `
-    <li><a href="#/home">Beranda</a></li>
-    <li><a href="#/home">Destinasi</a></li>
-    <li><a href="#/home">Acara Budaya</a></li>
-    <li>
-      <a class="flex gap-2 btn btn-outline-light" href="#/profile">
+    <li><a href="#/">Beranda</a></li>
+    <li><a href="#/destinations">Destinasi</a></li>
+    <li><a href="#/events">Acara Budaya</a></li>
+    <li class="relative">
+      <button id="user-toggle" class="flex gap-2 btn btn-outline-light">
         ${name}
         <i class="fas fa-chevron-down"></i>
-      </a>
+      </button>
+      <div id="user-dropdown" class="absolute right-0 mt-2 w-40 bg-white text-black rounded shadow hidden z-50">
+        <a href="#/profile" class="block px-4 py-2 hover:bg-gray-100">Profil</a>
+        <a id="logout-button" href="#/logout" class="block px-4 py-2 hover:bg-gray-100">Keluar</a>
+      </div>
     </li>
   `;
 }

@@ -1,6 +1,6 @@
 import { getActiveRoute } from '../routes/url-parser';
 import { setupSkipToContent, transitionHelper } from '../utils';
-import { getAccessToken } from '../utils/auth';
+import { getAccessToken, getLogout } from '../utils/auth';
 import { routes } from '../routes/routes';
 import { generateAuthenticatedNavigationListTemplate, generateUnauthenticatedNavigationListTemplate } from '../templates';
 
@@ -48,14 +48,22 @@ export default class App {
   #setupNavigationList() {
     const isLogin = !!getAccessToken();
     const navlist = this.#drawerNavigation.children.namedItem('navlist');
-
+    const headerContainer = document.getElementById('header-container');
+    
     // Unauthenticated User
     if (!isLogin) {
+      headerContainer.classList.add('unauthenticated-nav');
       navlist.innerHTML = generateUnauthenticatedNavigationListTemplate();
       return;
     }
     
+    headerContainer.classList.remove('unauthenticated-nav');
     navlist.innerHTML = generateAuthenticatedNavigationListTemplate();
+
+    document.getElementById('user-toggle').addEventListener('click', () => {
+      const dropdown = document.getElementById('user-dropdown');
+      dropdown.classList.toggle('hidden');
+    });
 
     const logoutButton = document.getElementById('logout-button');
     logoutButton.addEventListener('click', (event) => {
@@ -65,19 +73,22 @@ export default class App {
         getLogout();
 
         // Redirect
-        location.hash = '/login';
+        location.hash = '/landing';
       }
     });
   }
   async renderPage() {
     const url = getActiveRoute();
     const route = routes[url];
+    const isLogin = getAccessToken();
 
     // Get page instance
     const page = route();
 
     const transition = transitionHelper({
       updateDOM: async () => {
+        const header = document.getElementById('header');
+        
         this.#content.innerHTML = await page.render();
         console.log('isi halaman', await page.render());
         page.afterRender();
