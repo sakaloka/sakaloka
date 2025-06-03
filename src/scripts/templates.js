@@ -35,9 +35,9 @@ export function generateAuthenticatedNavigationListTemplate () {
   const user = JSON.parse(localStorage.getItem('user'));
   const name = user?.name;
   return `
-    <li><a href="#/home">Beranda</a></li>
-    <li><a href="#/home">Destinasi</a></li>
-    <li><a href="#/home">Acara Budaya</a></li>
+    <li><a href="#/">Beranda</a></li>
+    <li><a href="#/destinations">Destinasi</a></li>
+    <li><a href="#/events">Acara Budaya</a></li>
     <li>
       <a class="flex gap-2 btn btn-outline-light" href="#/profile">
         ${name}

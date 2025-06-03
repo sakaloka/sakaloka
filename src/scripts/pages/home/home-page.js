@@ -5,9 +5,6 @@ export default class HomePage {
   #presenter = null;
 
   async render() {
-    document.querySelector('header')?.classList.add('hidden');
-    document.querySelector('footer')?.classList.add('hidden');
-
     return `
       <div class="flex min-h-screen bg-gray-100">
         <!-- Sidebar -->
@@ -27,28 +24,7 @@ export default class HomePage {
           </nav>
         </aside>
 
-        <!-- Main Content -->
-        <div class="flex flex-col flex-1">
-          <!-- Header -->
-          <header class="bg-[#483434] text-white px-6 py-4 flex justify-between items-center shadow">
-            <div class="flex items-center gap-3">
-              <button id="toggle-sidebar" class="md:hidden text-2xl">☰</button>
-              <h2 class="text-xl font-semibold">SakaLoka</h2>
-            </div>
-            <div class="relative">
-              <button id="user-toggle" class="flex items-center gap-2 border border-white rounded-full px-3 py-1">
-                <span id="name"></span>
-                <span>▼</span>
-              </button>
-              <div id="user-dropdown" class="absolute right-0 mt-2 w-40 bg-white text-black rounded shadow hidden z-50">
-                <a href="#/profile" class="block px-4 py-2 hover:bg-gray-100">Profil</a>
-                <a href="#/logout" class="block px-4 py-2 hover:bg-gray-100">Keluar</a>
-              </div>
-            </div>
-          </header>
-
-          <!-- Dashboard -->
-          <main class="flex-1 p-6">
+        <div>
             <h1 class="text-2xl font-bold mb-6">Dasbor</h1>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div onclick="location.href='#/bookmark'" class="cursor-pointer p-6 bg-white rounded-lg border shadow hover:shadow-md">
@@ -68,12 +44,6 @@ export default class HomePage {
               </div>
             </div>
           </main>
-
-          <!-- Footer -->
-          <footer class="bg-white text-center py-4 text-sm text-gray-500 border-t">
-            &copy; 2025 SakaLoka - Semua hak dilindungi undang-undang.
-          </footer>
-        </div>
       </div>
     `;
   }

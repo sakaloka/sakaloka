@@ -11,7 +11,8 @@ import { checkAuthenticatedRoute, checkUnauthenticatedRouteOnly } from '../utils
 import PersonalOptionPage from '../pages/auth/option/personal-option-page'; 
 
 export const routes = {
-  '/': () => new LandingPage(),
+  '/': () => checkAuthenticatedRoute(new HomePage()),
+  '/landing': () => new LandingPage(),
   
   '/login': () => checkUnauthenticatedRouteOnly(new LoginPage()),
   '/register': () => checkUnauthenticatedRouteOnly(new RegisterPage()),
@@ -20,7 +21,6 @@ export const routes = {
   // !!NOTE: kalau auth page (login, register) udah jadi, tinggal tambahin function kaya hash login di atas,
   // misalnya utk destinasi: checkAuthenticatedRoute(new DestinationPage())
   // jadi page destinasi hanya untuk aunthenticated user (sudah login)
-  '/home': () => checkAuthenticatedRoute(new HomePage()),
   '/destinations': () => checkAuthenticatedRoute(new DestinationPage()),
   '/destinations/:id': () => checkAuthenticatedRoute(new DestinationDetailPage()),
   '/events': () => checkAuthenticatedRoute(new EventPage()),

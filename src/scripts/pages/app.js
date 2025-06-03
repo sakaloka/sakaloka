@@ -48,13 +48,16 @@ export default class App {
   #setupNavigationList() {
     const isLogin = !!getAccessToken();
     const navlist = this.#drawerNavigation.children.namedItem('navlist');
-
+    const headerContainer = document.getElementById('header-container');
+    
     // Unauthenticated User
     if (!isLogin) {
+      headerContainer.classList.add = 'unauthenticated-nav';
       navlist.innerHTML = generateUnauthenticatedNavigationListTemplate();
       return;
     }
     
+    headerContainer.classList.remove = 'unauthenticated-nav';
     navlist.innerHTML = generateAuthenticatedNavigationListTemplate();
 
     const logoutButton = document.getElementById('logout-button');
@@ -72,12 +75,15 @@ export default class App {
   async renderPage() {
     const url = getActiveRoute();
     const route = routes[url];
+    const isLogin = getAccessToken();
 
     // Get page instance
     const page = route();
 
     const transition = transitionHelper({
       updateDOM: async () => {
+        const header = document.getElementById('header');
+        
         this.#content.innerHTML = await page.render();
         console.log('isi halaman', await page.render());
         page.afterRender();
