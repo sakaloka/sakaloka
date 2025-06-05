@@ -1,76 +1,91 @@
 import { renderHeader } from '../../components/header.js';
+import { getSession } from '../../components/utils/auth.js';
+import { API_URL } from '../../constants/urlApi.js';
 
 export default class ProfilePresenter {
   #view;
-  #userModel;
   #user;
 
-  constructor({ view, userModel }) {
+  constructor({ view }) {
     this.#view = view;
-    this.#userModel = userModel;
     this.#user = JSON.parse(localStorage.getItem('user') || '{}');
   }
 
   async loadProfile() {
-    const profile =JSON.parse(localStorage.getItem('user') || '{}');
-    if (profile) {
-      this.#user = profile;
-      this.#view.showProfile({
-        ...this.#user,
-        previewPhotoUrl: this.#user.photoUrl
-      });
-      this.#attachEvents();
-    }
+    this.#view.showProfile(this.#user);
   }
 
- #attachEvents() {
-  document.getElementById('profile-form')?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = document.getElementById('input-name').value.trim();
-    const email = document.getElementById('input-email').value.trim();
-    const password = document.getElementById('input-password').value.trim();
+  attachEvents() {
+    // Form Profil
+    document.getElementById('profile-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('input-name').value.trim();
+      const session = getSession();
+      const userId = session?.user?.userId;
+      const token = session?.accessToken;
 
-    const updatedUser = {
-      ...this.#user,
-      name,
-      email,
-      ...(password && { password }),
-    };
+      if (!userId || !token) {
+        this.#view.showError('Anda belum login');
+        return;
+      }
 
-    localStorage.setItem('user', JSON.stringify(updatedUser));
-    this.#user = updatedUser;
-    this.#view.showSuccess('Profil berhasil diperbarui!');
+      const updatedUser = { ...this.#user, name };
 
-    renderHeader(); // Render ulang header agar nama/avatar ikut berubah
-    this.loadProfile();
-  });
+      const res = await fetch(`${API_URL}/users/${userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ name }),
+      });
 
-  const photoInput = document.getElementById('photo-input');
-  const photoPreview = document.getElementById('photo-preview');
+      if (res.ok) {
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        this.#user = updatedUser;
+        this.#view.showSuccess('Profil berhasil diperbarui!');
+        renderHeader();
+        this.loadProfile();
+      } else {
+        this.#view.showError('Gagal memperbarui profil');
+      }
+    });
 
-  photoInput?.addEventListener('change', () => {
-    const file = photoInput.files[0];
-    if (!file) return;
+    // Form Foto
+    document.getElementById('photo-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const file = document.getElementById('photo-input')?.files?.[0];
+      if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      photoPreview.innerHTML = `<img src="${reader.result}" alt="Preview" />`;
-      this.#user.photoUrl = reader.result;
-      this.#user.avatar = reader.result;
-    };
-    reader.readAsDataURL(file);
-  });
+      const session = getSession();
+      const userId = session?.user?.userId;
+      const token = session?.accessToken;
 
-  document.getElementById('photo-form')?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    if (!this.#user.photoUrl)
-      return this.#view.showError('Pilih gambar terlebih dahulu');
+      const formData = new FormData();
+      formData.append('photo', file);
 
-    localStorage.setItem('user', JSON.stringify(this.#user));
-    this.#view.showSuccess('Foto berhasil diperbarui!');
+      const res = await fetch(`${API_URL}/users/${userId}/photo`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
 
-    renderHeader(); 
-    this.loadProfile();
-  });
-}
+      if (res.ok) {
+        const result = await res.json();
+        const updatedUser = {
+          ...this.#user,
+          previewPhotoUrl: result.photoUrl,
+        };
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        this.#user = updatedUser;
+        this.#view.showSuccess('Foto berhasil diperbarui!');
+        renderHeader();
+        this.loadProfile();
+      } else {
+        this.#view.showError('Gagal mengunggah foto');
+      }
+    });
+  }
 }

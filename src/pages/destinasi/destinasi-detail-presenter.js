@@ -19,9 +19,26 @@ export class DestinasiDetailPresenter {
     }
   }
 
+  async loadUlasan(destinationId) {
+    try {
+      const session = getSession();
+      const res = await fetch(`${API_URL}/reviews?type=destination&targetId=${destinationId}`, {
+        headers: {
+          Authorization: `Bearer ${session?.accessToken}`,
+        },
+      });
+      if (!res.ok) throw new Error('Gagal memuat ulasan');
+      const json = await res.json();
+      return json;
+    } catch (err) {
+      console.error(err);
+      return null;
+    }
+  }
+
   async getUserReview(destinationId, userId) {
     const session = getSession();
-    const res = await fetch(`${API_URL}/destinations/${destinationId}/reviews?userId=${userId}`, {
+    const res = await fetch(`${API_URL}/reviews?type=destination&targetId=${destinationId}`, {
       headers: {
        Authorization: `Bearer ${session?.accessToken}`,
       },
@@ -31,30 +48,31 @@ export class DestinasiDetailPresenter {
   }
 
   async submitReview({ destinationId, userId, comment, rating }) {
-    const existing = await this.getUserReview(destinationId, userId);
-    if (existing) {
-      return await this.updateReview(existing.id, { comment, rating });
-    } else {
-      return await this.addReview({ destinationId, userId, comment, rating });
-    }
+    // const existing = await this.getUserReview(destinationId, userId);
+    // if (existing) {
+    //   return await this.updateReview(existing.id, { comment, rating });
+    // } else {
+    //   return await this.addReview({ destinationId, userId, comment, rating });
+    // }
+    return await this.addReview({ destinationId, userId, comment, rating });
   }
 
   async addReview({ destinationId, userId, comment, rating }) {
     const session = getSession();
-    const res = await fetch(`${API_URL}/destinations/reviews`, {
+    const res = await fetch(`${API_URL}/reviews/destinations`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${session?.accessToken}`,
       },
-      body: JSON.stringify({ destination_id: destinationId, user_id: userId, comment, rating }),
+      body: JSON.stringify({ destinationId, userId, comment, rating }),
     });
     return await res.json();
   }
 
   async updateReview(reviewId, { comment, rating }) {
     const session = getSession();
-    const res = await fetch(`${API_URL}/destinations/reviews/${reviewId}`, {
+    const res = await fetch(`${API_URL}/reviews/${reviewId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

@@ -30,6 +30,9 @@ const ENDPOINTS = {
   UPDATE_REVIEW_DESTINATION: (id) => `${API_URL}/reviews/destinations/${id}`,
   REVIEWS_DESTINATION: (id) => `${API_URL}/reviews?type=destination&targetId=${id}`,
   REVIEWS_DESTINATION_STAT: (id) => `${API_URL}/reviews/destination/${id}/stats`,
+
+  DESTINATIONS_TOPS: `${API_URL}/destinations/top`,
+  DESTINATION_CATEGORIES: `${API_URL}/destinations/categories`
 };
 
 // Auth
@@ -247,6 +250,28 @@ export async function updateDestinationReview(reviewId, { comment, rating }) {
       Authorization: `Bearer ${token}`,
     },
     body: data,
+  });
+  const json = await response.json();
+  return { ...json, ok: response.ok };
+}
+
+export async function destinationTop() {
+  const response = await fetch(ENDPOINTS.DESTINATIONS_TOPS, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  const json = await response.json();
+  return { ...json, ok: response.ok };
+}
+
+export async function destinationCategories() {
+  const response = await fetch(ENDPOINTS.DESTINATION_CATEGORIES, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
   });
   const json = await response.json();
   return { ...json, ok: response.ok };

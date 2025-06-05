@@ -33,6 +33,33 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   window.addEventListener('hashchange', handleRoute);
+
+  // Auto inject token ke fetch
+  const originalFetch = window.fetch;
+  window.fetch = async (input, init = {}) => {
+    const token = localStorage.getItem('accessToken');
+    const authInit = {
+      ...init,
+      headers: { ...init.headers, Authorization: `Bearer ${token}` },
+    };
+
+    let response = await originalFetch(input, authInit);
+    // akun minta refresh token
+    if (response.status === 401) {
+      toast('Refresh token failed, redirecting to login.');
+      window.location.href = '/login';
+      return;
+    }
+    // Akun di inactive
+    if (response.status === 403) {
+      localStorage.clear();
+      sessionStorage.clear();
+      toast('Akun anda telah di Nonaktifkan', 'error');
+      navigateTo('login');
+      return;
+    }
+    return response;
+  };
 });
 
 export function handleRoute() {

@@ -1,5 +1,6 @@
 import { html, render } from 'lit-html';
 import { generateTopDestinationItems } from './destination_items';
+import { destinationTop } from '../constants/urlApi';
 
 export function renderLandingIndex(container) {
   const template = html`
@@ -17,10 +18,10 @@ export function renderLandingIndex(container) {
           <p class="mt-4 text-xl mx-auto">
             Temukan acara budaya dan destinasi lokal sesuai minat dan lokasimu. Dengan smart map dan rekomendasi berbasis machine learning, kami menyediakan apa yang kamu cari.
           </p>
-          <button class="btn mt-6 bg-[#dce8c4] px-6 py-6 text-xl mx-auto text-black rounded-full font-semibold hover:bg-[#c4d8a0] transition flex items-center gap-3 group">
+          <a href="#/login" class="btn mt-6 bg-[#dce8c4] px-6 py-6 text-xl mx-auto text-black rounded-full font-semibold hover:bg-[#c4d8a0] transition">
             Jelajahi Sekarang
             <i class="fa fa-arrow-right transition-transform duration-300 group-hover:translate-x-1"></i>
-          </button>
+          </a>
         </div>
       </section>
 
@@ -134,8 +135,8 @@ export function renderLandingIndex(container) {
           const icon = btn.querySelector('i');
           if (answer) {
             answer.classList.toggle('hidden');
-            icon.classList.toggle('fa-plus');
-            icon.classList.toggle('fa-times');
+            icon.classList.toggle('fa-chevron-down');
+            icon.classList.toggle('fa-chevron-up');
           }
         });
       });
@@ -166,12 +167,19 @@ export function renderLandingIndex(container) {
       });
     }, 0);
 
-    // Render destinasi
-    const destinationTemplates = dummyDestinations.map((d) =>
-      generateTopDestinationItems(d.name, d.location, d.image)
-    );
-    const destinationContainer = document.getElementById('destination-container');
-    render(html`${destinationTemplates}`, destinationContainer);
+    // ambil destinasi
+    setTimeout(async () => {
+      // Render destinasi
+      const response = await destinationTop(); // ← ambil data dari API
+      const destinations = response?.data || []; // Ambil hanya array-nya
+      const destinationTemplates = destinations.map((d) =>
+        generateTopDestinationItems(d.name, d.city, d.photo_url, d.rating)
+      );
+      
+      const destinationContainer = document.getElementById('destination-container');
+      render(html`${destinationTemplates}`, destinationContainer);
+    }, 0);
+
   });
 }
 
