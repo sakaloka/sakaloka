@@ -49,7 +49,7 @@ export function renderLandingIndex(container) {
       </section>
 
       <!-- Destinasi Populer -->
-      <section id="destination-section" class="section-fade bg-[#614b4b] text-white py-20 px-4 text-center">
+      <section id="destination-section" class="section-fade bg-[#3c2626] text-white py-20 px-4 text-center">
         <h2 class="text-4xl font-bold mb-4">Destinasi Populer</h2>
         <p class="max-w-xl text-white mx-auto mb-12 text-base md:text-lg">
           Jelajahi keindahan budaya dan alam di Pulau Jawa yang sedang digemari wisatawan.
@@ -61,7 +61,7 @@ export function renderLandingIndex(container) {
       </section>
 
       <!-- FAQ -->
-      <section id="faq-section" class="section-fade bg-[#f7f8fa] text-primary py-20 px-4">
+      <section id="faq-section" class="section-fade bg-[#d7e4c0] text-primary py-20 px-4">
         <div class="max-w-7xl mx-auto">
           <h2 class="text-4xl font-bold text-center mb-6">Pertanyaan Umum (FAQ)</h2>
           <p class="text-center text-gray-600 mb-10 text-base md:text-lg">
@@ -88,22 +88,23 @@ export function renderLandingIndex(container) {
       </section>
 
       <!-- Kontak -->
-      <section id="contact-section" class="section-fade bg-[#3c2626] text-white py-20 px-4 text-center">
-        <h2 class="text-3xl font-extrabold mb-6">Hubungi Kami</h2>
-        <div class="flex flex-col items-center gap-4 text-xl w-full mx-auto">
-          <p>Punya pertanyaan atau saran? Kami siap mendengar Anda.</p>
-          <div class="flex flex-wrap justify-center items-center gap-6 mt-4 text-xl">
-            <a href="mailto:sakaloka@gmail.com" class="flex items-center gap-2 hover:underline">
-              <img src="./images/icons/gmail.svg" class="w-5 h-5" alt="Gmail Icon" />
-              <span>sakaloka@gmail.com</span>
-            </a>
-            <a href="https://www.instagram.com/" target="_blank" class="flex items-center gap-2 hover:underline">
-              <img src="./images/icons/instagram.svg" class="w-5 h-5" alt="Instagram Icon" />
-              <span>@sakaloka</span>
-            </a>
-          </div>
-        </div>
-      </section>
+      <!-- Kontak -->
+<section id="contact-section" class="section-fade bg-[#3c2626] text-white py-20 px-4 text-center">
+  <h2 class="text-3xl font-extrabold mb-6">Hubungi Kami</h2>
+  <div class="flex flex-col items-center gap-4 text-xl w-full mx-auto">
+    <p>Punya pertanyaan atau saran? Kami siap mendengar Anda.</p>
+    <div class="flex flex-wrap justify-center items-center gap-6 mt-4 text-xl">
+      <a href="mailto:sakaloka@gmail.com" class="flex items-center gap-2 hover:underline">
+        <i class="fas fa-envelope text-white"></i>
+        <span>sakaloka@gmail.com</span>
+      </a>
+      <a href="https://www.instagram.com/" target="_blank" class="flex items-center gap-2 hover:underline">
+        <i class="fab fa-instagram text-white"></i>
+        <span>@sakaloka</span>
+      </a>
+    </div>
+  </div>
+</section>
     </section>
   `;
 
@@ -114,7 +115,7 @@ export function renderLandingIndex(container) {
   const backTopBtn = html`
     <button id="backTop"
       class="btn fixed bottom-4 right-4 z-50 rounded-full hidden 
-            w-[70px] h-[70px] bg-[rgba(255,255,255, 0.5)] text-gray-700 
+          w-[70px] h-[70px] bg-[rgba(255,255,255,0.5)] text-black
             text-3xl shadow-lg transition transform hover:scale-110 flex items-center justify-center">
       <i class="fa fa-arrow-up"></i>
     </button>

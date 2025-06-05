@@ -1,16 +1,25 @@
 import { html, render } from 'lit-html';
 import RegisterPresenter from './register-presenter.js';
-import AuthModel from '../../components/utils/auth-model.js';
-import SakaLokaAPI from '../../constants/urlApi.js';
+import Swal from 'sweetalert2';
 
 export function renderRegister(container) {
   const presenter = new RegisterPresenter({
     view: {
-      showSuccess: (msg) => alert(msg),
-      showError: (msg) => alert(msg),
-    },
-    authModel: new AuthModel(),
-    userModel: SakaLokaAPI,
+      showSuccess: (msg) => Swal.fire({
+        title: 'Berhasil!',
+        text: msg,
+        icon: 'success',
+        timer: 1500,
+        showConfirmButton: false
+      }),
+      showError: (msg) =>  Swal.fire({
+        title: 'Gagal!',
+        text: msg,
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#483434'
+      }),
+    },    
   });
 
   const template = html`

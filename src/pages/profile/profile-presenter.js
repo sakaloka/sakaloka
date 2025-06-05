@@ -12,7 +12,7 @@ export default class ProfilePresenter {
   }
 
   async loadProfile() {
-    const profile = await this.#userModel.get('profile');
+    const profile =JSON.parse(localStorage.getItem('user') || '{}');
     if (profile) {
       this.#user = profile;
       this.#view.showProfile({

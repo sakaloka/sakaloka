@@ -1,3 +1,5 @@
+import { register } from "../../constants/urlApi";
+
 export default class RegisterPresenter {
   #view;
   #userModel;
@@ -20,26 +22,23 @@ export default class RegisterPresenter {
       return;
     }
 
-    // Dummy Regis
-    if (email === 'dummy@sakaloka.com') {
-      const dummyData = {
-        accessToken: 'dummy-token',
-        user: { name, email },
-      };
-      this.#userModel.saveSession(dummyData);
-      this.#view.showSuccess('Pendaftaran berhasil (dummy)');
-      location.hash = '#/personal-option';
-      return;
-    }
-
-    // API
     try {
-      const result = await this.#authModel.register(name, email, password);
-      this.#userModel.saveSession(result);
-      this.#view.showSuccess('Pendaftaran berhasil');
-      location.hash = '#/personal-option';
+      const res = await register({ name, email, password });
+
+      if (!res.ok) {
+        const msg = res?.message || 'Registrasi gagal.';
+        this.#view.showError(msg);
+        return;
+      }
+
+      this.#view.showSuccess('Registrasi berhasil!');
+      setTimeout(() => {
+        window.location.hash = '#/login';
+      }, 1500);
     } catch (err) {
-      this.#view.showError(err.message);
+      console.error(err);
+      this.#view.showError('Terjadi kesalahan koneksi.');
     }
   }
+
 }

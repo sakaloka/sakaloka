@@ -177,10 +177,11 @@ function defaultHome() {
 }
 
 function matchRoute(pathname) {
-   pathname = pathname.replace(/\/+$/, '');
+  pathname = pathname.replace(/\/+$/, '');
+
   for (const key in routes) {
     if (key.includes('/:')) {
-      const pattern = key.replace(/:\w+/g, '([a-f0-9\\-]{36})');
+      const pattern = key.replace(/:\w+/g, '([^/]+)');
       const regex = new RegExp(`^${pattern}$`);
       const match = pathname.match(regex);
       if (match) return { route: routes[key], routeKey: key, param: match[1] };
@@ -188,6 +189,7 @@ function matchRoute(pathname) {
       return { route: routes[key], routeKey: key, param: null };
     }
   }
+
   return { route: null, routeKey: pathname, param: null };
 }
 

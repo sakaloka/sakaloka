@@ -2,6 +2,7 @@ import { renderHome } from '../pages/home/home.js';
 import { renderCalendarPage } from '../pages/event/event.js';
 import { renderEventDetailPage } from '../pages/event/event-detail.js';
 import { renderDestinasi } from '../pages/destinasi/destinasi.js';
+import { renderDestinasiDetailPage } from '../pages/destinasi/destinasi-detail.js';
 import { renderLogin } from '../pages/auth/login.js';
 import { renderRegister } from '../pages/auth/register.js';
 import { renderPersonalOption } from '../pages/auth/personal-option.js';
@@ -24,8 +25,8 @@ const homeRoutes = {
     protectedRoute: true,
     showNavbar: true,
   },
-  'event/detail': {
-    path: 'event/detail',
+  'event/detail/:id': {
+    path: 'event/detail/:id', 
     title: 'Detail Event',
     render: renderEventDetailPage,
     protectedRoute: true,
@@ -38,6 +39,13 @@ const homeRoutes = {
     protectedRoute: true,
     showNavbar: true,
   },
+  'destinasi/detail/:id': {
+  path: 'destinasi/detail/:id',
+  title: 'Detail Destinasi',
+  render: renderDestinasiDetailPage,
+  protectedRoute: true,
+  showNavbar: true,
+},
   'profile': {
     path: 'profile',
     title: 'Profil Saya',

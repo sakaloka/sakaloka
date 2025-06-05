@@ -1,6 +1,5 @@
 import { html, render } from 'lit-html';
 import ProfilePresenter from './profile-presenter.js';
-import SakaLokaAPI from '../../constants/urlApi.js';
 
 export function renderProfile(container) {
   const presenter = new ProfilePresenter({
@@ -63,7 +62,6 @@ export function renderProfile(container) {
         render(template, container);
       },
     },
-    userModel: SakaLokaAPI,
   });
 
   presenter.loadProfile();
