@@ -1,4 +1,4 @@
-export const API_URL = 'http://localhost:9000'; // ganti nanti
+export const API_URL = 'https://sakaloka-backend-production.up.railway.app'; // ganti nanti
 import { getAccessToken } from '../components/utils/auth';
 
 
