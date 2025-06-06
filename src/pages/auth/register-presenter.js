@@ -33,7 +33,7 @@ export default class RegisterPresenter {
 
       this.#view.showSuccess('Registrasi berhasil!');
       setTimeout(() => {
-        window.location.hash = '#/login';
+        window.location.hash = '#/personal-option';
       }, 1500);
     } catch (err) {
       console.error(err);
