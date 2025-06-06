@@ -42,24 +42,25 @@ export function renderHeader(containerId = 'header') {
             <i class="fa fa-chevron-down ml-2 text-xs"></i>
           </button>
 
-          ${window.__isProfileDropdownOpen
-            ? html`
-              <div class="absolute right-0 mt-2 w-36 bg-white rounded-md shadow-md z-50">
-                <a
-                  href="#/profile"
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >Akun</a
-                >
-                <button
-                  class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-                  @click=${handleLogout}
-                >
-                  Logout
-                </button>
-              </div>
-            `
+          ${
+            window.__isProfileDropdownOpen
+              ? html`
+                  <div class="absolute right-0 mt-2 w-36 bg-white rounded-md shadow-md z-50">
+                    <a
+                      href="#/profile"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >Akun</a
+                    >
+                    <button
+                      class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                      @click=${handleLogout}
+                    >
+                      Logout
+                    </button>
+                  </div>
+                `
               : ''
-            }
+          }
           </div>
         </div>
       </div>
@@ -70,9 +71,10 @@ export function renderHeader(containerId = 'header') {
     >
       <div class="mt-20 flex items-center gap-3 px-4">
   <div class="avatar-sidebar w-10 h-10 rounded-full overflow-hidden border border-gray-300 bg-gray-100 flex items-center justify-center">
-    ${user?.photoUrl
-      ? html`<img src=${user.avatar} alt="Avatar" class="w-full h-full object-cover" />`
-      : html`<i class="fa fa-user text-black-500 text-lg"></i>`
+    ${
+      user?.photoUrl
+        ? html`<img src=${user.avatar} alt="Avatar" class="w-full h-full object-cover" />`
+        : html`<i class="fa fa-user text-black-500 text-lg"></i>`
     }
   </div>
   <p class="text-base font-semibold text-[#678337]">Hai, ${user?.name || 'Martha'}</p>

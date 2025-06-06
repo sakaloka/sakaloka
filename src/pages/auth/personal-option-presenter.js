@@ -15,9 +15,9 @@ export default class PersonalOptionPresenter {
     }
   }
 
-  async handleSubmit(selected) {
-    if (selected.length !== 5) {
-      this.#view.showError('Pilih tepat 5 destinasi favorit sebelum submit.');
+  async handleSubmit(selected, count) {
+    if (!selected) {
+      this.#view.showError(`Pilih tepat 5 destinasi favorit. Sekarang baru ${count || 0}.`);
       return;
     }
 
@@ -35,21 +35,17 @@ export default class PersonalOptionPresenter {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ preferences: selected }),
+        body: JSON.stringify({ userId, preferences: selected }),
       });
 
       const data = await res.json();
 
       if (!res.ok) throw new Error(data.message || 'Gagal menyimpan preferensi.');
 
-      // Update session jika perlu
-      const updatedUser = { ...session.user, preferences: selected };
-      saveSession({ ...session, user: updatedUser });
-
       this.#view.showSuccess('Preferensi berhasil disimpan.');
-      location.hash = '#/login';
+      location.hash = '#/home';
     } catch (err) {
       this.#view.showError(err.message);
     }

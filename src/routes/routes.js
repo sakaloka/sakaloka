@@ -7,7 +7,7 @@ import { renderLogin } from '../pages/auth/login.js';
 import { renderRegister } from '../pages/auth/register.js';
 import { renderPersonalOption } from '../pages/auth/personal-option.js';
 import { renderProfile } from '../pages/profile/profile.js';
-import { renderBookmarkPage } from '../pages/bookmark/bookmark.js'; 
+import { renderBookmarkPage } from '../pages/bookmark/bookmark.js';
 import { renderLandingIndex } from '../landing/index.js';
 
 const homeRoutes = {
@@ -26,7 +26,7 @@ const homeRoutes = {
     showNavbar: true,
   },
   'event/detail/:id': {
-    path: 'event/detail/:id', 
+    path: 'event/detail/:id',
     title: 'Detail Event',
     render: renderEventDetailPage,
     protectedRoute: true,
@@ -40,12 +40,12 @@ const homeRoutes = {
     showNavbar: true,
   },
   'destinasi/detail/:id': {
-  path: 'destinasi/detail/:id',
-  title: 'Detail Destinasi',
-  render: renderDestinasiDetailPage,
-  protectedRoute: true,
-  showNavbar: true,
-},
+    path: 'destinasi/detail/:id',
+    title: 'Detail Destinasi',
+    render: renderDestinasiDetailPage,
+    protectedRoute: true,
+    showNavbar: true,
+  },
   'profile': {
     path: 'profile',
     title: 'Profil Saya',
@@ -84,7 +84,7 @@ const authRoutes = {
 };
 
 const landingPage = {
-  'index': {
+  index: {
     path: 'index',
     title: 'Sakalola Apps',
     render: renderLandingIndex,
@@ -95,5 +95,5 @@ const landingPage = {
 export const routes = {
   ...homeRoutes,
   ...authRoutes,
-  ...landingPage
+  ...landingPage,
 };

@@ -1,4 +1,4 @@
-import { html, render } from 'lit-html'; 
+import { html, render } from 'lit-html';
 import HomePresenter from './home-presenter.js';
 import { navigateTo } from '../../components/utils/navigateTo.js';
 

@@ -52,7 +52,8 @@
   animation-duration: 300ms;
   animation-timing-function: ease;
 }
-html, body {
+html,
+body {
   overflow-x: hidden;
   scroll-behavior: smooth;
 }
@@ -467,7 +468,6 @@ body {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-
 #features-section {
   background: var(--primary-color) !important;
   color: var(--primary-text-color) !important;
@@ -475,7 +475,9 @@ body {
 
 .destination-items {
   cursor: pointer;
-  transition: transform 0.3s ease, filter 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    filter 0.3s ease;
 }
 
 .destination-items:hover {

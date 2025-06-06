@@ -1,6 +1,5 @@
 export const API_URL = 'https://sakaloka-backend-production.up.railway.app'; // ganti nanti
-import { getAccessToken } from '../components/utils/auth';
-
+import { getAccessToken, getSession } from '../components/utils/auth';
 
 const ENDPOINTS = {
   // Auth
@@ -8,7 +7,7 @@ const ENDPOINTS = {
   LOGIN: `${API_URL}/login`,
   USER_DETAILS: (id) => `${API_URL}/users/${id}`,
   USER_UPDATE: (id) => `${API_URL}/users/${id}`,
-  
+
   // Events
   EVENTS: `${API_URL}/events`,
   EVENT_DETAILS: (id) => `${API_URL}/events/${id}`,
@@ -16,7 +15,7 @@ const ENDPOINTS = {
   // Destinations
   DESTINATIONS: `${API_URL}/destinations`,
   DESTINATION_DETAILS: (id) => `${API_URL}/destinations/${id}`,
-  
+
   // Reviews
   REVIEWS: `${API_URL}/reviews`,
   REVIEWS_USER: (id) => `${API_URL}/reviews/user?userId=${id}`,
@@ -32,27 +31,28 @@ const ENDPOINTS = {
   REVIEWS_DESTINATION_STAT: (id) => `${API_URL}/reviews/destination/${id}/stats`,
 
   DESTINATIONS_TOPS: `${API_URL}/destinations/top`,
-  DESTINATION_CATEGORIES: `${API_URL}/destinations/categories`
+  DESTINATIONS_RECOMMENDED: (id) => `${API_URL}/destinations/recommend/${id}`,
+  DESTINATION_CATEGORIES: `${API_URL}/destinations/categories`,
 };
 
 // Auth
-export async function register ({ name, email, password }) {
+export async function register({ name, email, password }) {
   const data = JSON.stringify({ name, email, password });
-  
+
   const fetchResponse = await fetch(ENDPOINTS.REGISTER, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: data,
   });
   const json = await fetchResponse.json();
-  
+
   return {
     ...json,
     ok: fetchResponse.ok,
   };
 }
 
-export async function login ({email, password}) {
+export async function login({ email, password }) {
   const data = JSON.stringify({ email, password });
 
   const fetchResponse = await fetch(ENDPOINTS.LOGIN, {
@@ -61,14 +61,14 @@ export async function login ({email, password}) {
     body: data,
   });
   const json = await fetchResponse.json();
-  
+
   return {
     ...json,
     ok: fetchResponse.ok,
   };
 }
 
-export async function getUserById (id) {
+export async function getUserById(id) {
   const token = getAccessToken();
   const response = await fetch(ENDPOINTS.USER_DETAILS(id), {
     headers: {
@@ -76,16 +76,16 @@ export async function getUserById (id) {
     },
   });
   const json = await response.json();
-  
+
   return {
     ...json,
     ok: response.ok,
   };
 }
 
-export async function updateUser (id, {email, name}) {
+export async function updateUser(id, { email, name }) {
   const token = getAccessToken();
-  const data = JSON.stringify({email, name});
+  const data = JSON.stringify({ email, name });
   const response = await fetch(ENDPOINTS.USER_UPDATE(id), {
     headers: {
       method: 'PUT',
@@ -94,7 +94,7 @@ export async function updateUser (id, {email, name}) {
     },
   });
   const json = await response.json();
-  
+
   return {
     ...json,
     ok: response.ok,
@@ -102,23 +102,23 @@ export async function updateUser (id, {email, name}) {
 }
 
 // Events
-export async function getEvents () {
+export async function getEvents() {
   const token = getAccessToken();
-  
+
   const response = await fetch(ENDPOINTS.EVENTS, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
   const json = await response.json();
-  
+
   return {
     ...json,
     ok: response.ok,
   };
 }
 
-export async function getEventById (id) {
+export async function getEventById(id) {
   const token = getAccessToken();
   const response = await fetch(ENDPOINTS.EVENT_DETAILS(id), {
     headers: {
@@ -126,7 +126,7 @@ export async function getEventById (id) {
     },
   });
   const json = await response.json();
-  
+
   return {
     ...json,
     ok: response.ok,
@@ -134,23 +134,23 @@ export async function getEventById (id) {
 }
 
 // Destinations
-export async function getDestinations () {
+export async function getDestinations() {
   const token = getAccessToken();
-  
+
   const response = await fetch(ENDPOINTS.DESTINATIONS, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
   const json = await response.json();
-  
+
   return {
     ...json,
     ok: response.ok,
   };
 }
 
-export async function getDestinationById (id) {
+export async function getDestinationById(id) {
   const token = getAccessToken();
   const response = await fetch(ENDPOINTS.DESTINATION_DETAILS(id), {
     headers: {
@@ -158,7 +158,7 @@ export async function getDestinationById (id) {
     },
   });
   const json = await response.json();
-  
+
   return {
     ...json,
     ok: response.ok,
@@ -202,7 +202,7 @@ export async function addEventReview({ eventId, userId, comment, rating }) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+      'Authorization': `Bearer ${token}`,
     },
     body: data,
   });
@@ -217,7 +217,7 @@ export async function updateEventReview(reviewId, { comment, rating }) {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+      'Authorization': `Bearer ${token}`,
     },
     body: data,
   });
@@ -232,7 +232,7 @@ export async function addDestinationReview({ destinationId, userId, comment, rat
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+      'Authorization': `Bearer ${token}`,
     },
     body: data,
   });
@@ -247,7 +247,7 @@ export async function updateDestinationReview(reviewId, { comment, rating }) {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+      'Authorization': `Bearer ${token}`,
     },
     body: data,
   });
@@ -271,6 +271,19 @@ export async function destinationCategories() {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
+    },
+  });
+  const json = await response.json();
+  return { ...json, ok: response.ok };
+}
+
+export async function getRecommendedDestinations(userId) {
+  const token = getSession().accessToken;
+  const response = await fetch(ENDPOINTS.DESTINATIONS_RECOMMENDED(userId), {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
     },
   });
   const json = await response.json();

@@ -115,8 +115,7 @@ class EventDetailPage {
     });
     const s = new Date(start);
     const e = new Date(end);
-    const isSame =
-      s.getMonth() === e.getMonth() && s.getFullYear() === e.getFullYear();
+    const isSame = s.getMonth() === e.getMonth() && s.getFullYear() === e.getFullYear();
     return isSame
       ? `${s.getDate()} – ${formatter.format(e)}`
       : `${formatter.format(s)} – ${formatter.format(e)}`;
@@ -132,25 +131,48 @@ class EventDetailPage {
     return html`
       <section class="mt-24 text-left relative">
         <div class="max-w-4xl mx-auto flex justify-right mb-2">
-          <a href="#/event" class="text-sm px-4 py-2 bg-[#3c2b2b] text-white rounded hover:bg-[#4a3838] transition">
+          <a
+            href="#/event"
+            class="text-sm px-4 py-2 bg-[#3c2b2b] text-white rounded hover:bg-[#4a3838] transition"
+          >
             ← Kembali ke Event
           </a>
         </div>
 
-        <div class="max-w-4xl bg-white border border-[#3c2b2b] rounded-lg shadow-md overflow-hidden mx-auto">
+        <div
+          class="max-w-4xl bg-white border border-[#3c2b2b] rounded-lg shadow-md overflow-hidden mx-auto"
+        >
           <div class="p-6 space-y-4 text-gray-800">
-            <img src="${d.image}" alt="${d.title}" class="w-40 h-40 object-cover rounded-md flex-shrink-0"/>
+            <img
+              src="${d.image}"
+              alt="${d.title}"
+              class="w-40 h-40 object-cover rounded-md flex-shrink-0"
+            />
             <h1 class="text-2xl font-bold text-black">${d.title}</h1>
             <p><i class="fas fa-tags text-black"></i> <strong>Kategori:</strong> ${d.category}</p>
-            <p><i class="fas fa-map-marker-alt text-black"></i> <strong>Lokasi:</strong> ${d.location}</p>
-            <p><i class="fas fa-calendar-alt text-black"></i> <strong>Tanggal:</strong> ${this.formatRangeTanggal(d.startDate, d.endDate)}</p>
+            <p>
+              <i class="fas fa-map-marker-alt text-black"></i>
+              <strong>Lokasi:</strong> ${d.location}
+            </p>
+            <p>
+              <i class="fas fa-calendar-alt text-black"></i>
+              <strong>Tanggal:</strong> ${this.formatRangeTanggal(d.startDate, d.endDate)}
+            </p>
             <p><i class="fas fa-book text-black"></i> ${d.description}</p>
 
             <div class="flex items-center justify-between pt-4 border-t mt-4">
-              <a href="${d.url}" class="text-blue-600 hover:underline break-all text-sm" target="_blank">
+              <a
+                href="${d.url}"
+                class="text-blue-600 hover:underline break-all text-sm"
+                target="_blank"
+              >
                 <i class="fas fa-link mr-1 text-black"></i> ${d.url}
               </a>
-              <button @click=${() => this.toggleSave()} title="${this.isSaved ? 'Tersimpan' : 'Simpan'}" class="text-2xl hover:scale-110 transition">
+              <button
+                @click=${() => this.toggleSave()}
+                title="${this.isSaved ? 'Tersimpan' : 'Simpan'}"
+                class="text-2xl hover:scale-110 transition"
+              >
                 <i class="${this.isSaved ? 'fas' : 'far'} fa-bookmark text-black"></i>
               </button>
             </div>
@@ -158,15 +180,25 @@ class EventDetailPage {
         </div>
 
         <!-- Form Review -->
-        <div class="max-w-4xl mx-auto mt-6 bg-[#bea5a5] border border-[#3c2b2b] rounded-lg shadow-md p-6">
+        <div
+          class="max-w-4xl mx-auto mt-6 bg-[#bea5a5] border border-[#3c2b2b] rounded-lg shadow-md p-6"
+        >
           <h2 class="text-lg font-semibold text-[#3c2b2b] mb-2">Tulis Review</h2>
           <div class="flex items-center gap-1 mb-3">
             ${[1, 2, 3, 4, 5].map(
               (i) => html`
-                <span class="cursor-pointer" @click=${() => { this.rating = i; this.update(); }}>
-                  <i class="fa-star ${i <= this.rating ? 'fas text-yellow-500' : 'far text-white'}"></i>
+                <span
+                  class="cursor-pointer"
+                  @click=${() => {
+                    this.rating = i;
+                    this.update();
+                  }}
+                >
+                  <i
+                    class="fa-star ${i <= this.rating ? 'fas text-yellow-500' : 'far text-white'}"
+                  ></i>
                 </span>
-              `
+              `,
             )}
           </div>
           <textarea
@@ -177,7 +209,10 @@ class EventDetailPage {
             placeholder="Tulis ulasanmu di sini..."
           ></textarea>
           <div class="flex justify-end mt-2">
-            <button class="bg-[#3c2b2b] text-white px-4 py-2 rounded hover:bg-[#483434]" @click=${() => this.saveReview()}>
+            <button
+              class="bg-[#3c2b2b] text-white px-4 py-2 rounded hover:bg-[#483434]"
+              @click=${() => this.saveReview()}
+            >
               Kirim Review
             </button>
           </div>
@@ -186,7 +221,9 @@ class EventDetailPage {
         <!-- List Review -->
         ${this.reviews.length > 0
           ? html`
-              <div class="max-w-4xl mx-auto mt-6 bg-white border border-[#3c2b2b] rounded-lg shadow-md p-6">
+              <div
+                class="max-w-4xl mx-auto mt-6 bg-white border border-[#3c2b2b] rounded-lg shadow-md p-6"
+              >
                 <h2 class="text-lg font-semibold text-[#3c2b2b] mb-2">Ulasan Pengunjung</h2>
                 <ul class="space-y-3">
                   ${this.reviews.map(
@@ -195,12 +232,16 @@ class EventDetailPage {
                         <div class="flex items-center gap-1 mb-1">
                           ${[1, 2, 3, 4, 5].map(
                             (i) =>
-                              html`<i class="fa-star ${i <= r.rating ? 'fas text-yellow-500' : 'far text-white'}"></i>`
+                              html`<i
+                                class="fa-star ${i <= r.rating
+                                  ? 'fas text-yellow-500'
+                                  : 'far text-white'}"
+                              ></i>`,
                           )}
                         </div>
                         <p class="text-black">${r.comment}</p>
                       </li>
-                    `
+                    `,
                   )}
                 </ul>
               </div>

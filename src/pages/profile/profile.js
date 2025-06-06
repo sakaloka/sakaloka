@@ -20,9 +20,15 @@ export function renderProfile(container) {
                 <h3 class="text-lg font-semibold text-gray-700">Informasi Pengguna</h3>
 
                 <div class="flex items-center gap-4">
-                  <div class="w-16 h-16 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center text-white text-xl">
+                  <div
+                    class="w-16 h-16 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center text-white text-xl"
+                  >
                     ${user.previewPhotoUrl
-                      ? html`<img src="${user.previewPhotoUrl}" class="w-full h-full object-cover" alt="Avatar" />`
+                      ? html`<img
+                          src="${user.previewPhotoUrl}"
+                          class="w-full h-full object-cover"
+                          alt="Avatar"
+                        />`
                       : html`<i class="fa fa-user"></i>`}
                   </div>
                   <div class="font-medium text-gray-800" id="display-name">${user.name || '-'}</div>
@@ -39,7 +45,10 @@ export function renderProfile(container) {
                   />
                 </div>
 
-                <button type="submit" class="w-full bg-[#3c2b2b] text-white py-2 rounded hover:bg-[#4a3838]">
+                <button
+                  type="submit"
+                  class="w-full bg-[#3c2b2b] text-white py-2 rounded hover:bg-[#4a3838]"
+                >
                   Simpan Perubahan
                 </button>
               </form>
@@ -48,20 +57,32 @@ export function renderProfile(container) {
               <form id="photo-form" class="bg-white border rounded-lg shadow-sm p-6 space-y-4">
                 <h3 class="text-lg font-semibold text-gray-700">Foto Profil</h3>
 
-                <div class="w-32 h-32 rounded-full bg-gray-100 overflow-hidden flex items-center justify-center mx-auto">
+                <div
+                  class="w-32 h-32 rounded-full bg-gray-100 overflow-hidden flex items-center justify-center mx-auto"
+                >
                   ${user.previewPhotoUrl
-                    ? html`<img src="${user.previewPhotoUrl}" class="w-full h-full object-cover" alt="Foto Profil" />`
+                    ? html`<img
+                        src="${user.previewPhotoUrl}"
+                        class="w-full h-full object-cover"
+                        alt="Foto Profil"
+                      />`
                     : html`<i class="fa fa-image text-4xl text-gray-400"></i>`}
                 </div>
 
                 <div class="text-center mt-2">
-                  <label for="photo-input" class="cursor-pointer text-sm text-blue-600 hover:underline">
+                  <label
+                    for="photo-input"
+                    class="cursor-pointer text-sm text-blue-600 hover:underline"
+                  >
                     Pilih Foto
                   </label>
                   <input type="file" id="photo-input" class="hidden" accept="image/*" />
                 </div>
 
-                <button type="submit" class="w-full bg-[#3c2b2b] text-white py-2 rounded hover:bg-[#4a3838]">
+                <button
+                  type="submit"
+                  class="w-full bg-[#3c2b2b] text-white py-2 rounded hover:bg-[#4a3838]"
+                >
                   Simpan Foto
                 </button>
               </form>
