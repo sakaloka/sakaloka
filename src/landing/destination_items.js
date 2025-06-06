@@ -1,9 +1,9 @@
 import { html } from 'lit-html';
 
 export function generateTopDestinationItems(name, city, photo_url, rating) {
-  const rounded = Number(rating.toFixed(1));
+  const rounded = Number(parseFloat(rating).toFixed(1));
   return html`
-    <div class="flex flex-col bg-white rounded-xl shadow hover:shadow-md transition overflow-hidden">
+    <div class="destination-items flex flex-col bg-white rounded-xl shadow hover:shadow-md transition overflow-hidden" @click=${() => window.location.hash = '/login'}>
       <div class="relative h-48 w-full">
         <img
           src="${photo_url}"
