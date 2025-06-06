@@ -40,7 +40,7 @@ class DestinasiView {
           <div class="flex gap-6 mt-4 border-b text-sm font-medium">
             ${this.filteredCategories.map(
               (tab) => html`
-                <button @click=${(e) => this.searchKeyword(e, tab.name)} class="pb-2 text-gray-600 hover:text-[#678337] category-tab">
+                <button @click=${(e) => this.searchCategory(e, tab.name)} class="pb-2 text-gray-600 hover:text-[#678337] category-tab">
                   ${tab.name}
                 </button>
               `
@@ -130,6 +130,36 @@ class DestinasiView {
         .openOn(this.map);
     }
   }
+
+  searchCategory(event, category) {
+    console.log(category);
+    // Reset semua tombol
+    document.querySelectorAll('.category-tab').forEach((btn) => {
+      btn.classList.remove('border-b-2', 'border-[#678337]', 'text-[#678337]');
+      btn.classList.add('text-gray-600');
+    });
+  
+    // Aktifkan tombol yang diklik
+    const clickedBtn = event.currentTarget;
+    clickedBtn.classList.remove('text-gray-600');
+    clickedBtn.classList.add('border-b-2', 'border-[#678337]', 'text-[#678337]');
+  
+    const lowerKeyword = category.toLowerCase();
+  
+    this.filteredDestinations = this.originalDestinations.filter((d) => {
+      const categories = d.categories?.split(',').map(c => c.trim().toLowerCase()) || [];
+  
+      console.log(categories);
+      // Jika salah satu kategori cocok
+      if (categories.includes(lowerKeyword)) {
+        return true;
+      }
+
+      return false;
+    });
+  
+    this.updateView();
+  }  
 
   searchKeyword(event, keyword) {
     // Hapus semua class aktif dari tombol lain
