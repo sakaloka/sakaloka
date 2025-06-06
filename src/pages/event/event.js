@@ -43,7 +43,7 @@ export async function renderCalendarPage(container) {
             </div>
             <div class="grid grid-cols-7 gap-2">
               ${cells.map((day) =>
-                day === null ? html`<div></div>` : renderDayBox(day, year, month)
+                day === null ? html`<div></div>` : renderDayBox(day, year, month),
               )}
             </div>
           </div>
@@ -63,9 +63,11 @@ export async function renderCalendarPage(container) {
       >
         <p class="text-xs text-[#678337] font-semibold mb-1">${formatDateIndo(e.date)}</p>
         <h4 class="font-bold text-sm text-black mb-1">${e.title}</h4>
-        <p class="text-xs text-gray-600 leading-snug line-clamp-3">${e.description.slice(0, 100)}...</p>
+        <p class="text-xs text-gray-600 leading-snug line-clamp-3">
+          ${e.description.slice(0, 100)}...
+        </p>
       </a>
-    `
+    `,
   )}
 </div>
           </div>
@@ -74,7 +76,7 @@ export async function renderCalendarPage(container) {
         <div id="calendarModal"></div>
       </section>
     `,
-    container
+    container,
   );
 }
 
@@ -84,8 +86,14 @@ function renderDayBox(day, year, month) {
 
   return html`
     <div
-      class="${isEventDate ? 'bg-[#678337] text-white' : 'bg-white'} border p-3 h-16 rounded-md cursor-pointer"
-      @click=${() => openModal(dateStr, currentEvents.filter((e) => e.date === dateStr))}
+      class="${isEventDate
+        ? 'bg-[#678337] text-white'
+        : 'bg-white'} border p-3 h-16 rounded-md cursor-pointer"
+      @click=${() =>
+        openModal(
+          dateStr,
+          currentEvents.filter((e) => e.date === dateStr),
+        )}
     >
       ${day}
     </div>
@@ -112,12 +120,17 @@ function openModal(date, events) {
       <div class="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
         <div class="bg-white max-w-md w-full rounded-lg p-6 relative">
           <div class="flex items-center mb-4">
-            <button class="text-xl" @click=${() => render('', container)}><i class="fas fa-xmark"></i></button>
+            <button class="text-xl" @click=${() => render('', container)}>
+              <i class="fas fa-xmark"></i>
+            </button>
             <h2 class="ml-3 font-bold text-[#678337]">Acara pada ${formatDateIndo(date)}</h2>
           </div>
           <ul class="mb-4 list-disc ml-5 text-sm">
             ${events.length
-              ? events.map((e) => html`<li><a href="#/event/detail/${e.id}" target="_blank">${e.title}</a></li>`)
+              ? events.map(
+                  (e) =>
+                    html`<li><a href="#/event/detail/${e.id}" target="_blank">${e.title}</a></li>`,
+                )
               : html`<li class="italic text-gray-400">Belum ada acara</li>`}
           </ul>
           <div class="flex justify-end">
@@ -131,7 +144,7 @@ function openModal(date, events) {
         </div>
       </div>
     `,
-    container
+    container,
   );
 }
 
@@ -159,18 +172,27 @@ async function fetchEvents() {
     return res.data.map((e) => {
       const [year, month, day] = e.start_date.split('-');
       const monthMap = {
-        Januari: '01', Februari: '02', Maret: '03', April: '04',
-        Mei: '05', Juni: '06', Juli: '07', Agustus: '08',
-        September: '09', Oktober: '10', November: '11', Desember: '12'
+        Januari: '01',
+        Februari: '02',
+        Maret: '03',
+        April: '04',
+        Mei: '05',
+        Juni: '06',
+        Juli: '07',
+        Agustus: '08',
+        September: '09',
+        Oktober: '10',
+        November: '11',
+        Desember: '12',
       };
       const date = `${year}-${month}-${day.padStart(2, '0')}`;
-      console.log(e.id, date, e.title, e.description, e.detail_url)
+      console.log(e.id, date, e.title, e.description, e.detail_url);
       return {
         id: e.id,
         date,
         title: e.title,
         description: e.description,
-        url: e.detail_url
+        url: e.detail_url,
       };
     });
   } catch (err) {

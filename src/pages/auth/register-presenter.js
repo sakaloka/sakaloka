@@ -1,4 +1,5 @@
-import { register } from "../../constants/urlApi";
+import { saveSession } from '../../components/utils/auth';
+import { login, register } from '../../constants/urlApi';
 
 export default class RegisterPresenter {
   #view;
@@ -31,14 +32,20 @@ export default class RegisterPresenter {
         return;
       }
 
-      this.#view.showSuccess('Registrasi berhasil!');
-      setTimeout(() => {
-        window.location.hash = '#/personal-option';
-      }, 1500);
+      const loginResponse = await login({ email, password });
+      console.log(loginResponse);
+      if (loginResponse.ok) {
+        saveSession(loginResponse.loginResult);
+        this.#view.showSuccess('Registrasi berhasil!');
+        setTimeout(() => {
+          window.location.hash = '#/personal-option';
+        }, 1500);
+      } else {
+        this.#view.showError('Terjadi kesalahan saat melakukan registrasi.');
+      }
     } catch (err) {
       console.error(err);
       this.#view.showError('Terjadi kesalahan koneksi.');
     }
   }
-
 }

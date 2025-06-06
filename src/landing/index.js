@@ -16,51 +16,68 @@ export function renderLandingIndex(container) {
           <h1 class="text-5xl md:text-6xl font-extrabold mb-4">SakaLoka</h1>
           <h3 class="text-2xl font-semibold">Jelajahi Budaya & Wisata Lokal Jawa</h3>
           <p class="mt-4 text-xl mx-auto">
-            Temukan acara budaya dan destinasi lokal sesuai minat dan lokasimu. Dengan smart map dan rekomendasi berbasis machine learning, kami menyediakan apa yang kamu cari.
+            Temukan acara budaya dan destinasi lokal sesuai minat dan lokasimu. Dengan smart map dan
+            rekomendasi berbasis machine learning, kami menyediakan apa yang kamu cari.
           </p>
-         <a 
-        href="#/login"
-        class="block mt-10 bg-[#dce8c4] px-6 py-4 text-xl mx-auto text-black rounded-full font-semibold hover:bg-[#c4d8a0] transition text-center w-fit"
-      >
-        Jelajahi Sekarang
-        <i class="fa fa-arrow-right ml-2 transition-transform duration-300 group-hover:translate-x-1"></i>
-      </a>
-
+          <a
+            href="#/login"
+            class="block mt-10 bg-[#dce8c4] px-6 py-4 text-xl mx-auto text-black rounded-full font-semibold hover:bg-[#c4d8a0] transition text-center w-fit"
+          >
+            Jelajahi Sekarang
+            <i
+              class="fa fa-arrow-right ml-2 transition-transform duration-300 group-hover:translate-x-1"
+            ></i>
+          </a>
         </div>
       </section>
 
       <!-- Fitur -->
-      <section id="features-section" class="section-fade bg-primary text-white py-20 px-4 text-center">
+      <section
+        id="features-section"
+        class="section-fade bg-primary text-white py-20 px-4 text-center"
+      >
         <h2 class="text-3xl font-extrabold mb-6">Jelajahi Keindahan Jawa dalam Sekejap</h2>
         <p class="text-xl mx-auto mb-10">
-          Sakaloka hadir dengan dua fitur utama yang dirancang untuk menemani petualangan Anda dalam menjelajahi budaya Jawa
+          Sakaloka hadir dengan dua fitur utama yang dirancang untuk menemani petualangan Anda dalam
+          menjelajahi budaya Jawa
         </p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-7xl mx-auto">
           <div class="bg-[#dce8c4] text-black rounded-lg p-6 flex flex-col gap-4">
             <div class="w-12 h-12 bg-[#1f1f1f] rounded"></div>
             <div class="text-left">
               <h3 class="font-bold text-xl">Kalender Budaya</h3>
-              <p class="mt-1 text-md">Cari dan ulas berbagai acara budaya menarik seperti festival, pertunjukan tradisional, dan event khas dari berbagai kota di Jawa.</p>
+              <p class="mt-1 text-md">
+                Cari dan ulas berbagai acara budaya menarik seperti festival, pertunjukan
+                tradisional, dan event khas dari berbagai kota di Jawa.
+              </p>
             </div>
           </div>
           <div class="bg-[#dce8c4] text-black rounded-lg p-6 flex flex-col gap-4">
             <div class="w-12 h-12 bg-[#1f1f1f] rounded"></div>
             <div class="text-left">
               <h3 class="font-bold text-xl">Peta Destinasi Personal</h3>
-              <p class="mt-1 text-md">Temukan tempat wisata terbaik di Jawa yang disesuaikan dengan minat dan interaksi Anda.</p>
+              <p class="mt-1 text-md">
+                Temukan tempat wisata terbaik di Jawa yang disesuaikan dengan minat dan interaksi
+                Anda.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
       <!-- Destinasi Populer -->
-      <section id="destination-section" class="section-fade bg-[#3c2626] text-white py-20 px-4 text-center">
+      <section
+        id="destination-section"
+        class="section-fade bg-[#3c2626] text-white py-20 px-4 text-center"
+      >
         <h2 class="text-4xl font-bold mb-4">Destinasi Populer</h2>
         <p class="max-w-xl text-white mx-auto mb-12 text-base md:text-lg">
           Jelajahi keindahan budaya dan alam di Pulau Jawa yang sedang digemari wisatawan.
         </p>
-        <div id="destination-container"
-          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 max-w-7xl mx-auto px-2 sm:px-4">
+        <div
+          id="destination-container"
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 max-w-7xl mx-auto px-2 sm:px-4"
+        >
           <!-- Destination Items akan dirender disini -->
         </div>
       </section>
@@ -75,25 +92,30 @@ export function renderLandingIndex(container) {
           <div class="flex flex-col gap-4">
             ${faqItems.map(
               (item) => html`
-                <div class="faq-item border border-gray-200 bg-white rounded-xl shadow-sm transition overflow-hidden">
+                <div
+                  class="faq-item border border-gray-200 bg-white rounded-xl shadow-sm transition overflow-hidden"
+                >
                   <button
                     class="faq-toggle w-full flex items-center justify-between px-6 py-4 text-left hover:bg-gray-50 transition"
                   >
                     <h3 class="text-2xl font-medium text-gray-800 grow">${item.q}</h3>
-                    <i class="fas fa-chevron-down text-gray-500 transition-transform duration-300"></i>
+                    <i
+                      class="fas fa-chevron-down text-gray-500 transition-transform duration-300"
+                    ></i>
                   </button>
-                  <div class="faq-answer px-6 pb-4 text-lg text-gray-600 hidden">
-                    ${item.a}
-                  </div>
+                  <div class="faq-answer px-6 pb-4 text-lg text-gray-600 hidden">${item.a}</div>
                 </div>
-              `
+              `,
             )}
           </div>
         </div>
       </section>
 
       <!-- Kontak -->
-      <section id="contact-section" class="section-fade bg-[#3c2626] text-white py-20 px-4 text-center">
+      <section
+        id="contact-section"
+        class="section-fade bg-[#3c2626] text-white py-20 px-4 text-center"
+      >
         <h2 class="text-3xl font-extrabold mb-6">Hubungi Kami</h2>
         <div class="flex flex-col items-center gap-4 text-xl w-full mx-auto">
           <p>Punya pertanyaan atau saran? Kami siap mendengar Anda.</p>
@@ -102,7 +124,11 @@ export function renderLandingIndex(container) {
               <i class="fas fa-envelope text-white"></i>
               <span>sakaloka@gmail.com</span>
             </a>
-            <a href="https://www.instagram.com/" target="_blank" class="flex items-center gap-2 hover:underline">
+            <a
+              href="https://www.instagram.com/"
+              target="_blank"
+              class="flex items-center gap-2 hover:underline"
+            >
               <i class="fab fa-instagram text-white"></i>
               <span>@sakaloka</span>
             </a>
@@ -117,14 +143,16 @@ export function renderLandingIndex(container) {
 
   // Render tombol backTop ke luar dari kontainer utama
   const backTopBtn = html`
-    <button id="backTop"
+    <button
+      id="backTop"
       class="btn fixed bottom-4 right-4 z-50 rounded-full hidden 
           w-[70px] h-[70px] bg-[rgba(255,255,255,0.5)] text-black
-            text-3xl shadow-lg transition transform hover:scale-110 flex items-center justify-center">
+            text-3xl shadow-lg transition transform hover:scale-110 flex items-center justify-center"
+    >
       <i class="fa fa-arrow-up"></i>
     </button>
   `;
-  const holder = document.createElement("div");
+  const holder = document.createElement('div');
   document.body.appendChild(holder);
   render(backTopBtn, holder);
 
@@ -145,14 +173,17 @@ export function renderLandingIndex(container) {
       });
 
       // Fade in animation
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            e.target.classList.add('show');
-            observer.unobserve(e.target);
-          }
-        });
-      }, { threshold: 0.15 });
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add('show');
+              observer.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.15 },
+      );
 
       document.querySelectorAll('.section-fade').forEach((el) => observer.observe(el));
 
@@ -173,17 +204,16 @@ export function renderLandingIndex(container) {
     // ambil destinasi
     setTimeout(async () => {
       // Render destinasi
-      const response = await destinationTop(); 
-      const destinations = response?.data || []; 
+      const response = await destinationTop();
+      const destinations = response?.data || [];
       const destinationTemplates = destinations.map((d) =>
-        generateTopDestinationItems(d.name, d.location, d.photo, d.rating)
-      );      
+        generateTopDestinationItems(d.name, d.location, d.photo, d.rating),
+      );
       console.log(destinationTemplates);
-      
+
       const destinationContainer = document.getElementById('destination-container');
       render(html`${destinationTemplates}`, destinationContainer);
     }, 0);
-
   });
 }
 

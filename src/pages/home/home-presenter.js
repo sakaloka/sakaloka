@@ -6,7 +6,7 @@ export default class HomePresenter {
     this.#view = view;
     this.#model = model;
   }
-//API
+  //API
   async getSummary() {
     try {
       const data = await this.#model.fetchSummary();

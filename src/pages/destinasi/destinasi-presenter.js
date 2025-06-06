@@ -1,5 +1,5 @@
-import { getSession } from "../../components/utils/auth";
-import { API_URL, destinationCategories } from "../../constants/urlApi";
+import { getSession } from '../../components/utils/auth';
+import { API_URL, destinationCategories } from '../../constants/urlApi';
 
 export default class DestinasiPresenter {
   #view;
@@ -33,11 +33,11 @@ export default class DestinasiPresenter {
     }
   }
 
-  async loadCategories()  {
+  async loadCategories() {
     try {
       const json = await destinationCategories();
       const data = json.data;
-      
+
       if (json.status !== 'success') {
         throw new Error(json.message || 'Gagal mengambil data categories');
       }

@@ -5,21 +5,23 @@ import Swal from 'sweetalert2';
 export function renderRegister(container) {
   const presenter = new RegisterPresenter({
     view: {
-      showSuccess: (msg) => Swal.fire({
-        title: 'Berhasil!',
-        text: msg,
-        icon: 'success',
-        timer: 1500,
-        showConfirmButton: false
-      }),
-      showError: (msg) =>  Swal.fire({
-        title: 'Gagal!',
-        text: msg,
-        icon: 'error',
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#483434'
-      }),
-    },    
+      showSuccess: (msg) =>
+        Swal.fire({
+          title: 'Berhasil!',
+          text: msg,
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false,
+        }),
+      showError: (msg) =>
+        Swal.fire({
+          title: 'Gagal!',
+          text: msg,
+          icon: 'error',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#483434',
+        }),
+    },
   });
 
   const template = html`

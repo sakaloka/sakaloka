@@ -1,5 +1,5 @@
 import { API_URL } from '../../constants/urlApi.js';
-import { getSession } from "../../components/utils/auth";
+import { getSession } from '../../components/utils/auth';
 
 export class DestinasiDetailPresenter {
   async loadData(destinationId) {
@@ -40,7 +40,7 @@ export class DestinasiDetailPresenter {
     const session = getSession();
     const res = await fetch(`${API_URL}/reviews?type=destination&targetId=${destinationId}`, {
       headers: {
-       Authorization: `Bearer ${session?.accessToken}`,
+        Authorization: `Bearer ${session?.accessToken}`,
       },
     });
     const json = await res.json();
@@ -63,7 +63,7 @@ export class DestinasiDetailPresenter {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${session?.accessToken}`,
+        'Authorization': `Bearer ${session?.accessToken}`,
       },
       body: JSON.stringify({ destinationId, userId, comment, rating }),
     });
@@ -76,7 +76,7 @@ export class DestinasiDetailPresenter {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${session?.accessToken}`,
+        'Authorization': `Bearer ${session?.accessToken}`,
       },
       body: JSON.stringify({ comment, rating }),
     });
