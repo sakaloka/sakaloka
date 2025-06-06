@@ -18,10 +18,14 @@ export function renderLandingIndex(container) {
           <p class="mt-4 text-xl mx-auto">
             Temukan acara budaya dan destinasi lokal sesuai minat dan lokasimu. Dengan smart map dan rekomendasi berbasis machine learning, kami menyediakan apa yang kamu cari.
           </p>
-          <a href="#/login" class="btn mt-6 bg-[#dce8c4] px-6 py-6 text-xl mx-auto text-black rounded-full font-semibold hover:bg-[#c4d8a0] transition">
-            Jelajahi Sekarang
-            <i class="fa fa-arrow-right transition-transform duration-300 group-hover:translate-x-1"></i>
-          </a>
+         <a 
+        href="#/login"
+        class="block mt-10 bg-[#dce8c4] px-6 py-4 text-xl mx-auto text-black rounded-full font-semibold hover:bg-[#c4d8a0] transition text-center w-fit"
+      >
+        Jelajahi Sekarang
+        <i class="fa fa-arrow-right ml-2 transition-transform duration-300 group-hover:translate-x-1"></i>
+      </a>
+
         </div>
       </section>
 

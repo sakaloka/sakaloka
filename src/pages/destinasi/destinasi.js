@@ -18,73 +18,88 @@ class DestinasiView {
     this.originalCategories = categories;
     this.filteredCategories = [...categories];
 
-    const updateView = () => {
-      const template = html`
-      <section class="mt-24 w-full h-[80vh] flex flex-col gap-4">
-        <!-- Header -->
-        <div class="mt-[1px]">
-          <h2 class="text-2xl font-bold text-black">Destinasi</h2>
-          <p class="text-sm text-gray-500 mt-1">Klik provinsi manapun untuk memulai perjalananmu</p>
+   const updateView = () => {
+  const template = html`
+    <section class="mt-24 w-full h-[80vh] flex flex-col gap-4">
+      <!-- Header -->
+      <div class="mt-[1px]">
+        <h2 class="text-2xl font-bold text-black">Destinasi</h2>
+        <p class="text-sm text-gray-500 mt-1">Klik provinsi manapun untuk memulai perjalananmu</p>
 
-          <!-- Search dan Filter -->
-          <div class="mt-4">
-            <input
-              type="text"
-              placeholder="Cari destinasi..."
-              class="flex-1 border w-full px-4 py-3 rounded-lg shadow-sm text-lg"
-              @input=${(e) => this.filterDestinations(e.target.value)}
-            />
-          </div>
-
-          <!-- Tabs Provinsi (nonaktif / dummy) -->
-          <div class="flex gap-6 mt-4 border-b text-sm font-medium">
-            ${this.filteredCategories.map(
-              (tab) => html`
-                <button @click=${(e) => this.searchKeyword(e, tab.name)} class="pb-2 text-gray-600 hover:text-[#678337] category-tab">
-                  ${tab.name}
-                </button>
-              `
-              )}
-          </div>
+        <!-- Search -->
+        <div class="mt-4">
+          <input
+            type="text"
+            placeholder="Cari destinasi..."
+            class="flex-1 border w-full px-4 py-3 rounded-lg shadow-sm text-lg"
+            @input=${(e) => this.filterDestinations(e.target.value)}
+          />
         </div>
 
-        <!-- Peta + Daftar -->
-        <div class="flex-1 flex flex-col md:flex-row gap-6 px-4 overflow-hidden">
-          <!-- Peta -->
-          <div id="leafletMap" class="w-full md:w-2/3 h-full rounded border"></div>
-          <!-- Daftar -->
-          <div class="w-full md:w-1/3 h-full overflow-y-auto pr-2">
-            <div class="space-y-3">
-              ${this.filteredDestinations.map((d) => html`
-                  <div
-                    class="rounded border-l-4 border-[#678337] bg-white shadow hover:shadow-md transition p-4 cursor-pointer"
-                    @click=${() => this.flyToDestination(d.latitude, d.longitude, d.name)}
-                  >
-                    <h4 class="font-bold text-black">
-                      <a
-                        href="#/destinasi/detail/${d.id}"
-                        class="text-black hover:underline"
-                        @click=${(e) => e.stopPropagation()}
-                      >
-                        ${d.name}
-                      </a>
-                    </h4>
-                    <p class="text-sm text-gray-600 mt-1">
-                      ${d.description ? d.description.slice(0, 80) + '...' : '-'}
-                    </p>
-                    <div class="mt-2 text-xs text-gray-400">Koordinat: ${d.latitude}, ${d.longitude}</div>
+        <!-- Tabs -->
+        <div class="flex gap-6 mt-4 border-b text-sm font-medium">
+          <!-- Tab manual "Untuk Kamu" -->
+          <button
+            @click=${(e) => this.searchKeyword(e, 'Untuk Kamu')}
+            class="pb-2 text-gray-600 hover:text-[#678337] category-tab"
+          >
+            Untuk Kamu
+          </button>
+
+          <!-- Tab kategori dinamis -->
+          ${this.filteredCategories.map(
+            (tab) => html`
+              <button
+                @click=${(e) => this.searchKeyword(e, tab.name)}
+                class="pb-2 text-gray-600 hover:text-[#678337] category-tab"
+              >
+                ${tab.name}
+              </button>
+            `
+          )}
+        </div>
+      </div>
+
+      <!-- Peta + Daftar -->
+      <div class="flex-1 flex flex-col md:flex-row gap-6 px-4 overflow-hidden">
+        <!-- Peta -->
+        <div id="leafletMap" class="w-full md:w-2/3 h-full rounded border"></div>
+
+        <!-- Daftar -->
+        <div class="w-full md:w-1/3 h-full overflow-y-auto pr-2">
+          <div class="space-y-3">
+            ${this.filteredDestinations.map(
+              (d) => html`
+                <div
+                  class="rounded border-l-4 border-[#678337] bg-white shadow hover:shadow-md transition p-4 cursor-pointer"
+                  @click=${() => this.flyToDestination(d.latitude, d.longitude, d.name)}
+                >
+                  <h4 class="font-bold text-black">
+                    <a
+                      href="#/destinasi/detail/${d.id}"
+                      class="text-black hover:underline"
+                      @click=${(e) => e.stopPropagation()}
+                    >
+                      ${d.name}
+                    </a>
+                  </h4>
+                  <p class="text-sm text-gray-600 mt-1">
+                    ${d.description ? d.description.slice(0, 80) + '...' : '-'}
+                  </p>
+                  <div class="mt-2 text-xs text-gray-400">
+                    Koordinat: ${d.latitude}, ${d.longitude}
                   </div>
-                `
-                )}
-            </div>
+                </div>
+              `
+            )}
           </div>
-
         </div>
-      </section>
-    `;
-      render(template, this.container);
-      setTimeout(() => this.initMap(this.filteredDestinations), 0);
-    };
+      </div>
+    </section>
+  `;
+  render(template, this.container);
+  setTimeout(() => this.initMap(this.filteredDestinations), 0);
+};
 
     this.updateView = updateView;
     updateView();
@@ -131,18 +146,24 @@ class DestinasiView {
     }
   }
 
-  searchKeyword(event, keyword) {
-    // Hapus semua class aktif dari tombol lain
-    document.querySelectorAll('.category-tab').forEach((btn) => {
-      btn.classList.remove('border-b-2', 'border-[#678337]', 'text-[#678337]');
-      btn.classList.add('text-gray-600');
-    });
+ searchKeyword(event, keyword) {
+  // Hapus semua class aktif dari tombol lain
+  document.querySelectorAll('.category-tab').forEach((btn) => {
+    btn.classList.remove('border-b-2', 'border-[#678337]', 'text-[#678337]');
+    btn.classList.add('text-gray-600');
+  });
 
-    // Tambahkan class aktif ke tombol yang diklik
-    const clickedBtn = event.currentTarget;
-    clickedBtn.classList.remove('text-gray-600');
-    clickedBtn.classList.add('border-b-2', 'border-[#678337]', 'text-[#678337]');
+  // Tambahkan class aktif ke tombol yang diklik
+  const clickedBtn = event.currentTarget;
+  clickedBtn.classList.remove('text-gray-600');
+  clickedBtn.classList.add('border-b-2', 'border-[#678337]', 'text-[#678337]');
 
+  // Logika khusus untuk tab "Untuk Kamu"
+  if (keyword === 'Untuk Kamu') {
+    // Contoh: tampilkan 5 destinasi pertama sebagai rekomendasi
+    this.filteredDestinations = this.originalDestinations.slice(0, 5);
+  } else {
+    // Logika filter kategori biasa
     const lowerKeyword = keyword.toLowerCase();
     this.filteredDestinations = this.originalDestinations.filter((d) => {
       const name = d.name?.toLowerCase() || '';
@@ -156,7 +177,8 @@ class DestinasiView {
       // Jika tidak, cek apakah description mengandung keyword
       return description.includes(lowerKeyword);
     });
-    this.updateView();
   }
 
+  this.updateView(); // Pastikan updateView dipanggil di luar if-else
+}
 }
