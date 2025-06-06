@@ -61,7 +61,7 @@ export function renderLandingIndex(container) {
         </p>
         <div id="destination-container"
           class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 max-w-7xl mx-auto px-2 sm:px-4">
-          <!-- Cards will be rendered here -->
+          <!-- Destination Items akan dirender disini -->
         </div>
       </section>
 
@@ -93,23 +93,22 @@ export function renderLandingIndex(container) {
       </section>
 
       <!-- Kontak -->
-      <!-- Kontak -->
-<section id="contact-section" class="section-fade bg-[#3c2626] text-white py-20 px-4 text-center">
-  <h2 class="text-3xl font-extrabold mb-6">Hubungi Kami</h2>
-  <div class="flex flex-col items-center gap-4 text-xl w-full mx-auto">
-    <p>Punya pertanyaan atau saran? Kami siap mendengar Anda.</p>
-    <div class="flex flex-wrap justify-center items-center gap-6 mt-4 text-xl">
-      <a href="mailto:sakaloka@gmail.com" class="flex items-center gap-2 hover:underline">
-        <i class="fas fa-envelope text-white"></i>
-        <span>sakaloka@gmail.com</span>
-      </a>
-      <a href="https://www.instagram.com/" target="_blank" class="flex items-center gap-2 hover:underline">
-        <i class="fab fa-instagram text-white"></i>
-        <span>@sakaloka</span>
-      </a>
-    </div>
-  </div>
-</section>
+      <section id="contact-section" class="section-fade bg-[#3c2626] text-white py-20 px-4 text-center">
+        <h2 class="text-3xl font-extrabold mb-6">Hubungi Kami</h2>
+        <div class="flex flex-col items-center gap-4 text-xl w-full mx-auto">
+          <p>Punya pertanyaan atau saran? Kami siap mendengar Anda.</p>
+          <div class="flex flex-wrap justify-center items-center gap-6 mt-4 text-xl">
+            <a href="mailto:sakaloka@gmail.com" class="flex items-center gap-2 hover:underline">
+              <i class="fas fa-envelope text-white"></i>
+              <span>sakaloka@gmail.com</span>
+            </a>
+            <a href="https://www.instagram.com/" target="_blank" class="flex items-center gap-2 hover:underline">
+              <i class="fab fa-instagram text-white"></i>
+              <span>@sakaloka</span>
+            </a>
+          </div>
+        </div>
+      </section>
     </section>
   `;
 
@@ -174,11 +173,12 @@ export function renderLandingIndex(container) {
     // ambil destinasi
     setTimeout(async () => {
       // Render destinasi
-      const response = await destinationTop(); // ← ambil data dari API
-      const destinations = response?.data || []; // Ambil hanya array-nya
+      const response = await destinationTop(); 
+      const destinations = response?.data || []; 
       const destinationTemplates = destinations.map((d) =>
-        generateTopDestinationItems(d.name, d.city, d.photo_url, d.rating)
-      );
+        generateTopDestinationItems(d.name, d.location, d.photo, d.rating)
+      );      
+      console.log(destinationTemplates);
       
       const destinationContainer = document.getElementById('destination-container');
       render(html`${destinationTemplates}`, destinationContainer);

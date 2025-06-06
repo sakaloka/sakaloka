@@ -30,7 +30,7 @@ export async function renderDestinasiDetailPage(container, destinationId) {
         <div class="flex items-start justify-between gap-4">
           <div>
             <h1 class="text-2xl font-bold">${data.name}</h1>
-            <p class="text-black-500 text-sm mt-1"><i class="fas fa-map-marker-alt"></i> ${data.city}, ${data.province}</p>
+            <p class="text-black-500 text-sm mt-1"><i class="fas fa-map-marker-alt"></i> ${data.location}</p>
             <p class="text-sm text-black-600 mt-2">
               <i class="fas fa-star text-yellow-400"></i> ${data.avgRating ?? 0} / ${data.totalReviews ?? 0} ulasan —
               <i class="fas fa-bookmark"></i> ${data.totalSaved ?? 0} orang menyimpan destinasi ini
@@ -65,14 +65,17 @@ export async function renderDestinasiDetailPage(container, destinationId) {
           <div class="mt-6">
             <h2 class="text-xl font-semibold mb-2">Galeri</h2>
             <div class="grid grid-cols-3 gap-4">
-              ${(data.gallery || []).map(img => html`
-                <div class="aspect-square border flex items-center justify-center bg-gray-100">
-                  <img src="${img}" alt="galeri" class="object-cover w-full h-full" />
-                </div>
-              `)}
+              ${(data.photo_urls || '')
+                .split(' || ')
+                .filter(url => url.trim() !== '')
+                .map(img => html`
+                  <div class="aspect-square border flex items-center justify-center bg-gray-100">
+                    <img src="${img}" alt="galeri" class="object-cover w-full h-full" />
+                  </div>
+                `)}
             </div>
           </div>
-        ` : ''}
+        ` : ''}        
 
         ${selectedTab === 'ulasan' ? html`
           <div class="mt-6">
