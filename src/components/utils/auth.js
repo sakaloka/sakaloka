@@ -11,6 +11,10 @@ export function getSession() {
   };
 }
 
+export function getAccessToken() {
+  return getSession().accessToken;
+}
+  
 export function clearSession() {
   localStorage.removeItem('accessToken');
   localStorage.removeItem('user');

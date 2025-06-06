@@ -33,6 +33,33 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   window.addEventListener('hashchange', handleRoute);
+
+  // Auto inject token ke fetch
+  const originalFetch = window.fetch;
+  window.fetch = async (input, init = {}) => {
+    const token = localStorage.getItem('accessToken');
+    const authInit = {
+      ...init,
+      headers: { ...init.headers, Authorization: `Bearer ${token}` },
+    };
+
+    let response = await originalFetch(input, authInit);
+    // akun minta refresh token
+    if (response.status === 401) {
+      toast('Refresh token failed, redirecting to login.');
+      window.location.href = '/login';
+      return;
+    }
+    // Akun di inactive
+    if (response.status === 403) {
+      localStorage.clear();
+      sessionStorage.clear();
+      toast('Akun anda telah di Nonaktifkan', 'error');
+      navigateTo('login');
+      return;
+    }
+    return response;
+  };
 });
 
 export function handleRoute() {
@@ -177,10 +204,11 @@ function defaultHome() {
 }
 
 function matchRoute(pathname) {
-   pathname = pathname.replace(/\/+$/, '');
+  pathname = pathname.replace(/\/+$/, '');
+
   for (const key in routes) {
     if (key.includes('/:')) {
-      const pattern = key.replace(/:\w+/g, '([a-f0-9\\-]{36})');
+      const pattern = key.replace(/:\w+/g, '([^/]+)');
       const regex = new RegExp(`^${pattern}$`);
       const match = pathname.match(regex);
       if (match) return { route: routes[key], routeKey: key, param: match[1] };
@@ -188,6 +216,7 @@ function matchRoute(pathname) {
       return { route: routes[key], routeKey: key, param: null };
     }
   }
+
   return { route: null, routeKey: pathname, param: null };
 }
 

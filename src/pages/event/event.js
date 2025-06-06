@@ -1,31 +1,13 @@
 import { html, render } from 'lit-html';
+import { getEvents } from '../../constants/urlApi.js';
 
-const dummyEvents = [
-  {
-    id: 'festival-bali',
-    date: '2025-06-10',
-    title: 'Festival Budaya Bali',
-    description: 'Perayaan budaya khas Bali dengan tari-tarian dan kuliner.',
-  },
-  {
-     id: 'upacara-toraja',
-    date: '2025-06-12',
-    title: 'Upacara Adat Toraja',
-    description: 'Tradisi unik masyarakat Toraja yang sarat makna spiritual.',
-  },
-  {
-    id: 'Pameran-Batik-Yogyakarta',
-    date: '2025-06-15',
-    title: 'Pameran Batik Yogyakarta',
-    description: 'Pameran batik dari seniman lokal dan nasional di Yogyakarta.',
-  },
-];
-
-let currentEvents = [...dummyEvents];
+let currentEvents = [];
 let currentMonth = new Date().getMonth();
 let currentYear = new Date().getFullYear();
 
-export function renderCalendarPage(container) {
+export async function renderCalendarPage(container) {
+  currentEvents = await fetchEvents();
+
   const year = currentYear;
   const month = currentMonth;
 
@@ -41,77 +23,59 @@ export function renderCalendarPage(container) {
     return d.getFullYear() === year && d.getMonth() === month;
   });
 
-  const template = html`
-  <section
-    class="mt-20 w-full px-4 flex flex-col md:flex-row gap-6 items-start transition-all duration-300"
-  >
-    <!-- Bagian Kiri: Kalender Budaya -->
-    <div class="w-full md:w-2/3 space-y-4">
-      <div class="bg-[#bea5a5] border border-black rounded-lg px-5 py-5">
-        <h2 class="text-xl font-semibold text-black mb-4">Kalender Budaya</h2>
-
-        <!-- Navigasi Bulan -->
-        <div class="flex justify-center items-center gap-6 mb-4">
-          <button class="text-lg text-black-700 hover:text-black" @click=${() => changeMonth(-1)}>
-            <i class="fa fa-angle-left"></i>
-          </button>
-          <div class="flex flex-col items-center">
-            <span class="text-xl font-bold text-black">
-              ${new Date(year, month).toLocaleString('id', { month: 'long' })}
-            </span>
-            <span class="text-base text-black-600">${year}</span>
+  render(
+    html`
+      <section class="mt-20 w-full px-4 flex flex-col md:flex-row gap-6 items-start">
+        <!-- Kalender -->
+        <div class="w-full md:w-2/3">
+  <h3 class="text-2xl font-bold text-black mt-[16px] flex items-center mb-6">Kalender Budaya</h3>
+  <div class="bg-[#bea5a5] border border-black rounded-lg px-5 py-5">
+            <div class="flex justify-center items-center gap-6 mb-1">
+              <button @click=${() => changeMonth(-1)}><i class="fa fa-angle-left"></i></button>
+              <div class="text-center">
+                <div class="text-xl font-bold">${new Date(year, month).toLocaleString('id', { month: 'long' })}</div>
+                <div>${year}</div>
+              </div>
+              <button @click=${() => changeMonth(1)}><i class="fa fa-angle-right"></i></button>
+            </div>
+            <div class="grid grid-cols-7 text-center font-semibold mb-2">
+              ${['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'].map((d) => html`<div>${d}</div>`)}
+            </div>
+            <div class="grid grid-cols-7 gap-2">
+              ${cells.map((day) =>
+                day === null ? html`<div></div>` : renderDayBox(day, year, month)
+              )}
+            </div>
           </div>
-          <button class="text-lg text-gray-black hover:text-black" @click=${() => changeMonth(1)}>
-            <i class="fa fa-angle-right"></i>
-          </button>
         </div>
 
-        <!-- Header Hari -->
-        <div class="grid grid-cols-7 text-center text-sm font-semibold text-black-700 mb-2">
-          <div>Min</div>
-          <div>Sen</div>
-          <div>Sel</div>
-          <div>Rab</div>
-          <div>Kam</div>
-          <div>Jum</div>
-          <div>Sab</div>
+        <!-- Daftar Acara -->
+        <div class="w-full md:w-1/3 space-y-4 mt-16">
+          <div class="bg-white border border-black rounded-lg px-5 py-5 shadow">
+            <h3 class="text-xl font-semibold mb-4">Daftar Acara Bulan Ini</h3>
+            <div class="overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
+          <div class="flex flex-col gap-3 max-h-[400px] overflow-y-auto pr-2">
+  ${monthEvents.map(
+    (e) => html`
+      <a
+        href="#/event/detail/${e.id}"
+        class="bg-white rounded-lg p-3 border-l-4 border-[#678337] shadow hover:shadow-md transition-all"
+      >
+        <p class="text-xs text-[#678337] font-semibold mb-1">${formatDateIndo(e.date)}</p>
+        <h4 class="font-bold text-sm text-black mb-1">${e.title}</h4>
+        <p class="text-xs text-gray-600 leading-snug line-clamp-3">${e.description.slice(0, 100)}...</p>
+      </a>
+    `
+  )}
+</div>
+          </div>
         </div>
 
-        <!-- Hari -->
-        <div class="grid grid-cols-7 gap-2 text-sm">
-          ${cells.map((day) =>
-            day === null ? html`<div></div>` : renderDayBox(day, year, month),
-          )}
-        </div>
-      </div>
-    </div>
-
-    <!-- Bagian Kanan: Daftar Acara -->
-    <div class="w-full md:w-1/3 space-y-4">
-      <div class="bg-white border border-black rounded-lg px-5 py-5 shadow border">
-        <h3 class="text-xl font-semibold text-black mb-4">Daftar Acara Bulan Ini</h3>
-        <div class="grid gap-4">
-          ${monthEvents.map(
-            (e) => html`
-              <a
-                href="#/event/detail"
-                class="block rounded-xl p-4 border-l-4 border-[#678337] bg-white shadow hover:shadow-md transition-all"
-              >
-                <p class="text-sm text-[#678337] font-semibold mb-1">${formatDateIndo(e.date)}</p>
-                <h4 class="text-base font-bold text-gray-800">${e.title}</h4>
-                <p class="text-sm text-gray-600 mt-1">${e.description}</p>
-              </a>
-            `
-          )}
-        </div>
-      </div>
-    </div>
-
-    <div id="calendarModal"></div>
-  </section>
-`;
-
-  render(template, container);
+        <div id="calendarModal"></div>
+      </section>
+    `,
+    container
+  );
 }
 
 function renderDayBox(day, year, month) {
@@ -120,15 +84,10 @@ function renderDayBox(day, year, month) {
 
   return html`
     <div
-      class="${isEventDate ? 'bg-[#678337] text-white font-semibold' : 'bg-white text-black'} 
-        border border-gray-300 rounded-md p-3 h-16 text-left cursor-pointer hover:bg-blue-50 transition"
-      @click=${() =>
-        openModal(
-          dateStr,
-          currentEvents.filter((e) => e.date === dateStr),
-        )}
+      class="${isEventDate ? 'bg-[#678337] text-white' : 'bg-white'} border p-3 h-16 rounded-md cursor-pointer"
+      @click=${() => openModal(dateStr, currentEvents.filter((e) => e.date === dateStr))}
     >
-      <div>${day}</div>
+      ${day}
     </div>
   `;
 }
@@ -148,86 +107,74 @@ function changeMonth(offset) {
 
 function openModal(date, events) {
   const container = document.getElementById('calendarModal');
-
-  const modal = html`
-    <div
-      class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999]"
-    >
-      <div class="bg-white w-full max-w-md rounded-lg shadow-lg p-6 relative">
-        <!-- Flex bar: ikon X di kiri dan judul -->
-        <div class="flex items-center gap-3 mb-2">
-          <button
-            class="text-gray-500 hover:text-black text-xl"
-            @click=${() => render('', container)}
-            title="Tutup"
-          >
-            <i class="fas fa-xmark"></i>
-          </button>
-
-          <h2 class="text-lg font-bold text-[#678337]">
-            Acara pada ${formatDateIndo(date)}
-          </h2>
-        </div>
-
-        <!-- List event -->
-        <ul class="mb-4 list-disc ml-5 text-sm">
-          ${events.length > 0
-            ? events.map(
-                (e) => html`
-                  <li>
-                    <a
-                        href="#/event/detail"
-                        style="color: #black; font-weight: semibold;"
-                        class="hover:underline"
-                      >
-                      ${e.title}
-                  </a>
-                  </li>
-                `
-              )
-            : html`<li class="text-gray-400 italic">Belum ada acara</li>`}
-        </ul>
-
-        <!-- Tombol simpan -->
-        <div class="flex justify-end">
-          <button
-            class="px-4 py-2 bg-[#678337] text-white rounded hover:bg-[#57732e]"
-            @click=${() => saveEvent(date)}
-          >
-            Simpan Acara
-          </button>
+  render(
+    html`
+      <div class="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+        <div class="bg-white max-w-md w-full rounded-lg p-6 relative">
+          <div class="flex items-center mb-4">
+            <button class="text-xl" @click=${() => render('', container)}><i class="fas fa-xmark"></i></button>
+            <h2 class="ml-3 font-bold text-[#678337]">Acara pada ${formatDateIndo(date)}</h2>
+          </div>
+          <ul class="mb-4 list-disc ml-5 text-sm">
+            ${events.length
+              ? events.map((e) => html`<li><a href="#/event/detail/${e.id}" target="_blank">${e.title}</a></li>`)
+              : html`<li class="italic text-gray-400">Belum ada acara</li>`}
+          </ul>
+          <div class="flex justify-end">
+            <button
+              class="bg-[#678337] text-white px-4 py-2 rounded hover:bg-[#57732e]"
+              @click=${() => saveEvent(date)}
+            >
+              Simpan Acara
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-  `;
-
-  render(modal, container);
+    `,
+    container
+  );
 }
 
 function saveEvent(date) {
-  const selectedEvents = currentEvents.filter(e => e.date === date);
-  if (selectedEvents.length === 0) return;
+  const selectedEvents = currentEvents.filter((e) => e.date === date);
+  if (!selectedEvents.length) return;
 
-  // Ambil bookmark yang sudah ada
   const existing = JSON.parse(localStorage.getItem('bookmarkedEvents') || '[]');
-
-  // Tambah hanya jika belum ada
-  selectedEvents.forEach((event) => {
-    const alreadyExists = existing.some(e => e.title === event.title && e.date === event.date);
-    if (!alreadyExists) {
-      existing.push(event);
-    }
+  selectedEvents.forEach((e) => {
+    const exists = existing.some((x) => x.title === e.title && x.date === e.date);
+    if (!exists) existing.push(e);
   });
-
-  // Simpan kembali ke localStorage
   localStorage.setItem('bookmarkedEvents', JSON.stringify(existing));
-
-  // Tutup modal
-  const modalContainer = document.getElementById('calendarModal');
-  if (modalContainer) render('', modalContainer);
+  render('', document.getElementById('calendarModal'));
 }
 
 function formatDateIndo(dateStr) {
   const [year, month, day] = dateStr.split('-');
   return `${day}-${month}-${year}`;
+}
+
+async function fetchEvents() {
+  try {
+    const res = await getEvents();
+    return res.data.map((e) => {
+      const [year, month, day] = e.start_date.split('-');
+      const monthMap = {
+        Januari: '01', Februari: '02', Maret: '03', April: '04',
+        Mei: '05', Juni: '06', Juli: '07', Agustus: '08',
+        September: '09', Oktober: '10', November: '11', Desember: '12'
+      };
+      const date = `${year}-${month}-${day.padStart(2, '0')}`;
+      console.log(e.id, date, e.title, e.description, e.detail_url)
+      return {
+        id: e.id,
+        date,
+        title: e.title,
+        description: e.description,
+        url: e.detail_url
+      };
+    });
+  } catch (err) {
+    console.error('Gagal mengambil data event:', err);
+    return [];
+  }
 }

@@ -1,5 +1,5 @@
 import { getSession } from "../../components/utils/auth";
-import { API_URL } from "../../constants/urlApi";
+import { API_URL, destinationCategories } from "../../constants/urlApi";
 
 export default class DestinasiPresenter {
   #view;
@@ -25,7 +25,23 @@ export default class DestinasiPresenter {
         throw new Error(json.message || 'Gagal mengambil data destinasi');
       }
 
-      this.#view.renderList(json.data);
+      // ambil kategori
+      const categories = await this.loadCategories();
+      this.#view.renderList(json.data, categories);
+    } catch (err) {
+      this.#view.renderError(err.message || 'Terjadi kesalahan saat mengambil data destinasi');
+    }
+  }
+
+  async loadCategories()  {
+    try {
+      const json = await destinationCategories();
+      const data = json.data;
+      
+      if (json.status !== 'success') {
+        throw new Error(json.message || 'Gagal mengambil data categories');
+      }
+      return data;
     } catch (err) {
       this.#view.renderError(err.message || 'Terjadi kesalahan saat mengambil data destinasi');
     }

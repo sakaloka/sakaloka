@@ -1,5 +1,6 @@
 import { html, render } from 'lit-html';
 import { generateTopDestinationItems } from './destination_items';
+import { destinationTop } from '../constants/urlApi';
 
 export function renderLandingIndex(container) {
   const template = html`
@@ -17,10 +18,10 @@ export function renderLandingIndex(container) {
           <p class="mt-4 text-xl mx-auto">
             Temukan acara budaya dan destinasi lokal sesuai minat dan lokasimu. Dengan smart map dan rekomendasi berbasis machine learning, kami menyediakan apa yang kamu cari.
           </p>
-          <button class="btn mt-6 bg-[#dce8c4] px-6 py-6 text-xl mx-auto text-black rounded-full font-semibold hover:bg-[#c4d8a0] transition flex items-center gap-3 group">
+          <a href="#/login" class="btn mt-6 bg-[#dce8c4] px-6 py-6 text-xl mx-auto text-black rounded-full font-semibold hover:bg-[#c4d8a0] transition">
             Jelajahi Sekarang
             <i class="fa fa-arrow-right transition-transform duration-300 group-hover:translate-x-1"></i>
-          </button>
+          </a>
         </div>
       </section>
 
@@ -49,19 +50,19 @@ export function renderLandingIndex(container) {
       </section>
 
       <!-- Destinasi Populer -->
-      <section id="destination-section" class="section-fade bg-[#614b4b] text-white py-20 px-4 text-center">
+      <section id="destination-section" class="section-fade bg-[#3c2626] text-white py-20 px-4 text-center">
         <h2 class="text-4xl font-bold mb-4">Destinasi Populer</h2>
         <p class="max-w-xl text-white mx-auto mb-12 text-base md:text-lg">
           Jelajahi keindahan budaya dan alam di Pulau Jawa yang sedang digemari wisatawan.
         </p>
         <div id="destination-container"
           class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 max-w-7xl mx-auto px-2 sm:px-4">
-          <!-- Cards will be rendered here -->
+          <!-- Destination Items akan dirender disini -->
         </div>
       </section>
 
       <!-- FAQ -->
-      <section id="faq-section" class="section-fade bg-[#f7f8fa] text-primary py-20 px-4">
+      <section id="faq-section" class="section-fade bg-[#d7e4c0] text-primary py-20 px-4">
         <div class="max-w-7xl mx-auto">
           <h2 class="text-4xl font-bold text-center mb-6">Pertanyaan Umum (FAQ)</h2>
           <p class="text-center text-gray-600 mb-10 text-base md:text-lg">
@@ -94,11 +95,11 @@ export function renderLandingIndex(container) {
           <p>Punya pertanyaan atau saran? Kami siap mendengar Anda.</p>
           <div class="flex flex-wrap justify-center items-center gap-6 mt-4 text-xl">
             <a href="mailto:sakaloka@gmail.com" class="flex items-center gap-2 hover:underline">
-              <img src="./images/icons/gmail.svg" class="w-5 h-5" alt="Gmail Icon" />
+              <i class="fas fa-envelope text-white"></i>
               <span>sakaloka@gmail.com</span>
             </a>
             <a href="https://www.instagram.com/" target="_blank" class="flex items-center gap-2 hover:underline">
-              <img src="./images/icons/instagram.svg" class="w-5 h-5" alt="Instagram Icon" />
+              <i class="fab fa-instagram text-white"></i>
               <span>@sakaloka</span>
             </a>
           </div>
@@ -114,7 +115,7 @@ export function renderLandingIndex(container) {
   const backTopBtn = html`
     <button id="backTop"
       class="btn fixed bottom-4 right-4 z-50 rounded-full hidden 
-            w-[70px] h-[70px] bg-[rgba(255,255,255, 0.5)] text-gray-700 
+          w-[70px] h-[70px] bg-[rgba(255,255,255,0.5)] text-black
             text-3xl shadow-lg transition transform hover:scale-110 flex items-center justify-center">
       <i class="fa fa-arrow-up"></i>
     </button>
@@ -133,8 +134,8 @@ export function renderLandingIndex(container) {
           const icon = btn.querySelector('i');
           if (answer) {
             answer.classList.toggle('hidden');
-            icon.classList.toggle('fa-plus');
-            icon.classList.toggle('fa-times');
+            icon.classList.toggle('fa-chevron-down');
+            icon.classList.toggle('fa-chevron-up');
           }
         });
       });
@@ -165,12 +166,20 @@ export function renderLandingIndex(container) {
       });
     }, 0);
 
-    // Render destinasi
-    const destinationTemplates = dummyDestinations.map((d) =>
-      generateTopDestinationItems(d.name, d.location, d.image)
-    );
-    const destinationContainer = document.getElementById('destination-container');
-    render(html`${destinationTemplates}`, destinationContainer);
+    // ambil destinasi
+    setTimeout(async () => {
+      // Render destinasi
+      const response = await destinationTop(); 
+      const destinations = response?.data || []; 
+      const destinationTemplates = destinations.map((d) =>
+        generateTopDestinationItems(d.name, d.location, d.photo, d.rating)
+      );      
+      console.log(destinationTemplates);
+      
+      const destinationContainer = document.getElementById('destination-container');
+      render(html`${destinationTemplates}`, destinationContainer);
+    }, 0);
+
   });
 }
 

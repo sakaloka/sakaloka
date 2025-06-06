@@ -12,7 +12,7 @@ export async function renderHome(container) {
       <section class="px-4 transition-all duration-300">
         <!-- Judul Dashboard -->
         <div class="mt-[90px] flex items-center mb-6">
-          <h2 class="text-xl font-bold text-black">Dashboard</h2>
+          <h2 class="text-2xl font-bold text-black">Dashboard</h2>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
