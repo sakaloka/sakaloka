@@ -53,7 +53,7 @@ export async function renderCalendarPage(container) {
         <div class="w-full md:w-1/3 space-y-4 mt-16">
           <div class="bg-white border border-black rounded-lg px-5 py-5 shadow">
             <h3 class="text-xl font-semibold mb-4">Daftar Acara Bulan Ini</h3>
-           <div class="overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
+            <div class="overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
           <div class="flex flex-col gap-3 max-h-[400px] overflow-y-auto pr-2">
   ${monthEvents.map(
     (e) => html`
@@ -157,13 +157,14 @@ async function fetchEvents() {
   try {
     const res = await getEvents();
     return res.data.map((e) => {
-      const [day, monthName, year] = e.start_date.split(' ');
+      const [year, month, day] = e.start_date.split('-');
       const monthMap = {
         Januari: '01', Februari: '02', Maret: '03', April: '04',
         Mei: '05', Juni: '06', Juli: '07', Agustus: '08',
         September: '09', Oktober: '10', November: '11', Desember: '12'
       };
-      const date = `${year}-${monthMap[monthName]}-${day.padStart(2, '0')}`;
+      const date = `${year}-${month}-${day.padStart(2, '0')}`;
+      console.log(e.id, date, e.title, e.description, e.detail_url)
       return {
         id: e.id,
         date,
