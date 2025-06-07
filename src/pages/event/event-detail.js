@@ -1,5 +1,5 @@
 import { html, render } from 'lit-html';
-import { getEventById } from '../../constants/urlApi';
+import { addEventBookmark, getEventById, getUserBookmarks, removeBookmark } from '../../constants/urlApi';
 import { EventDetailPresenter } from './event-detail-presenter.js';
 import { getSession } from '../../components/utils/auth.js';
 
@@ -25,7 +25,7 @@ class EventDetailPage {
   async init() {
     try {
       const json = await getEventById(this.id);
-      const data = json?.data;
+      const data = json?.data[0];
       if (!data) throw new Error('Data event tidak ditemukan');
 
       this.#data = {
@@ -38,9 +38,9 @@ class EventDetailPage {
         description: data.description,
         url: data.detail_url,
         image: data.image || '/images/default.jpg',
+        isSaved: data.is_saved, 
       };
 
-      this.isSaved = this.checkIsSaved();
       this.reviews = await this.presenter.getReviews(this.#data.id);
     } catch (err) {
       console.error('Gagal ambil detail event:', err);
@@ -53,6 +53,7 @@ class EventDetailPage {
         description: 'Event tidak tersedia',
         url: '#',
         image: '/images/default.jpg',
+        isSaved: 0,
       };
     }
   }
@@ -62,27 +63,48 @@ class EventDetailPage {
     render(this.render(), container);
   }
 
-  checkIsSaved() {
-    const saved = JSON.parse(localStorage.getItem('bookmarkedEvents') || '[]');
-    return saved.some((e) => e.title === this.#data.title);
-  }
-
-  toggleSave() {
-    const saved = JSON.parse(localStorage.getItem('bookmarkedEvents') || '[]');
-    const exists = saved.find((e) => e.title === this.#data.title);
-
-    if (exists) {
-      const updated = saved.filter((e) => e.title !== this.#data.title);
-      localStorage.setItem('bookmarkedEvents', JSON.stringify(updated));
-      this.isSaved = false;
-    } else {
-      saved.push(this.#data);
-      localStorage.setItem('bookmarkedEvents', JSON.stringify(saved));
-      this.isSaved = true;
+  
+  async toggleSave(isSaved, eventId) {
+    const session = getSession();
+    const userId = session?.user?.userId;
+  
+    if (!userId) {
+      alert('Anda harus login untuk menyimpan event.');
+      return;
     }
-
-    this.update();
+  
+    if (!isSaved) {
+      const res = await addEventBookmark(eventId);
+      if (res.ok) {
+        alert('Bookmark berhasil ditambahkan');
+        this.#data.isSaved = true; 
+      } else {
+        alert('Gagal menambahkan bookmark');
+      }
+    } else {
+      const result = await getUserBookmarks();
+      const bookmarks = result.data;
+  
+      const found = bookmarks.find(
+        (b) => b.event_id === eventId && b.user_id === userId
+      );
+  
+      if (found) {
+        const res = await removeBookmark(found.id);
+        if (res.ok) {
+          alert('Bookmark berhasil dihapus');
+          this.#data.isSaved = false; 
+        } else {
+          alert('Gagal menghapus bookmark');
+        }
+      } else {
+        alert('Bookmark tidak ditemukan');
+      }
+    }
+  
+    this.update(); 
   }
+  
 
   async saveReview() {
     if (this.rating === 0 || !this.reviewText.trim()) return;
@@ -169,11 +191,11 @@ class EventDetailPage {
                 <i class="fas fa-link mr-1 text-black"></i> ${d.url}
               </a>
               <button
-                @click=${() => this.toggleSave()}
-                title="${this.isSaved ? 'Tersimpan' : 'Simpan'}"
+                @click=${() => this.toggleSave(d.isSaved, d.id)}
+                title="${d.isSaved ? 'Tersimpan' : 'Simpan'}"
                 class="text-2xl hover:scale-110 transition"
               >
-                <i class="${this.isSaved ? 'fas' : 'far'} fa-bookmark text-black"></i>
+                <i class="${d.isSaved ? 'fas' : 'far'} fa-bookmark text-black"></i>
               </button>
             </div>
           </div>

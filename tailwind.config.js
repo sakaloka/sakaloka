@@ -1,9 +1,12 @@
 module.exports = {
   content: ['./src/**/*.{html,js}'],
-  darkMode: 'class', // ⬅️ ini penting biar Tailwind gak ikutin setting sistem
+  darkMode: 'class', 
   safelist: ['alert-success', 'alert-error', 'alert-warning', 'alert-info'],
   theme: {
     extend: {
+      colors: {
+        primary: '#483434',
+      },
       keyframes: {
         'fade-in': {
           '0%': { opacity: '0', transform: 'translateY(10px)' },
@@ -22,6 +25,6 @@ module.exports = {
   },
   plugins: [require('daisyui')],
   daisyui: {
-    themes: ['light', 'dark'], // ⬅️ optional, kamu bisa pakai hanya "light" aja
+    themes: ['light', 'dark'], 
   },
 };

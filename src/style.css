@@ -511,3 +511,24 @@ body {
     transform: scale(0.97);
   }
 }
+
+/* BUTTON */
+.btn-bookmark {
+  background-color: transparent;
+  border: 1px solid #678337;
+  color: black;
+}
+
+.btn-bookmark:hover {
+  background-color: #5c7532;
+  color: white;
+}
+
+.btn-bookmark-remove {
+  background-color: #678337;
+  color: white;
+}
+
+.btn-bookmark-remove:hover {
+  background-color: #5c7532;
+}

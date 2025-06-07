@@ -33,7 +33,6 @@ export default class RegisterPresenter {
       }
 
       const loginResponse = await login({ email, password });
-      console.log(loginResponse);
       if (loginResponse.ok) {
         saveSession(loginResponse.loginResult);
         this.#view.showSuccess('Registrasi berhasil!');

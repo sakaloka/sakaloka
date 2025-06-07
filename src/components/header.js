@@ -22,8 +22,6 @@ export function renderHeader(containerId = 'header') {
     >
       <div class="flex items-center justify-between px-4 py-3 relative">
         <div class="flex items-center gap-3">
-          <img src="/images/logo.png" alt="Logo" class="w-[120px] h-auto object-contain" />
-          <span class="text-lg font-semibold"></span>
           <button
             id="burgerButton"
             class="focus:outline-none text-2xl pl-3"
@@ -31,6 +29,9 @@ export function renderHeader(containerId = 'header') {
           >
             ☰
           </button>
+          <a href="#/home">
+            <img src="/images/logo.png" alt="Logo" class="w-[120px] h-auto object-contain" />
+          </a>
         </div>
         <!-- Avatar + Dropdown -->
         <div class="relative">
@@ -123,8 +124,6 @@ function toggleSidebar() {
   const isNowOpen = !sidebar.classList.contains('-translate-x-full');
   window.__isSidebarOpen = isNowOpen;
 
-  console.log('Sidebar sekarang:', isNowOpen ? 'TERBUKA' : 'TERTUTUP');
-
   if (isNowOpen) {
     main.classList.add('pl-64');
   } else {
@@ -134,7 +133,6 @@ function toggleSidebar() {
 
 function handleLogout() {
   // Tambahkan logika logout kamu di sini
-  console.log('Logout clicked');
   clearSession();
   window.location.href = '#/index';
   window.location.reload();
