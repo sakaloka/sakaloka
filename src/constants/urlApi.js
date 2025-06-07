@@ -1,4 +1,4 @@
-export const API_URL = 'https://sakaloka-backend-production.up.railway.app'; // ganti nanti
+export const API_URL = 'https://sakaloka-backend-production.up.railway.app';
 import { getAccessToken, getSession } from '../components/utils/auth';
 
 const ENDPOINTS = {

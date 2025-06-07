@@ -33,7 +33,7 @@ export async function renderHome(container) {
               </svg>
             </div>
             <div>
-              <p class="text-sm text-gray-500">Total Favorit Kamu</p>
+              <p class="text-sm text-gray-500">Total Favorit</p>
               <p class="text-xl font-semibold text-black">${totalFavorit}</p>
             </div>
           </div>
@@ -56,7 +56,7 @@ export async function renderHome(container) {
               </svg>
             </div>
             <div>
-              <p class="text-sm text-gray-500">Total Destinasi Untuk Kamu</p>
+              <p class="text-sm text-gray-500">Total Destinasi</p>
               <p class="text-xl font-semibold text-black">${totalDestinasi}</p>
             </div>
           </div>
@@ -79,7 +79,7 @@ export async function renderHome(container) {
               </svg>
             </div>
             <div>
-              <p class="text-sm text-gray-500">Total Acara Budaya Untuk Kamu</p>
+              <p class="text-sm text-gray-500">Total Acara Budaya</p>
               <p class="text-xl font-semibold text-black">${totalEvent}</p>
             </div>
           </div>

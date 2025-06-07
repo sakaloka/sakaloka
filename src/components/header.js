@@ -4,16 +4,14 @@ import { clearSession } from './utils/auth';
 export function renderHeader(containerId = 'header') {
   const header = document.getElementById(containerId);
 
-  // Tambahkan ini untuk ambil user dari localStorage
   const user = JSON.parse(localStorage.getItem('user') || '{}');
-  // Pastikan default state dropdown tertutup
   if (typeof window.__isProfileDropdownOpen === 'undefined') {
     window.__isProfileDropdownOpen = false;
   }
 
   const toggleProfileDropdown = () => {
     window.__isProfileDropdownOpen = !window.__isProfileDropdownOpen;
-    renderHeader(); // render ulang header
+    renderHeader(); 
   };
   const template = html`
     <header
