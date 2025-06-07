@@ -24,7 +24,7 @@ export function renderPersonalOption(container) {
 
   const template = html`
     <section class="min-h-screen flex items-center justify-center px-4 py-10 bg-[#F9F9F9]">
-      <div class="max-w-xl w-full bg-white rounded-2xl shadow-md p-6 border border-gray-200">
+      <div class="max-w-xl w-full bg-white rounded-2xl shadow-md p-6 border border-black">
         <h2 class="text-2xl font-bold text-center mb-4 text-[#333]">Pilih 5 Destinasi Favoritmu</h2>
         <p class="text-sm text-gray-500 text-center mb-6">
           Preferensi ini akan membantu kami menampilkan konten yang relevan untukmu.

@@ -1,6 +1,12 @@
 import { html, render } from 'lit-html';
-import { addEventBookmark, getEvents, getUserBookmarks, removeBookmark } from '../../constants/urlApi.js';
+import {
+  addEventBookmark,
+  getEvents,
+  getUserBookmarks,
+  removeBookmark,
+} from '../../constants/urlApi.js';
 import { getSession } from '../../components/utils/auth.js';
+import Swal from 'sweetalert2';
 
 let currentEvents = [];
 let currentMonth = new Date().getMonth();
@@ -126,44 +132,42 @@ function openModal(date, events) {
             </button>
             <h2 class="ml-3 font-bold text-[#678337]">Acara pada ${formatDateIndo(date)}</h2>
           </div>
-          ${events.length
+          ${
+            events.length
               ? events.map(
-                (e) =>
-                    html`
-                      <ul class="mb-4 list-disc ml-5 text-sm">
-                        <li>
-                          <a href="#/event/detail/${e.id}" target="_blank">
-                            ${e.title}
-                          </a>
-                        </li>
-                      </ul>
-                      <div class="flex justify-end">
-                        <button
-                          class="w-fit px-4 py-2 rounded ${e.is_saved ? 'btn-bookmark-remove' : 'btn-bookmark'}"
-                          @click=${async () => {
-                            if (e.is_saved) {
-                              await handleRemoveEventBookmark(e.id);
-                              e.is_saved = false; 
-                            } else {
-                              await handleAddEventBookmark(e.id);
-                              e.is_saved = true; 
-                            }
-                            openModal(date, events); 
-                          }}
-                        >
-                          ${e.is_saved ? 'Tersimpan' : 'Simpan Acara'}
-                        </button>
-                      </div>
-                      `,
-                    )
-                    : html`
-                      <ul class="mb-4 list-disc ml-5 text-sm">
-                        <li class="italic text-gray-400">
-                          Belum ada acara
-                        </li>
-                      </ul>
-                    `
-                }
+                  (e) => html`
+                    <ul class="mb-4 list-disc ml-5 text-sm">
+                      <li>
+                        <a href="#/event/detail/${e.id}" target="_blank"> ${e.title} </a>
+                      </li>
+                    </ul>
+                    <div class="flex justify-end">
+                      <button
+                        class="w-fit px-4 py-2 rounded ${e.is_saved
+                          ? 'btn-bookmark-remove'
+                          : 'btn-bookmark'}"
+                        @click=${async () => {
+                          if (e.is_saved) {
+                            await handleRemoveEventBookmark(e.id);
+                            e.is_saved = false;
+                          } else {
+                            await handleAddEventBookmark(e.id);
+                            e.is_saved = true;
+                          }
+                          openModal(date, events);
+                        }}
+                      >
+                        ${e.is_saved ? 'Tersimpan' : 'Simpan Acara'}
+                      </button>
+                    </div>
+                  `,
+                )
+              : html`
+                  <ul class="mb-4 list-disc ml-5 text-sm">
+                    <li class="italic text-gray-400">Belum ada acara</li>
+                  </ul>
+                `
+          }
           </ul>
           
         </div>
@@ -179,7 +183,7 @@ async function saveEvent(eventId) {
   if (result.ok) {
     render('', document.getElementById('calendarModal'));
   } else {
-    alert('Terjadi kesalahan saat menyimpan Acara Budaya ini.')
+    alert('Terjadi kesalahan saat menyimpan Acara Budaya ini.');
   }
 }
 
@@ -226,9 +230,19 @@ async function fetchEvents() {
 async function handleAddEventBookmark(eventId) {
   const result = await addEventBookmark(eventId);
   if (result.ok) {
-    alert('Acara berhasil disimpan.');
+    Swal.fire({
+      icon: 'success',
+      title: 'Tersimpan!',
+      text: 'Acara berhasil disimpan.',
+      timer: 1500,
+      showConfirmButton: false,
+    });
   } else {
-    alert('Gagal menyimpan acara.');
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal!',
+      text: 'Gagal menyimpan acara.',
+    });
   }
 }
 
@@ -242,11 +256,25 @@ async function handleRemoveEventBookmark(eventId) {
   if (match) {
     const res = await removeBookmark(match.id);
     if (res.ok) {
-      alert('Acara berhasil dihapus dari bookmark.');
+      Swal.fire({
+        icon: 'success',
+        title: 'Dihapus!',
+        text: 'Acara berhasil dihapus dari bookmark.',
+        timer: 1500,
+        showConfirmButton: false,
+      });
     } else {
-      alert('Gagal menghapus bookmark.');
+      Swal.fire({
+        icon: 'error',
+        title: 'Gagal!',
+        text: 'Gagal menghapus bookmark.',
+      });
     }
   } else {
-    alert('Bookmark tidak ditemukan.');
+    Swal.fire({
+      icon: 'warning',
+      title: 'Tidak ditemukan',
+      text: 'Bookmark tidak ditemukan.',
+    });
   }
 }

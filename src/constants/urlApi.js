@@ -146,9 +146,9 @@ export async function getEventById(id) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${session?.accessToken}`,
+      'Authorization': `Bearer ${session?.accessToken}`,
     },
-    body: JSON.stringify ({
+    body: JSON.stringify({
       userId: session?.user?.userId,
     }),
   });
@@ -326,7 +326,7 @@ export async function getUserBookmarks() {
     },
   });
   const json = await res.json();
-  return { ...json, ok: res.ok }; 
+  return { ...json, ok: res.ok };
 }
 
 export async function addDestinationBookmark(targetId) {
@@ -378,7 +378,7 @@ export async function removeBookmark(targetId) {
       bookmark_id: targetId,
     }),
   });
-  
+
   const json = await response.json();
   return { ...json, ok: response.ok };
 }

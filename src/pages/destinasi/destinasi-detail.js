@@ -1,27 +1,27 @@
 import { html, render } from 'lit-html';
 import { DestinasiDetailPresenter } from './destinasi-detail-presenter.js';
 import { getSession } from '../../components/utils/auth.js';
-import { addDestinationBookmark, getUserBookmarks, removeBookmark } from '../../constants/urlApi.js';
+import {
+  addDestinationBookmark,
+  getUserBookmarks,
+  removeBookmark,
+} from '../../constants/urlApi.js';
+import Swal from 'sweetalert2';
 
 export async function renderDestinasiDetailPage(container, destinationId) {
   const presenter = new DestinasiDetailPresenter();
   const session = getSession();
   const userId = session?.user?.userId;
 
-  let data = null;
-  data = await presenter.loadData(destinationId);
-  
+  let data = await presenter.loadData(destinationId);
   let ulasan = null;
   let existingReview = null;
-  // if (userId) {
-    //   existingReview = await presenter.getUserReview(destinationId, userId);
-    // }
-    
-    if (!data) {
-      render(html`<p class="text-center text-red-500">Data tidak ditemukan.</p>`, container);
+
+  if (!data) {
+    render(html`<p class="text-center text-red-500">Data tidak ditemukan.</p>`, container);
     return;
   }
-  
+
   let comment = existingReview?.comment || '';
   let rating = existingReview?.rating || 5;
   let selectedTab = 'lokasi';
@@ -29,34 +29,32 @@ export async function renderDestinasiDetailPage(container, destinationId) {
   async function handleAddBookmark(destinationId) {
     const res = await addDestinationBookmark(destinationId);
     if (res.ok) {
-      alert('Bookmark berhasil ditambahkan');
+      Swal.fire('Berhasil!', 'Bookmark berhasil ditambahkan.', 'success');
       await updateView();
     } else {
-      alert('Terjadi kesalahan saat menambahkan bookmark');
+      Swal.fire('Oops!', 'Terjadi kesalahan saat menambahkan bookmark.', 'error');
     }
   }
-  
+
   async function handleRemoveBookmark(destinationId, userId) {
     const result = await getUserBookmarks();
     const bookmarks = result.data;
-  
-    const found = bookmarks.find(
-      (b) => b.destination_id == destinationId && b.user_id == userId
-    );
-  
+
+    const found = bookmarks.find((b) => b.destination_id == destinationId && b.user_id == userId);
+
     if (found) {
       const res = await removeBookmark(found.id);
       if (res.ok) {
-        alert('Bookmark berhasil dihapus');
+        Swal.fire('Berhasil!', 'Bookmark berhasil dihapus.', 'success');
         await updateView();
       } else {
-        alert('Terjadi kesalahan saat menghapus bookmark');
+        Swal.fire('Oops!', 'Terjadi kesalahan saat menghapus bookmark.', 'error');
       }
     } else {
-      alert('Bookmark tidak ditemukan');
+      Swal.fire('Oops!', 'Bookmark tidak ditemukan.', 'warning');
     }
   }
-  
+
   const updateView = async () => {
     data = await presenter.loadData(destinationId);
     ulasan = await presenter.loadUlasan(destinationId);
@@ -70,7 +68,9 @@ export async function renderDestinasiDetailPage(container, destinationId) {
             </p>
             <p class="text-sm text-black-600 mt-2">
               <i class="fas fa-star text-yellow-400"></i>
-              ${data.avgRating ? `${data.avgRating} / ${data.totalReviews} ulasan | ` : 'Belum ada ulasan | '}
+              ${data.avgRating
+                ? `${data.avgRating} / ${data.totalReviews} ulasan | `
+                : 'Belum ada ulasan | '}
 
               <i class="fas fa-bookmark"></i> ${data.bookmark_count ?? 0} orang menyimpan ini
             </p>
@@ -89,7 +89,6 @@ export async function renderDestinasiDetailPage(container, destinationId) {
           >
             <i class="${data.is_saved ? 'fas' : 'far'} fa-bookmark text-black"></i>
           </button>
-
         </div>
 
         <!-- Tabs -->
@@ -145,7 +144,7 @@ export async function renderDestinasiDetailPage(container, destinationId) {
           : ''}
         ${selectedTab === 'ulasan'
           ? html`
-              <div class="mt-6">
+              <div class="mt-6 border border-black rounded-xl p-4">
                 <h2 class="text-xl font-semibold mb-2">Tulis Ulasan Kamu</h2>
                 <!-- Bintang Rating -->
                 <div class="flex items-center gap-1 mb-2">
@@ -181,10 +180,10 @@ export async function renderDestinasiDetailPage(container, destinationId) {
                       comment: commentVal,
                       rating,
                     });
-                    alert(res?.message || 'Berhasil disimpan');
+                    Swal.fire('Ulasan Terkirim', res?.message || 'Berhasil disimpan.', 'success');
                     await updateView();
                   }}
-                  class="mt-3 px-4 py-2 bg-blue-600 text-white rounded"
+                  class="mt-3 px-4 py-2 bg-[#bea5a5] text-black rounded"
                 >
                   Kirim Ulasan
                 </button>

@@ -11,7 +11,7 @@ export function renderHeader(containerId = 'header') {
 
   const toggleProfileDropdown = () => {
     window.__isProfileDropdownOpen = !window.__isProfileDropdownOpen;
-    renderHeader(); 
+    renderHeader();
   };
   const template = html`
     <header

@@ -1,4 +1,4 @@
-import { getUserSummary } from "../../constants/urlApi";
+import { getUserSummary } from '../../constants/urlApi';
 
 export default class HomePresenter {
   #view;

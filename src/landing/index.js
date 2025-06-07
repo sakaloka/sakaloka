@@ -8,7 +8,7 @@ export function renderLandingIndex(container) {
       <!-- Hero Section -->
       <section
         id="hero"
-        class="section-fade min-h-screen justify-center relative bg-cover bg-center text-white text-center flex flex-col items-center px-5 py-25 pt-36"
+        class="section-fade relative bg-cover bg-center text-white text-center flex flex-col items-center justify-center min-h-[90vh] px-4 py-30"
         style="background-image: url('/images/bg-hero.svg');"
       >
         <div class="backdrop-brightness-75 absolute inset-0 z-0"></div>
@@ -34,7 +34,7 @@ export function renderLandingIndex(container) {
       <!-- Fitur -->
       <section
         id="features-section"
-        class="section-fade flex flex-col min-h-screen bg-primary text-white py-20 px-36 justify-center text-center"
+        class="section-fade bg-primary text-white py-20 px-4 text-center"
       >
         <h2 class="text-3xl font-extrabold mb-6">Jelajahi Keindahan Jawa dalam Sekejap</h2>
         <p class="text-xl mx-auto mb-10">
@@ -83,13 +83,13 @@ export function renderLandingIndex(container) {
       </section>
 
       <!-- FAQ -->
-      <section id="faq-section" class="section-fade flex flex-col min-h-screen bg-[#d7e4c0] text-primary py-20 px-4">
-        <div class="w-full mx-auto">
-          <h2 class="text-4xl text-primary font-bold text-center mb-6">Pertanyaan Umum (FAQ)</h2>
+      <section id="faq-section" class="section-fade bg-[#d7e4c0] text-primary py-20 px-4">
+        <div class="max-w-7xl mx-auto">
+          <h2 class="text-4xl font-bold text-center mb-6">Pertanyaan Umum (FAQ)</h2>
           <p class="text-center text-gray-600 mb-10 text-base md:text-lg">
             Temukan jawaban atas pertanyaan yang sering diajukan tentang SakaLoka.
           </p>
-          <div class="flex flex-col gap-4 px-20">
+          <div class="flex flex-col gap-4">
             ${faqItems.map(
               (item) => html`
                 <div
@@ -98,7 +98,7 @@ export function renderLandingIndex(container) {
                   <button
                     class="faq-toggle w-full flex items-center justify-between px-6 py-4 text-left hover:bg-gray-50 transition"
                   >
-                    <h3 class="text-xl font-medium text-gray-800 grow">${item.q}</h3>
+                    <h3 class="text-2xl font-medium text-gray-800 grow">${item.q}</h3>
                     <i
                       class="fas fa-chevron-down text-gray-500 transition-transform duration-300"
                     ></i>
@@ -114,12 +114,12 @@ export function renderLandingIndex(container) {
       <!-- Kontak -->
       <section
         id="contact-section"
-        class="section-fade bg-[#3c2626] min-h-screen flex flex-col justify-center text-white py-20 px-4 text-center"
+        class="section-fade bg-[#3c2626] text-white py-20 px-4 text-center"
       >
         <h2 class="text-3xl font-extrabold mb-6">Hubungi Kami</h2>
         <div class="flex flex-col items-center gap-4 text-xl w-full mx-auto">
           <p>Punya pertanyaan atau saran? Kami siap mendengar Anda.</p>
-          <div class="flex flex-col flex-wrap justify-center items-center gap-6 mt-4 text-xl">
+          <div class="flex flex-wrap justify-center items-center gap-6 mt-4 text-xl">
             <a href="mailto:sakaloka@gmail.com" class="flex items-center gap-2 hover:underline">
               <i class="fas fa-envelope text-white"></i>
               <span>sakaloka@gmail.com</span>
