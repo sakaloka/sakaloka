@@ -6,10 +6,15 @@ export class DestinasiDetailPresenter {
     try {
       const session = getSession();
       const res = await fetch(`${API_URL}/destinations/${destinationId}`, {
+        method: 'POST',
         headers: {
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${session?.accessToken}`,
         },
-      });
+        body: JSON.stringify({
+          userId: session?.user?.userId,
+        }),        
+      }); 
       if (!res.ok) throw new Error('Gagal memuat destinasi');
       const json = await res.json();
       return json.data;

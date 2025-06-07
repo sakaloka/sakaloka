@@ -1,5 +1,6 @@
 import { html, render } from 'lit-html';
-import { getEvents } from '../../constants/urlApi.js';
+import { addEventBookmark, getEvents, getUserBookmarks, removeBookmark } from '../../constants/urlApi.js';
+import { getSession } from '../../components/utils/auth.js';
 
 let currentEvents = [];
 let currentMonth = new Date().getMonth();
@@ -125,22 +126,46 @@ function openModal(date, events) {
             </button>
             <h2 class="ml-3 font-bold text-[#678337]">Acara pada ${formatDateIndo(date)}</h2>
           </div>
-          <ul class="mb-4 list-disc ml-5 text-sm">
-            ${events.length
+          ${events.length
               ? events.map(
-                  (e) =>
-                    html`<li><a href="#/event/detail/${e.id}" target="_blank">${e.title}</a></li>`,
-                )
-              : html`<li class="italic text-gray-400">Belum ada acara</li>`}
+                (e) =>
+                    html`
+                      <ul class="mb-4 list-disc ml-5 text-sm">
+                        <li>
+                          <a href="#/event/detail/${e.id}" target="_blank">
+                            ${e.title}
+                          </a>
+                        </li>
+                      </ul>
+                      <div class="flex justify-end">
+                        <button
+                          class="w-fit px-4 py-2 rounded ${e.is_saved ? 'btn-bookmark-remove' : 'btn-bookmark'}"
+                          @click=${async () => {
+                            if (e.is_saved) {
+                              await handleRemoveEventBookmark(e.id);
+                              e.is_saved = false; 
+                            } else {
+                              await handleAddEventBookmark(e.id);
+                              e.is_saved = true; 
+                            }
+                            openModal(date, events); 
+                          }}
+                        >
+                          ${e.is_saved ? 'Tersimpan' : 'Simpan Acara'}
+                        </button>
+                      </div>
+                      `,
+                    )
+                    : html`
+                      <ul class="mb-4 list-disc ml-5 text-sm">
+                        <li class="italic text-gray-400">
+                          Belum ada acara
+                        </li>
+                      </ul>
+                    `
+                }
           </ul>
-          <div class="flex justify-end">
-            <button
-              class="bg-[#678337] text-white px-4 py-2 rounded hover:bg-[#57732e]"
-              @click=${() => saveEvent(date)}
-            >
-              Simpan Acara
-            </button>
-          </div>
+          
         </div>
       </div>
     `,
@@ -148,17 +173,14 @@ function openModal(date, events) {
   );
 }
 
-function saveEvent(date) {
-  const selectedEvents = currentEvents.filter((e) => e.date === date);
-  if (!selectedEvents.length) return;
+async function saveEvent(eventId) {
+  const result = await addEventBookmark(eventId);
 
-  const existing = JSON.parse(localStorage.getItem('bookmarkedEvents') || '[]');
-  selectedEvents.forEach((e) => {
-    const exists = existing.some((x) => x.title === e.title && x.date === e.date);
-    if (!exists) existing.push(e);
-  });
-  localStorage.setItem('bookmarkedEvents', JSON.stringify(existing));
-  render('', document.getElementById('calendarModal'));
+  if (result.ok) {
+    render('', document.getElementById('calendarModal'));
+  } else {
+    alert('Terjadi kesalahan saat menyimpan Acara Budaya ini.')
+  }
 }
 
 function formatDateIndo(dateStr) {
@@ -186,17 +208,45 @@ async function fetchEvents() {
         Desember: '12',
       };
       const date = `${year}-${month}-${day.padStart(2, '0')}`;
-      console.log(e.id, date, e.title, e.description, e.detail_url);
       return {
         id: e.id,
         date,
         title: e.title,
         description: e.description,
         url: e.detail_url,
+        is_saved: e.is_saved,
       };
     });
   } catch (err) {
     console.error('Gagal mengambil data event:', err);
     return [];
+  }
+}
+
+async function handleAddEventBookmark(eventId) {
+  const result = await addEventBookmark(eventId);
+  if (result.ok) {
+    alert('Acara berhasil disimpan.');
+  } else {
+    alert('Gagal menyimpan acara.');
+  }
+}
+
+async function handleRemoveEventBookmark(eventId) {
+  const session = getSession();
+  const userId = session?.user?.userId;
+  const result = await getUserBookmarks();
+  const bookmarks = result?.data ?? [];
+
+  const match = bookmarks.find((b) => b.event_id == eventId && b.user_id == userId);
+  if (match) {
+    const res = await removeBookmark(match.id);
+    if (res.ok) {
+      alert('Acara berhasil dihapus dari bookmark.');
+    } else {
+      alert('Gagal menghapus bookmark.');
+    }
+  } else {
+    alert('Bookmark tidak ditemukan.');
   }
 }

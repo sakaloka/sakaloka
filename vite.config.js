@@ -2,13 +2,12 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
   root: 'src',
-  publicDir: '../public', // ✅ Tambahkan ini
+  publicDir: '../public', 
   server: {
     host: true,
-    port: 5173,
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
+        target: 'https://sakaloka-backend-production.up.railway.app/',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },

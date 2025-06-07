@@ -8,7 +8,7 @@ export function renderLandingIndex(container) {
       <!-- Hero Section -->
       <section
         id="hero"
-        class="section-fade relative bg-cover bg-center text-white text-center flex flex-col items-center justify-center min-h-[90vh] px-4 py-20"
+        class="section-fade min-h-screen justify-center relative bg-cover bg-center text-white text-center flex flex-col items-center px-5 py-25 pt-36"
         style="background-image: url('/images/bg-hero.svg');"
       >
         <div class="backdrop-brightness-75 absolute inset-0 z-0"></div>
@@ -85,7 +85,7 @@ export function renderLandingIndex(container) {
       <!-- FAQ -->
       <section id="faq-section" class="section-fade bg-[#d7e4c0] text-primary py-20 px-4">
         <div class="max-w-7xl mx-auto">
-          <h2 class="text-4xl font-bold text-center mb-6">Pertanyaan Umum (FAQ)</h2>
+          <h2 class="text-4xl text-primary font-bold text-center mb-6">Pertanyaan Umum (FAQ)</h2>
           <p class="text-center text-gray-600 mb-10 text-base md:text-lg">
             Temukan jawaban atas pertanyaan yang sering diajukan tentang SakaLoka.
           </p>
@@ -209,41 +209,12 @@ export function renderLandingIndex(container) {
       const destinationTemplates = destinations.map((d) =>
         generateTopDestinationItems(d.name, d.location, d.photo, d.rating),
       );
-      console.log(destinationTemplates);
 
       const destinationContainer = document.getElementById('destination-container');
       render(html`${destinationTemplates}`, destinationContainer);
     }, 0);
   });
 }
-
-const dummyDestinations = [
-  {
-    name: 'Candi Borobudur',
-    location: 'Magelang, Jawa Tengah',
-    image: '/images/image1.jpg',
-  },
-  {
-    name: 'Gunung Bromo',
-    location: 'Probolinggo, Jawa Timur',
-    image: '/images/image2.jpg',
-  },
-  {
-    name: 'Keraton Yogyakarta',
-    location: 'Yogyakarta',
-    image: '/images/image3.jpg',
-  },
-  {
-    name: 'Taman Nasional Ujung Kulon',
-    location: 'Pandeglang, Banten',
-    image: '/images/image4.jpg',
-  },
-  {
-    name: 'Dataran Tinggi Dieng',
-    location: 'Wonosobo, Jawa Tengah',
-    image: '/images/image5.jpg',
-  },
-];
 
 const faqItems = [
   {

@@ -7,9 +7,10 @@ const ENDPOINTS = {
   LOGIN: `${API_URL}/login`,
   USER_DETAILS: (id) => `${API_URL}/users/${id}`,
   USER_UPDATE: (id) => `${API_URL}/users/${id}`,
+  USER_SUMMARY: (id) => `${API_URL}/users/summary/${id}`,
 
   // Events
-  EVENTS: `${API_URL}/events`,
+  EVENTS: (id) => `${API_URL}/events?userId=${id}`,
   EVENT_DETAILS: (id) => `${API_URL}/events/${id}`,
 
   // Destinations
@@ -33,6 +34,11 @@ const ENDPOINTS = {
   DESTINATIONS_TOPS: `${API_URL}/destinations/top`,
   DESTINATIONS_RECOMMENDED: (id) => `${API_URL}/destinations/recommend/${id}`,
   DESTINATION_CATEGORIES: `${API_URL}/destinations/categories`,
+
+  // Bookmark
+  BOOKMARK: `${API_URL}/bookmarks`,
+  BOOKMARK_USER: (id) => `${API_URL}/bookmarks/${id}`,
+  BOOKMARK_DELETE: `${API_URL}/bookmarks`,
 };
 
 // Auth
@@ -101,13 +107,29 @@ export async function updateUser(id, { email, name }) {
   };
 }
 
+export async function getUserSummary() {
+  const session = getSession();
+
+  const response = await fetch(ENDPOINTS.USER_SUMMARY(session.user.userId), {
+    headers: {
+      Authorization: `Bearer ${session.accessToken}`,
+    },
+  });
+  const json = await response.json();
+
+  return {
+    ...json,
+    ok: response.ok,
+  };
+}
+
 // Events
 export async function getEvents() {
-  const token = getAccessToken();
+  const session = getSession();
 
-  const response = await fetch(ENDPOINTS.EVENTS, {
+  const response = await fetch(ENDPOINTS.EVENTS(session.user.userId), {
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${session.accessToken}`,
     },
   });
   const json = await response.json();
@@ -119,11 +141,16 @@ export async function getEvents() {
 }
 
 export async function getEventById(id) {
-  const token = getAccessToken();
+  const session = getSession();
   const response = await fetch(ENDPOINTS.EVENT_DETAILS(id), {
+    method: 'POST',
     headers: {
-      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${session?.accessToken}`,
     },
+    body: JSON.stringify ({
+      userId: session?.user?.userId,
+    }),
   });
   const json = await response.json();
 
@@ -286,6 +313,72 @@ export async function getRecommendedDestinations(userId) {
       'Authorization': `Bearer ${token}`,
     },
   });
+  const json = await response.json();
+  return { ...json, ok: response.ok };
+}
+
+// Bookmark
+export async function getUserBookmarks() {
+  const session = getSession();
+  const res = await fetch(ENDPOINTS.BOOKMARK_USER(session.user.userId), {
+    headers: {
+      Authorization: `Bearer ${session.accessToken}`,
+    },
+  });
+  const json = await res.json();
+  return { ...json, ok: res.ok }; 
+}
+
+export async function addDestinationBookmark(targetId) {
+  const session = getSession();
+  const response = await fetch(ENDPOINTS.BOOKMARK, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${session.accessToken}`,
+    },
+    body: JSON.stringify({
+      user_id: session.user.userId,
+      type: 'Destinasi',
+      destination_id: targetId,
+    }),
+  });
+  const json = await response.json();
+  return { ...json, ok: response.ok };
+}
+
+export async function addEventBookmark(targetId) {
+  const session = getSession();
+  const response = await fetch(ENDPOINTS.BOOKMARK, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${session.accessToken}`,
+    },
+    body: JSON.stringify({
+      user_id: session.user.userId,
+      type: 'Acara Budaya',
+      event_id: targetId,
+    }),
+  });
+  const json = await response.json();
+  return { ...json, ok: response.ok };
+}
+
+export async function removeBookmark(targetId) {
+  const session = getSession();
+  const response = await fetch(ENDPOINTS.BOOKMARK_DELETE, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${session.accessToken}`,
+    },
+    body: JSON.stringify({
+      user_id: session.user.userId,
+      bookmark_id: targetId,
+    }),
+  });
+  
   const json = await response.json();
   return { ...json, ok: response.ok };
 }

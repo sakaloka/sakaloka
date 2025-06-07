@@ -11,7 +11,6 @@ export function confirmDialog(message = 'Yakin?') {
       setTimeout(() => {
         render(null, container);
         container.remove();
-        console.log('modal closed');
       }, 200);
     };
 

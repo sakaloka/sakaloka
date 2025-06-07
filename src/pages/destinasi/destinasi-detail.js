@@ -1,29 +1,64 @@
 import { html, render } from 'lit-html';
 import { DestinasiDetailPresenter } from './destinasi-detail-presenter.js';
 import { getSession } from '../../components/utils/auth.js';
+import { addDestinationBookmark, getUserBookmarks, removeBookmark } from '../../constants/urlApi.js';
 
 export async function renderDestinasiDetailPage(container, destinationId) {
   const presenter = new DestinasiDetailPresenter();
   const session = getSession();
   const userId = session?.user?.userId;
 
-  const data = await presenter.loadData(destinationId);
+  let data = null;
+  data = await presenter.loadData(destinationId);
+  
   let ulasan = null;
   let existingReview = null;
   // if (userId) {
-  //   existingReview = await presenter.getUserReview(destinationId, userId);
-  // }
-
-  if (!data) {
-    render(html`<p class="text-center text-red-500">Data tidak ditemukan.</p>`, container);
+    //   existingReview = await presenter.getUserReview(destinationId, userId);
+    // }
+    
+    if (!data) {
+      render(html`<p class="text-center text-red-500">Data tidak ditemukan.</p>`, container);
     return;
   }
-
+  
   let comment = existingReview?.comment || '';
   let rating = existingReview?.rating || 5;
   let selectedTab = 'lokasi';
 
+  async function handleAddBookmark(destinationId) {
+    const res = await addDestinationBookmark(destinationId);
+    if (res.ok) {
+      alert('Bookmark berhasil ditambahkan');
+      await updateView();
+    } else {
+      alert('Terjadi kesalahan saat menambahkan bookmark');
+    }
+  }
+  
+  async function handleRemoveBookmark(destinationId, userId) {
+    const result = await getUserBookmarks();
+    const bookmarks = result.data;
+  
+    const found = bookmarks.find(
+      (b) => b.destination_id == destinationId && b.user_id == userId
+    );
+  
+    if (found) {
+      const res = await removeBookmark(found.id);
+      if (res.ok) {
+        alert('Bookmark berhasil dihapus');
+        await updateView();
+      } else {
+        alert('Terjadi kesalahan saat menghapus bookmark');
+      }
+    } else {
+      alert('Bookmark tidak ditemukan');
+    }
+  }
+  
   const updateView = async () => {
+    data = await presenter.loadData(destinationId);
     ulasan = await presenter.loadUlasan(destinationId);
     const template = html`
       <section class="max-w-5xl mx-auto px-4 py-6 mt-20">
@@ -34,16 +69,27 @@ export async function renderDestinasiDetailPage(container, destinationId) {
               <i class="fas fa-map-marker-alt"></i> ${data.location}
             </p>
             <p class="text-sm text-black-600 mt-2">
-              <i class="fas fa-star text-yellow-400"></i> ${data.avgRating ?? 0} /
-              ${data.totalReviews ?? 0} ulasan —
-              <i class="fas fa-bookmark"></i> ${data.totalSaved ?? 0} orang menyimpan destinasi ini
+              <i class="fas fa-star text-yellow-400"></i>
+              ${data.avgRating ? `${data.avgRating} / ${data.totalReviews} ulasan | ` : 'Belum ada ulasan | '}
+
+              <i class="fas fa-bookmark"></i> ${data.bookmark_count ?? 0} orang menyimpan ini
             </p>
           </div>
           <button
-            class="ml-auto border border-black bg-[#bea5a5] px-4 py-2 rounded-full text-sm hover:bg-gray-100"
+            id="save-dest"
+            title="${data.is_saved ? 'Tersimpan' : 'Simpan'}"
+            class="text-2xl hover:scale-110 transition"
+            @click=${async () => {
+              if (data.is_saved) {
+                await handleRemoveBookmark(destinationId, userId);
+              } else {
+                await handleAddBookmark(destinationId);
+              }
+            }}
           >
-            Simpan
+            <i class="${data.is_saved ? 'fas' : 'far'} fa-bookmark text-black"></i>
           </button>
+
         </div>
 
         <!-- Tabs -->
