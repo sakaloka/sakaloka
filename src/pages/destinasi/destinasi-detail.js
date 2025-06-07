@@ -69,9 +69,10 @@ export async function renderDestinasiDetailPage(container, destinationId) {
               <i class="fas fa-map-marker-alt"></i> ${data.location}
             </p>
             <p class="text-sm text-black-600 mt-2">
-              <i class="fas fa-star text-yellow-400"></i> ${data.avgRating ?? 0} /
-              ${data.totalReviews ?? 0} ulasan —
-              <i class="fas fa-bookmark"></i> ${data.totalSaved ?? 0} orang menyimpan destinasi ini
+              <i class="fas fa-star text-yellow-400"></i>
+              ${data.avgRating ? `${data.avgRating} / ${data.totalReviews} ulasan | ` : 'Belum ada ulasan | '}
+
+              <i class="fas fa-bookmark"></i> ${data.bookmark_count ?? 0} orang menyimpan ini
             </p>
           </div>
           <button

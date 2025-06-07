@@ -1,3 +1,5 @@
+import { getUserSummary } from "../../constants/urlApi";
+
 export default class HomePresenter {
   #view;
   #model;
@@ -9,11 +11,12 @@ export default class HomePresenter {
   //API
   async getSummary() {
     try {
-      const data = await this.#model.fetchSummary();
+      const result = await getUserSummary();
+      const data = result?.data;
       return {
-        totalFavorit: data?.totalFavorit ?? 0,
-        totalDestinasi: data?.totalDestinasi ?? 0,
-        totalEvent: data?.totalEvent ?? 0,
+        totalFavorit: data?.bookmark_total ?? 0,
+        totalDestinasi: data?.destination_total ?? 0,
+        totalEvent: data?.event_total ?? 0,
       };
     } catch (err) {
       console.warn('[HomePresenter] Gunakan fallback:', err.message);

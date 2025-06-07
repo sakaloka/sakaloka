@@ -7,6 +7,7 @@ const ENDPOINTS = {
   LOGIN: `${API_URL}/login`,
   USER_DETAILS: (id) => `${API_URL}/users/${id}`,
   USER_UPDATE: (id) => `${API_URL}/users/${id}`,
+  USER_SUMMARY: (id) => `${API_URL}/users/summary/${id}`,
 
   // Events
   EVENTS: (id) => `${API_URL}/events?userId=${id}`,
@@ -96,6 +97,22 @@ export async function updateUser(id, { email, name }) {
       method: 'PUT',
       Authorization: `Bearer ${token}`,
       body: data,
+    },
+  });
+  const json = await response.json();
+
+  return {
+    ...json,
+    ok: response.ok,
+  };
+}
+
+export async function getUserSummary() {
+  const session = getSession();
+
+  const response = await fetch(ENDPOINTS.USER_SUMMARY(session.user.userId), {
+    headers: {
+      Authorization: `Bearer ${session.accessToken}`,
     },
   });
   const json = await response.json();
