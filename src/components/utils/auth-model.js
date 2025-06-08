@@ -1,6 +1,4 @@
-export default class AuthModel {
-
-}
+export default class AuthModel {}
 // API
 //
 // async login(email, password) {

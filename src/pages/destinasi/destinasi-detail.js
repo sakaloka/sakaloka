@@ -1,7 +1,12 @@
 import { html, render } from 'lit-html';
 import { DestinasiDetailPresenter } from './destinasi-detail-presenter.js';
 import { getSession } from '../../components/utils/auth.js';
-import { addDestinationBookmark, getUserBookmarks, removeBookmark } from '../../constants/urlApi.js';
+import {
+  addDestinationBookmark,
+  getUserBookmarks,
+  removeBookmark,
+} from '../../constants/urlApi.js';
+import Swal from 'sweetalert2';
 
 export async function renderDestinasiDetailPage(container, destinationId) {
   const presenter = new DestinasiDetailPresenter();
@@ -10,7 +15,7 @@ export async function renderDestinasiDetailPage(container, destinationId) {
 
   let data = null;
   data = await presenter.loadData(destinationId);
-  
+ 
   if (!data) {
     render(html`<p class="text-center text-red-500">Data tidak ditemukan.</p>`, container);
     return;
@@ -25,31 +30,29 @@ export async function renderDestinasiDetailPage(container, destinationId) {
   async function handleAddBookmark(destinationId) {
     const res = await addDestinationBookmark(destinationId);
     if (res.ok) {
-      alert('Bookmark berhasil ditambahkan');
+      Swal.fire('Berhasil!', 'Bookmark berhasil ditambahkan.', 'success');
       await updateView();
     } else {
-      alert('Terjadi kesalahan saat menambahkan bookmark');
+      Swal.fire('Oops!', 'Terjadi kesalahan saat menambahkan bookmark.', 'error');
     }
   }
-  
+
   async function handleRemoveBookmark(destinationId, userId) {
     const result = await getUserBookmarks();
     const bookmarks = result.data;
-  
-    const found = bookmarks.find(
-      (b) => b.destination_id == destinationId && b.user_id == userId
-    );
-  
+
+    const found = bookmarks.find((b) => b.destination_id == destinationId && b.user_id == userId);
+
     if (found) {
       const res = await removeBookmark(found.id);
       if (res.ok) {
-        alert('Bookmark berhasil dihapus');
+        Swal.fire('Berhasil!', 'Bookmark berhasil dihapus.', 'success');
         await updateView();
       } else {
-        alert('Terjadi kesalahan saat menghapus bookmark');
+        Swal.fire('Oops!', 'Terjadi kesalahan saat menghapus bookmark.', 'error');
       }
     } else {
-      alert('Bookmark tidak ditemukan');
+      Swal.fire('Oops!', 'Bookmark tidak ditemukan.', 'warning');
     }
   }
   
@@ -93,7 +96,6 @@ export async function renderDestinasiDetailPage(container, destinationId) {
           >
             <i class="${data.is_saved ? 'fas' : 'far'} fa-bookmark text-black"></i>
           </button>
-
         </div>
 
         <!-- Tabs -->

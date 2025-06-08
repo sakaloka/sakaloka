@@ -1,6 +1,5 @@
 import { html, render } from 'lit-html';
 import LoginPresenter from './login-presenter.js';
-import AuthModel from '../../components/utils/auth-model.js';
 import Swal from 'sweetalert2';
 
 export function renderLogin(container) {

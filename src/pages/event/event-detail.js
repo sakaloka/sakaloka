@@ -1,7 +1,13 @@
 import { html, render } from 'lit-html';
-import { addEventBookmark, getEventById, getUserBookmarks, removeBookmark } from '../../constants/urlApi';
+import {
+  addEventBookmark,
+  getEventById,
+  getUserBookmarks,
+  removeBookmark,
+} from '../../constants/urlApi';
 import { EventDetailPresenter } from './event-detail-presenter.js';
 import { getSession } from '../../components/utils/auth.js';
+import Swal from 'sweetalert2';
 
 export async function renderEventDetailPage(container, id) {
   const page = new EventDetailPage(id);
@@ -40,7 +46,7 @@ class EventDetailPage {
         description: data.description,
         url: data.detail_url,
         image: data.image || '/images/default.jpg',
-        isSaved: data.is_saved, 
+        isSaved: data.is_saved,
       };
 
       const session = getSession();
@@ -81,48 +87,71 @@ class EventDetailPage {
     render(this.render(), container);
   }
 
-  
   async toggleSave(isSaved, eventId) {
     const session = getSession();
     const userId = session?.user?.userId;
-  
+
     if (!userId) {
-      alert('Anda harus login untuk menyimpan event.');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Login Diperlukan',
+        text: 'Anda harus login untuk menyimpan event.',
+      });
       return;
     }
-  
+
     if (!isSaved) {
       const res = await addEventBookmark(eventId);
       if (res.ok) {
-        alert('Bookmark berhasil ditambahkan');
-        this.#data.isSaved = true; 
+        Swal.fire({
+          icon: 'success',
+          title: 'Berhasil!',
+          text: 'Bookmark berhasil ditambahkan.',
+          timer: 1500,
+          showConfirmButton: false,
+        });
+        this.#data.isSaved = true;
       } else {
-        alert('Gagal menambahkan bookmark');
+        Swal.fire({
+          icon: 'error',
+          title: 'Gagal',
+          text: 'Gagal menambahkan bookmark.',
+        });
       }
     } else {
       const result = await getUserBookmarks();
       const bookmarks = result.data;
-  
-      const found = bookmarks.find(
-        (b) => b.event_id === eventId && b.user_id === userId
-      );
-  
+      const found = bookmarks.find((b) => b.event_id === eventId && b.user_id === userId);
+
       if (found) {
         const res = await removeBookmark(found.id);
         if (res.ok) {
-          alert('Bookmark berhasil dihapus');
-          this.#data.isSaved = false; 
+          Swal.fire({
+            icon: 'success',
+            title: 'Dihapus!',
+            text: 'Bookmark berhasil dihapus.',
+            timer: 1500,
+            showConfirmButton: false,
+          });
+          this.#data.isSaved = false;
         } else {
-          alert('Gagal menghapus bookmark');
+          Swal.fire({
+            icon: 'error',
+            title: 'Gagal',
+            text: 'Gagal menghapus bookmark.',
+          });
         }
       } else {
-        alert('Bookmark tidak ditemukan');
+        Swal.fire({
+          icon: 'warning',
+          title: 'Tidak Ditemukan',
+          text: 'Bookmark tidak ditemukan.',
+        });
       }
     }
-  
-    this.update(); 
+
+    this.update();
   }
-  
 
   async saveReview() {
     if (this.rating === 0 || !this.reviewText.trim()) return;
@@ -155,7 +184,11 @@ class EventDetailPage {
       await this.init(); 
       this.update();
     } else {
-      alert(result.message || 'Gagal mengirim ulasan.');
+      Swal.fire({
+        icon: 'error',
+        title: 'Gagal!',
+        text: result.message || 'Gagal mengirim ulasan.',
+      });
     }
   }  
 
