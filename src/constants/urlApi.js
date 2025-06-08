@@ -266,7 +266,7 @@ export async function deleteReview(reviewId) {
   const response = await fetch(ENDPOINTS.DELETE_REVIEW(reviewId), {
     method: 'DELETE',
     headers: {
-      'Authorization': `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     },
   });
   const json = await response.json();

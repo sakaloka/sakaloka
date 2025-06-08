@@ -56,14 +56,14 @@ class EventDetailPage {
 
       // Pisahkan review user sendiri dari list umum
       if (userId) {
-        const existing = this.reviews.find(r => r.user_id === userId);
+        const existing = this.reviews.find((r) => r.user_id === userId);
         if (existing) {
           this.userReview = existing;
           this.reviewText = existing.comment;
           this.rating = existing.rating;
 
           // Filter biar nggak double tampil
-          this.reviews = this.reviews.filter(r => r.user_id !== userId);
+          this.reviews = this.reviews.filter((r) => r.user_id !== userId);
         }
       }
     } catch (err) {
@@ -155,33 +155,45 @@ class EventDetailPage {
 
   async saveReview() {
     if (this.rating === 0 || !this.reviewText.trim()) return;
-  
+
     const session = getSession();
     const userId = session?.user?.userId;
-  
+
     const payload = {
       comment: this.reviewText,
       rating: this.rating,
       userId,
       eventId: this.#data.id,
     };
-  
+
     let result;
     if (this.userReview) {
       // Sudah ada review → update
-      result = await this.presenter.updateReview(this.userReview.id, payload.comment, payload.rating);
+      result = await this.presenter.updateReview(
+        this.userReview.id,
+        payload.comment,
+        payload.rating,
+      );
       if (result) this.isEditing = false;
     } else {
       // Belum ada → add
       result = await this.presenter.submitReview(payload);
     }
-  
+
     if (result) {
+      await Swal.fire({
+        icon: 'success',
+        title: this.userReview ? 'Ulasan Diperbarui' : 'Ulasan Terkirim',
+        text: this.userReview ? 'Ulasan berhasil diperbarui.' : 'Terima kasih atas ulasan Anda!',
+        timer: 1500,
+        showConfirmButton: false,
+      });
+
       this.reviewText = '';
       this.rating = 0;
       this.userReview = null;
       this.reviews = await this.presenter.getReviews(this.#data.id);
-      await this.init(); 
+      await this.init();
       this.update();
     } else {
       Swal.fire({
@@ -190,17 +202,25 @@ class EventDetailPage {
         text: result.message || 'Gagal mengirim ulasan.',
       });
     }
-  }  
+  }
 
-  async deleteReview () {
+  async deleteReview() {
     const result = await this.presenter.deleteReview(this.userReview.id);
     if (result) {
+      await Swal.fire({
+        icon: 'success',
+        title: 'Ulasan Dihapus',
+        text: 'Ulasan kamu berhasil dihapus.',
+        timer: 1500,
+        showConfirmButton: false,
+      });
+
       this.isEditing = false;
       this.reviewText = '';
       this.rating = 0;
       this.userReview = null;
       this.reviews = await this.presenter.getReviews(this.#data.id);
-      await this.init(); 
+      await this.init();
       this.update();
     } else {
       alert('Gagal menghapus ulasan.');
@@ -224,7 +244,7 @@ class EventDetailPage {
   parseMySQLDate(mysqlDateStr) {
     return new Date(mysqlDateStr.replace(' ', 'T'));
   }
-  
+
   formatTanggalIndo(dateStr) {
     const date = this.parseMySQLDate(dateStr);
     return new Intl.DateTimeFormat('id-ID', {
@@ -233,24 +253,24 @@ class EventDetailPage {
       year: 'numeric',
     }).format(date);
   }
-  
+
   formatWaktuRelatif(dateStr) {
     const now = new Date();
     const past = this.parseMySQLDate(dateStr);
     const diffMs = now - past;
-  
+
     const seconds = Math.floor(diffMs / 1000);
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
-  
+
     if (seconds < 60) return 'Baru saja';
     if (minutes < 60) return `${minutes} menit yang lalu`;
     if (hours < 24) return `${hours} jam yang lalu`;
     if (days < 7) return `${days} hari yang lalu`;
-  
+
     return this.formatTanggalIndo(dateStr);
-  }   
+  }
 
   update() {
     if (this.container) render(this.render(), this.container);
@@ -258,9 +278,7 @@ class EventDetailPage {
 
   renderReviewForm(isEditing = false) {
     return html`
-      <div
-        class="max-w-4xl mx-auto mt-6 bg-white border border-[#3c2b2b] rounded-lg shadow-md p-6"
-      >
+      <div class="max-w-4xl mx-auto mt-6 bg-white border border-[#3c2b2b] rounded-lg shadow-md p-6">
         <h2 class="text-lg font-semibold text-[#3c2b2b] mb-2">
           ${this.userReview ? 'Ulasan Kamu' : 'Tulis Ulasan'}
         </h2>
@@ -311,7 +329,7 @@ class EventDetailPage {
         </div>
       </div>
     `;
-  }  
+  }
 
   render() {
     const d = this.#data;
@@ -371,13 +389,18 @@ class EventDetailPage {
         ${!this.userReview || this.isEditing
           ? this.renderReviewForm()
           : html`
-              <div class="max-w-4xl mx-auto mt-6 bg-[#FFF] border border-primary rounded-lg shadow-md p-6">
+              <div
+                class="max-w-4xl mx-auto mt-6 bg-[#FFF] border border-black rounded-lg shadow-md p-6"
+              >
                 <h2 class="text-lg font-semibold text-[#3c2b2b] mb-3">Ulasan Kamu</h2>
                 <div class="bg-gray-100 p-4 rounded shadow-sm mt-4">
                   <div class="flex justify-between mb-2">
                     <div class="flex items-center gap-1 text-yellow-400 text-sm">
                       ${[1, 2, 3, 4, 5].map(
-                        (i) => html`<i class="${i <= this.userReview.rating ? 'fas' : 'far'} fa-star"></i>`
+                        (i) =>
+                          html`<i
+                            class="${i <= this.userReview.rating ? 'fas' : 'far'} fa-star"
+                          ></i>`,
                       )}
                     </div>
                     <div class="flex gap-2">
@@ -395,8 +418,18 @@ class EventDetailPage {
                       <button
                         class="text-sm text-red-600 hover:underline"
                         @click=${async () => {
-                          const confirmed = confirm('Yakin hapus ulasanmu?');
-                          if (confirmed) {
+                          const result = await Swal.fire({
+                            title: 'Konfirmasi',
+                            text: 'Yakin ingin menghapus ulasanmu?',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya, hapus',
+                            cancelButtonText: 'Batal',
+                            confirmButtonColor: '#483434',
+                            cancelButtonColor: '#aaa',
+                          });
+
+                          if (result.isConfirmed) {
                             await this.deleteReview();
                           }
                         }}
@@ -408,50 +441,43 @@ class EventDetailPage {
                   <p class="text-sm text-gray-800">${this.userReview.comment}</p>
                 </div>
               </div>
-          `
-        }     
+            `}
 
         <!-- List Review -->
-              <div
-                class="max-w-4xl mx-auto mt-6 bg-white border border-[#3c2b2b] rounded-lg shadow-md p-6"
-              >
-                <h2 class="text-lg font-semibold text-[#3c2b2b] mb-3">Ulasan Pengunjung</h2>
-                <div class="flex flex-col gap-3">
-                  ${Array.isArray(this.reviews) && this.reviews.length > 0
-                    ? this.reviews.map(
-                        (d) => html`
-                          <div
-                            class="flex gap-4 items-start bg-white border rounded-lg p-4 shadow-sm"
+        <div class="max-w-4xl mx-auto mt-6">
+          <h2 class="text-lg font-semibold text-[#3c2b2b] mb-3">Ulasan Pengunjung</h2>
+          <div class="flex flex-col gap-3">
+            ${Array.isArray(this.reviews) && this.reviews.length > 0
+              ? this.reviews.map(
+                  (d) => html`
+                    <div class="flex gap-4 items-start bg-white border rounded-lg p-4 shadow-sm">
+                      <div
+                        class="w-10 h-10 rounded-full bg-[#bea5a5] flex items-center justify-center text-sm font-bold text-black"
+                      >
+                        ${d.name?.[0]?.toUpperCase() || 'U'}
+                      </div>
+                      <div class="flex-1">
+                        <div class="flex justify-between items-center mb-1">
+                          <h4 class="font-semibold text-sm text-gray-800">
+                            ${d.name || 'Pengguna'}
+                          </h4>
+                          <span class="text-xs text-gray-500"
+                            >${this.formatWaktuRelatif(d.updated_at)}</span
                           >
-                            <div
-                              class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-sm font-bold text-white"
-                            >
-                              ${d.name?.[0]?.toUpperCase() || 'U'}
-                            </div>
-                            <div class="flex-1">
-                              <div class="flex justify-between items-center mb-1">
-                                <h4 class="font-semibold text-sm text-gray-800">
-                                  ${d.name || 'Pengguna'}
-                                </h4>
-                                <span class="text-xs text-gray-500"
-                                  >${this.formatWaktuRelatif(d.updated_at)}</span
-                                >
-                              </div>
-                              <div class="flex items-center gap-1 text-yellow-400 text-sm mb-1">
-                                ${[1, 2, 3, 4, 5].map(
-                                  (i) => html`
-                                    <i class="${i <= d.rating ? 'fas' : 'far'} fa-star"></i>
-                                  `,
-                                )}
-                              </div>
-                              <p class="text-sm text-gray-700">${d.comment}</p>
-                            </div>
-                          </div>
-                        `,
-                      )
-                    : html`<p class="text-gray-500 text-sm">Belum ada ulasan dari pengunjung</p>`}
-                </div>
-              </div>
+                        </div>
+                        <div class="flex items-center gap-1 text-yellow-400 text-sm mb-1">
+                          ${[1, 2, 3, 4, 5].map(
+                            (i) => html` <i class="${i <= d.rating ? 'fas' : 'far'} fa-star"></i> `,
+                          )}
+                        </div>
+                        <p class="text-sm text-gray-700">${d.comment}</p>
+                      </div>
+                    </div>
+                  `,
+                )
+              : html`<p class="text-gray-500 text-sm">Belum ada ulasan dari pengunjung</p>`}
+          </div>
+        </div>
       </section>
     `;
   }
