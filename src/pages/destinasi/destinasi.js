@@ -121,10 +121,12 @@ class DestinasiView {
     this.filteredDestinations = this.originalDestinations.filter((d) => {
       const name = d.name?.toLowerCase() || '';
       const location = d.location?.toLowerCase() || '';
+      const description = d.description?.toLowerCase() || '';
   
       return (
         name.includes(lowerKeyword) ||
-        location.includes(lowerKeyword)
+        location.includes(lowerKeyword) ||
+        description.includes(lowerKeyword)
       );
     });
   
