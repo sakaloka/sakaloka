@@ -41,13 +41,14 @@ class DestinasiView {
             </div>
 
             <!-- Tabs -->
-            <div class="flex gap-6 mt-4 border-b text-sm font-medium">
+            <div class="flex gap-6 mt-4 border-b text-sm font-medium max-w-screen overflow-x-auto">
               <!-- Tab manual "Untuk Kamu" -->
               <button
                 @click=${(e) => this.searchKeyword(e, 'Untuk Kamu')}
-                class="pb-2 text-gray-600 hover:text-[#678337] category-tab"
+                class="min-w-fit pb-2 flex gap-2 items-center text-gray-600 hover:text-[#678337] category-tab"
               >
                 Untuk Kamu
+                <i class="fas fa-wand-magic-sparkles"></i>
               </button>
 
               <!-- Tab kategori dinamis -->
@@ -55,7 +56,7 @@ class DestinasiView {
                 (tab) => html`
                   <button
                     @click=${(e) => this.searchCategory(e, tab.name)}
-                    class="pb-2 text-gray-600 hover:text-[#678337] category-tab"
+                    class="min-w-fit pb-2 text-gray-600 hover:text-[#678337] category-tab"
                   >
                     ${tab.name}
                   </button>
@@ -116,11 +117,19 @@ class DestinasiView {
 
   filterDestinations(keyword) {
     const lowerKeyword = keyword.toLowerCase();
-    this.filteredDestinations = this.originalDestinations.filter((d) =>
-      d.name.toLowerCase().includes(lowerKeyword),
-    );
+  
+    this.filteredDestinations = this.originalDestinations.filter((d) => {
+      const name = d.name?.toLowerCase() || '';
+      const location = d.location?.toLowerCase() || '';
+  
+      return (
+        name.includes(lowerKeyword) ||
+        location.includes(lowerKeyword)
+      );
+    });
+  
     this.updateView();
-  }
+  }  
 
   initMap(destinations) {
     if (!destinations.length) return;
@@ -198,14 +207,17 @@ class DestinasiView {
       this.filteredDestinations = this.originalDestinations.filter((d) => {
         const name = d.name?.toLowerCase() || '';
         const description = d.description?.toLowerCase() || '';
+        const location = d.location?.toLowerCase() || '';
 
         // Jika name mengandung keyword, langsung lolos
         if (name.includes(lowerKeyword)) {
           return true;
+        } else if (description.includes(lowerKeyword)) {
+          return true;
+        } else {
+          return location.includes(lowerKeyword);
         }
 
-        // Jika tidak, cek apakah description mengandung keyword
-        return description.includes(lowerKeyword);
       });
     }
 
