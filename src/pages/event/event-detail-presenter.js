@@ -1,4 +1,4 @@
-import { API_URL } from '../../constants/urlApi.js';
+import { API_URL, deleteReview, updateReview } from '../../constants/urlApi.js';
 import { getSession } from '../../components/utils/auth.js';
 
 export class EventDetailPresenter {
@@ -16,6 +16,26 @@ export class EventDetailPresenter {
     } catch (err) {
       console.error('[getReviews] Error:', err);
       return [];
+    }
+  }
+  
+  async updateReview (reviewId, comment, rating) {
+    try {
+      const res = await updateReview(reviewId, {comment, rating});
+      return res.ok;
+    } catch (err) {
+      console.error('[updateReview] Error:', err);
+      return false;
+    }
+  }
+
+  async deleteReview (reviewId) {
+    try {
+      const res = await deleteReview(reviewId);
+      return res.ok;
+    } catch (err) {
+      console.error('[deleteReview] Error:', err);
+      return false;
     }
   }
 

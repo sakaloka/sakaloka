@@ -1,4 +1,4 @@
-import { API_URL } from '../../constants/urlApi.js';
+import { API_URL, deleteReview, updateReview } from '../../constants/urlApi.js';
 import { getSession } from '../../components/utils/auth';
 
 export class DestinasiDetailPresenter {
@@ -37,24 +37,11 @@ export class DestinasiDetailPresenter {
     }
   }
 
-  async getUserReview(destinationId, userId) {
-    const session = getSession();
-    const res = await fetch(`${API_URL}/reviews?type=destination&targetId=${destinationId}`, {
-      headers: {
-        Authorization: `Bearer ${session?.accessToken}`,
-      },
-    });
-    const json = await res.json();
-    return json.data?.[0] || null;
-  }
-
   async submitReview({ destinationId, userId, comment, rating }) {
-    // const existing = await this.getUserReview(destinationId, userId);
-    // if (existing) {
-    //   return await this.updateReview(existing.id, { comment, rating });
-    // } else {
-    //   return await this.addReview({ destinationId, userId, comment, rating });
-    // }
+    const ulasanRes = await this.loadUlasan(destinationId);
+    const existing = ulasanRes?.data?.find((r) => r.user_id === userId);
+
+    if (existing) return await this.updateReview(existing.id, comment, rating);
     return await this.addReview({ destinationId, userId, comment, rating });
   }
 
@@ -71,16 +58,23 @@ export class DestinasiDetailPresenter {
     return await res.json();
   }
 
-  async updateReview(reviewId, { comment, rating }) {
-    const session = getSession();
-    const res = await fetch(`${API_URL}/reviews/${reviewId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${session?.accessToken}`,
-      },
-      body: JSON.stringify({ comment, rating }),
-    });
-    return await res.json();
+  async updateReview (reviewId, comment, rating) {
+    try {
+      const res = await updateReview(reviewId, {comment, rating});
+      return res.ok;
+    } catch (err) {
+      console.error('[updateReview] Error:', err);
+      return false;
+    }
+  }
+
+  async deleteReview (reviewId) {
+    try {
+      const res = await deleteReview(reviewId);
+      return res.ok;
+    } catch (err) {
+      console.error('[deleteReview] Error:', err);
+      return false;
+    }
   }
 }

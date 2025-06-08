@@ -11,17 +11,15 @@ export async function renderDestinasiDetailPage(container, destinationId) {
   let data = null;
   data = await presenter.loadData(destinationId);
   
-  let ulasan = null;
-  let existingReview = null;
-  // existingReview = await presenter.getUserReview(destinationId, userId);
-    
   if (!data) {
     render(html`<p class="text-center text-red-500">Data tidak ditemukan.</p>`, container);
     return;
   }
-  
-  let comment = existingReview?.comment || '';
-  let rating = existingReview?.rating;
+
+  let ulasan = null;
+  let comment = '';
+  let rating = 0;
+
   let selectedTab = 'lokasi';
 
   async function handleAddBookmark(destinationId) {
@@ -55,10 +53,17 @@ export async function renderDestinasiDetailPage(container, destinationId) {
     }
   }
   
+  let isEditing = false;
   const updateView = async () => {
     data = await presenter.loadData(destinationId);
     ulasan = await presenter.loadUlasan(destinationId);
-    console.log(ulasan);
+    const userReview = ulasan?.data?.find((d) => d.user_id === userId);
+    const otherReviews = ulasan?.data?.filter((d) => d.user_id !== userId);
+    if (!isEditing && userReview) {
+      comment = userReview.comment;
+      rating = userReview.rating;
+    }
+    
     const template = html`
       <section class="max-w-5xl mx-auto px-4 py-6 mt-20">
         <div class="flex items-start justify-between gap-4">
@@ -69,7 +74,7 @@ export async function renderDestinasiDetailPage(container, destinationId) {
             </p>
             <p class="text-sm text-black-600 mt-2">
               <i class="fas fa-star text-yellow-400"></i>
-              ${data.avgRating ? `${data.avgRating} / ${data.totalReviews} ulasan | ` : 'Belum ada ulasan | '}
+              ${data.rating_average ? `${data.rating_average} / 5 (${data.rating_count} ulasan) | ` : 'Belum ada ulasan | '}
 
               <i class="fas fa-bookmark"></i> ${data.bookmark_count ?? 0} orang menyimpan ini
             </p>
@@ -92,12 +97,12 @@ export async function renderDestinasiDetailPage(container, destinationId) {
         </div>
 
         <!-- Tabs -->
-        <div class="mt-6 border-b">
+        <div class="mt-6 border-b max-w-screen overflow-x-auto">
           <nav class="flex gap-4 text-sm font-medium text-gray-600">
             ${['lokasi', 'galeri', 'ulasan'].map(
               (tab) => html`
                 <button
-                  class="py-2 ${selectedTab === tab
+                  class="tab-items py-2 ${selectedTab === tab
                     ? 'border-b-2 border-black text-black'
                     : 'hover:text-black'}"
                   @click=${() => {
@@ -142,89 +147,138 @@ export async function renderDestinasiDetailPage(container, destinationId) {
               </div>
             `
           : ''}
-        ${selectedTab === 'ulasan'
-          ? html`
-              <div class="mt-6">
-                <h2 class="text-xl font-semibold mb-2">Tulis Ulasan Kamu</h2>
-                <!-- Bintang Rating -->
-                <div class="flex items-center gap-1 mb-2">
-                  ${[1, 2, 3, 4, 5].map(
-                    (i) => html`
-                      <i
-                        class="fa-star ${i <= rating
-                          ? 'fas text-yellow-500'
-                          : 'far text-gray-400'} cursor-pointer text-lg"
-                        @click=${() => {
-                          rating = i;
-                          updateView();
-                        }}
-                      ></i>
-                    `,
-                  )}
-                </div>
-
-                <textarea
-                  id="reviewComment"
-                  class="w-full border rounded p-2"
-                  rows="4"
-                  placeholder="Tulis ulasan..."
-                  .value=${comment}
-                ></textarea>
-
-                <button
-                  @click=${async () => {
-                    const commentVal = document.getElementById('reviewComment').value;
-                    const res = await presenter.submitReview({
-                      destinationId,
-                      userId,
-                      comment: commentVal,
-                      rating,
-                    });
-                    alert(res?.message || 'Berhasil disimpan');
-                    await updateView();
-                  }}
-                  class="mt-3 px-4 py-2 bg-blue-600 text-white rounded"
-                >
-                  Kirim Ulasan
-                </button>
-              </div>
-              <div class="mt-6">
-                ${Array.isArray(ulasan?.data) && ulasan.data.length > 0
-                  ? ulasan.data.map(
-                      (d) => html`
-                        <div
-                          class="flex gap-4 items-start bg-white border rounded-lg p-4 shadow-sm mb-4"
-                        >
-                          <div
-                            class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-sm font-bold text-white"
-                          >
-                            ${d.name?.[0]?.toUpperCase() || 'U'}
-                          </div>
-                          <div class="flex-1">
-                            <div class="flex justify-between items-center mb-1">
-                              <h4 class="font-semibold text-sm text-gray-800">
-                                ${d.name || 'Pengguna'}
-                              </h4>
-                              <span class="text-xs text-gray-500"
-                                >${new Date(d.created_at).toLocaleDateString()}</span
-                              >
-                            </div>
-                            <div class="flex items-center gap-1 text-yellow-400 text-sm mb-1">
+          ${selectedTab === 'ulasan'
+            ? html`
+                <div class="mt-6">
+                  <h2 class="text-xl font-semibold mb-2">Ulasan Kamu</h2>
+          
+                  ${userReview && !isEditing
+                    ? html`
+                        <div class="bg-gray-100 p-4 rounded shadow-sm">
+                          <div class="flex justify-between mb-2">
+                            <div class="flex items-center gap-1 text-yellow-400 text-sm">
                               ${[1, 2, 3, 4, 5].map(
-                                (i) => html`
-                                  <i class="${i <= d.rating ? 'fas' : 'far'} fa-star"></i>
-                                `,
+                                (i) => html`<i class="${i <= userReview.rating ? 'fas' : 'far'} fa-star"></i>`
                               )}
                             </div>
-                            <p class="text-sm text-gray-700">${d.comment}</p>
+                            <div class="flex gap-2">
+                              <button
+                                class="text-sm text-blue-600 hover:underline"
+                                @click=${() => {
+                                  isEditing = true;
+                                  updateView();
+                                }}
+                              >Edit</button>
+                              <button
+                                class="text-sm text-red-600 hover:underline"
+                                @click=${async () => {
+                                  const confirmed = confirm('Yakin hapus ulasanmu?');
+                                  if (confirmed) {
+                                    await presenter.deleteReview(userReview.id);
+                                    alert('Ulasan dihapus');
+                                    await updateView();
+                                  }
+                                }}
+                              >Hapus</button>
+                            </div>
+                          </div>
+                          <p class="text-sm text-gray-800">${userReview.comment}</p>
+                        </div>
+                      `
+                    : html`
+                        <div class="mt-2">
+                          <div class="flex items-center gap-1 mb-2">
+                            ${[1, 2, 3, 4, 5].map(
+                              (i) => html`
+                                <i
+                                  class="fa-star ${i <= rating ? 'fas text-yellow-500' : 'far text-gray-400'} cursor-pointer text-lg"
+                                  @click=${() => {
+                                    rating = i;
+                                    updateView();
+                                  }}
+                                ></i>
+                              `
+                            )}                          
+                          </div>
+          
+                          <textarea
+                            id="reviewComment"
+                            class="w-full border rounded p-2"
+                            rows="4"
+                            placeholder="Tulis ulasan..."
+                            .value=${comment}
+                            @input=${(e) => {
+                              comment = e.target.value;
+                            }}
+                          ></textarea>
+          
+                          <div class="flex gap-2 mt-3 justify-end">
+                            ${userReview
+                              ? html`
+                                  <button
+                                    class="px-4 py-2 border rounded text-gray-600 hover:bg-gray-100"
+                                    @click=${() => {
+                                      isEditing = false;
+                                      updateView();
+                                    }}
+                                  >
+                                    Batal
+                                  </button>
+                                `
+                              : ''}
+                            <button
+                              @click=${async () => {
+                                const commentVal = document.getElementById('reviewComment').value;
+                                const res = await presenter.submitReview({
+                                  destinationId,
+                                  userId,
+                                  comment: commentVal,
+                                  rating,
+                                });
+                                alert(res?.message || 'Berhasil disimpan');
+                                isEditing = false;
+                                await updateView();
+                              }}
+                              class="px-4 py-2 bg-primary text-white rounded"
+                            >
+                              ${userReview ? 'Perbarui Ulasan' : 'Kirim Ulasan'}
+                            </button>
                           </div>
                         </div>
-                      `,
-                    )
-                  : html`<p class="text-gray-500 text-sm">Belum ada ulasan.</p>`}
-              </div>
-            `
-          : ''}
+                      `}
+                </div>
+          
+                <!-- Ulasan Pengguna Lain -->
+                <div class="mt-6 flex flex-col gap-3">
+                  <h2 class="text-lg font-semibold mb-2">Ulasan Pengunjung</h2>
+                  ${otherReviews && otherReviews.length > 0
+                    ? otherReviews.map(
+                        (d) => html`
+                          <div class="flex gap-4 items-start bg-white border rounded-lg p-4 shadow-sm">
+                            <div
+                              class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-sm font-bold text-white"
+                            >
+                              ${d.name?.[0]?.toUpperCase() || 'U'}
+                            </div>
+                            <div class="flex-1">
+                              <div class="flex justify-between items-center mb-1">
+                                <h4 class="font-semibold text-sm text-gray-800">${d.name || 'Pengguna'}</h4>
+                                <span class="text-xs text-gray-500">${new Date(d.updated_at).toLocaleDateString()}</span>
+                              </div>
+                              <div class="flex items-center gap-1 text-yellow-400 text-sm mb-1">
+                                ${[1, 2, 3, 4, 5].map(
+                                  (i) => html` <i class="${i <= d.rating ? 'fas' : 'far'} fa-star"></i> `
+                                )}
+                              </div>
+                              <p class="text-sm text-gray-700">${d.comment}</p>
+                            </div>
+                          </div>
+                        `
+                      )
+                    : html`<p class="text-gray-500 text-sm">Belum ada ulasan lain.</p>`}
+                </div>
+              `
+            : ''}     
       </section>
     `;
 

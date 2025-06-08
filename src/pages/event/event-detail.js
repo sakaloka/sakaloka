@@ -13,6 +13,8 @@ class EventDetailPage {
   #data = null;
 
   constructor(id) {
+    this.userReview = null;
+    this.isEditing = false;
     this.id = id;
     this.reviewText = '';
     this.rating = 0;
@@ -41,7 +43,23 @@ class EventDetailPage {
         isSaved: data.is_saved, 
       };
 
+      const session = getSession();
+      const userId = session?.user?.userId;
+
       this.reviews = await this.presenter.getReviews(this.#data.id);
+
+      // Pisahkan review user sendiri dari list umum
+      if (userId) {
+        const existing = this.reviews.find(r => r.user_id === userId);
+        if (existing) {
+          this.userReview = existing;
+          this.reviewText = existing.comment;
+          this.rating = existing.rating;
+
+          // Filter biar nggak double tampil
+          this.reviews = this.reviews.filter(r => r.user_id !== userId);
+        }
+      }
     } catch (err) {
       console.error('Gagal ambil detail event:', err);
       this.#data = {
@@ -108,24 +126,51 @@ class EventDetailPage {
 
   async saveReview() {
     if (this.rating === 0 || !this.reviewText.trim()) return;
-
+  
     const session = getSession();
     const userId = session?.user?.userId;
-
-    const result = await this.presenter.submitReview({
+  
+    const payload = {
       comment: this.reviewText,
       rating: this.rating,
       userId,
       eventId: this.#data.id,
-    });
-
-    if (result.status === 'success') {
+    };
+  
+    let result;
+    if (this.userReview) {
+      // Sudah ada review → update
+      result = await this.presenter.updateReview(this.userReview.id, payload.comment, payload.rating);
+      if (result) this.isEditing = false;
+    } else {
+      // Belum ada → add
+      result = await this.presenter.submitReview(payload);
+    }
+  
+    if (result) {
       this.reviewText = '';
       this.rating = 0;
+      this.userReview = null;
       this.reviews = await this.presenter.getReviews(this.#data.id);
+      await this.init(); 
       this.update();
     } else {
       alert(result.message || 'Gagal mengirim ulasan.');
+    }
+  }  
+
+  async deleteReview () {
+    const result = await this.presenter.deleteReview(this.userReview.id);
+    if (result) {
+      this.isEditing = false;
+      this.reviewText = '';
+      this.rating = 0;
+      this.userReview = null;
+      this.reviews = await this.presenter.getReviews(this.#data.id);
+      await this.init(); 
+      this.update();
+    } else {
+      alert('Gagal menghapus ulasan.');
     }
   }
 
@@ -143,9 +188,97 @@ class EventDetailPage {
       : `${formatter.format(s)} – ${formatter.format(e)}`;
   }
 
+  parseMySQLDate(mysqlDateStr) {
+    return new Date(mysqlDateStr.replace(' ', 'T'));
+  }
+  
+  formatTanggalIndo(dateStr) {
+    const date = this.parseMySQLDate(dateStr);
+    return new Intl.DateTimeFormat('id-ID', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    }).format(date);
+  }
+  
+  formatWaktuRelatif(dateStr) {
+    const now = new Date();
+    const past = this.parseMySQLDate(dateStr);
+    const diffMs = now - past;
+  
+    const seconds = Math.floor(diffMs / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+  
+    if (seconds < 60) return 'Baru saja';
+    if (minutes < 60) return `${minutes} menit yang lalu`;
+    if (hours < 24) return `${hours} jam yang lalu`;
+    if (days < 7) return `${days} hari yang lalu`;
+  
+    return this.formatTanggalIndo(dateStr);
+  }   
+
   update() {
     if (this.container) render(this.render(), this.container);
   }
+
+  renderReviewForm(isEditing = false) {
+    return html`
+      <div
+        class="max-w-4xl mx-auto mt-6 bg-white border border-[#3c2b2b] rounded-lg shadow-md p-6"
+      >
+        <h2 class="text-lg font-semibold text-[#3c2b2b] mb-2">
+          ${this.userReview ? 'Ulasan Kamu' : 'Tulis Ulasan'}
+        </h2>
+        <div class="flex items-center gap-1 mb-3">
+          ${[1, 2, 3, 4, 5].map(
+            (i) => html`
+              <span
+                class="cursor-pointer"
+                @click=${() => {
+                  this.rating = i;
+                  this.update();
+                }}
+              >
+                <i
+                  class="fa-star ${i <= this.rating ? 'fas text-yellow-500' : 'far text-gray'}"
+                ></i>
+              </span>
+            `,
+          )}
+        </div>
+        <textarea
+          rows="3"
+          class="w-full border px-3 border-[#3c2b2b] py-2 rounded text-sm bg-white text-black placeholder-gray"
+          .value=${this.reviewText}
+          @input=${(e) => (this.reviewText = e.target.value)}
+          placeholder="Tulis ulasanmu di sini..."
+        ></textarea>
+        <div class="flex justify-end mt-2 gap-3">
+          ${this.userReview
+            ? html`
+                <button
+                  class="px-4 py-2 border rounded text-gray-600 hover:bg-gray-100"
+                  @click=${() => {
+                    this.isEditing = false;
+                    this.update();
+                  }}
+                >
+                  Batal
+                </button>
+              `
+            : ''}
+          <button
+            class="bg-[#3c2b2b] text-white px-4 py-2 rounded hover:bg-[#483434]"
+            @click=${() => this.saveReview()}
+          >
+            ${this.userReview ? 'Simpan Perubahan' : 'Kirim'}
+          </button>
+        </div>
+      </div>
+    `;
+  }  
 
   render() {
     const d = this.#data;
@@ -202,73 +335,90 @@ class EventDetailPage {
         </div>
 
         <!-- Form Review -->
-        <div
-          class="max-w-4xl mx-auto mt-6 bg-[#bea5a5] border border-[#3c2b2b] rounded-lg shadow-md p-6"
-        >
-          <h2 class="text-lg font-semibold text-[#3c2b2b] mb-2">Tulis Review</h2>
-          <div class="flex items-center gap-1 mb-3">
-            ${[1, 2, 3, 4, 5].map(
-              (i) => html`
-                <span
-                  class="cursor-pointer"
-                  @click=${() => {
-                    this.rating = i;
-                    this.update();
-                  }}
-                >
-                  <i
-                    class="fa-star ${i <= this.rating ? 'fas text-yellow-500' : 'far text-white'}"
-                  ></i>
-                </span>
-              `,
-            )}
-          </div>
-          <textarea
-            rows="3"
-            class="w-full border px-3 py-2 rounded text-sm bg-white text-black placeholder-gray"
-            .value=${this.reviewText}
-            @input=${(e) => (this.reviewText = e.target.value)}
-            placeholder="Tulis ulasanmu di sini..."
-          ></textarea>
-          <div class="flex justify-end mt-2">
-            <button
-              class="bg-[#3c2b2b] text-white px-4 py-2 rounded hover:bg-[#483434]"
-              @click=${() => this.saveReview()}
-            >
-              Kirim Review
-            </button>
-          </div>
-        </div>
+        ${!this.userReview || this.isEditing
+          ? this.renderReviewForm()
+          : html`
+              <div class="max-w-4xl mx-auto mt-6 bg-[#FFF] border border-primary rounded-lg shadow-md p-6">
+                <h2 class="text-lg font-semibold text-[#3c2b2b] mb-3">Ulasan Kamu</h2>
+                <div class="bg-gray-100 p-4 rounded shadow-sm mt-4">
+                  <div class="flex justify-between mb-2">
+                    <div class="flex items-center gap-1 text-yellow-400 text-sm">
+                      ${[1, 2, 3, 4, 5].map(
+                        (i) => html`<i class="${i <= this.userReview.rating ? 'fas' : 'far'} fa-star"></i>`
+                      )}
+                    </div>
+                    <div class="flex gap-2">
+                      <button
+                        class="text-sm text-blue-600 hover:underline"
+                        @click=${() => {
+                          this.reviewText = this.userReview.comment;
+                          this.rating = this.userReview.rating;
+                          this.isEditing = true;
+                          this.update();
+                        }}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        class="text-sm text-red-600 hover:underline"
+                        @click=${async () => {
+                          const confirmed = confirm('Yakin hapus ulasanmu?');
+                          if (confirmed) {
+                            await this.deleteReview();
+                          }
+                        }}
+                      >
+                        Hapus
+                      </button>
+                    </div>
+                  </div>
+                  <p class="text-sm text-gray-800">${this.userReview.comment}</p>
+                </div>
+              </div>
+          `
+        }     
 
         <!-- List Review -->
-        ${this.reviews.length > 0
-          ? html`
               <div
                 class="max-w-4xl mx-auto mt-6 bg-white border border-[#3c2b2b] rounded-lg shadow-md p-6"
               >
-                <h2 class="text-lg font-semibold text-[#3c2b2b] mb-2">Ulasan Pengunjung</h2>
-                <ul class="space-y-3">
-                  ${this.reviews.map(
-                    (r) => html`
-                      <li class="border rounded p-3 text-sm bg-[#bea5a5] text-white">
-                        <div class="flex items-center gap-1 mb-1">
-                          ${[1, 2, 3, 4, 5].map(
-                            (i) =>
-                              html`<i
-                                class="fa-star ${i <= r.rating
-                                  ? 'fas text-yellow-500'
-                                  : 'far text-white'}"
-                              ></i>`,
-                          )}
-                        </div>
-                        <p class="text-black">${r.comment}</p>
-                      </li>
-                    `,
-                  )}
-                </ul>
+                <h2 class="text-lg font-semibold text-[#3c2b2b] mb-3">Ulasan Pengunjung</h2>
+                <div class="flex flex-col gap-3">
+                  ${Array.isArray(this.reviews) && this.reviews.length > 0
+                    ? this.reviews.map(
+                        (d) => html`
+                          <div
+                            class="flex gap-4 items-start bg-white border rounded-lg p-4 shadow-sm"
+                          >
+                            <div
+                              class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-sm font-bold text-white"
+                            >
+                              ${d.name?.[0]?.toUpperCase() || 'U'}
+                            </div>
+                            <div class="flex-1">
+                              <div class="flex justify-between items-center mb-1">
+                                <h4 class="font-semibold text-sm text-gray-800">
+                                  ${d.name || 'Pengguna'}
+                                </h4>
+                                <span class="text-xs text-gray-500"
+                                  >${this.formatWaktuRelatif(d.updated_at)}</span
+                                >
+                              </div>
+                              <div class="flex items-center gap-1 text-yellow-400 text-sm mb-1">
+                                ${[1, 2, 3, 4, 5].map(
+                                  (i) => html`
+                                    <i class="${i <= d.rating ? 'fas' : 'far'} fa-star"></i>
+                                  `,
+                                )}
+                              </div>
+                              <p class="text-sm text-gray-700">${d.comment}</p>
+                            </div>
+                          </div>
+                        `,
+                      )
+                    : html`<p class="text-gray-500 text-sm">Belum ada ulasan dari pengunjung</p>`}
+                </div>
               </div>
-            `
-          : ''}
       </section>
     `;
   }
