@@ -1,26 +1,11 @@
 import { html, render } from 'lit-html';
 import LoginPresenter from './login-presenter.js';
-import Swal from 'sweetalert2';
 
 export function renderLogin(container) {
   const presenter = new LoginPresenter({
     view: {
-      showSuccess: (msg) =>
-        Swal.fire({
-          title: 'Berhasil!',
-          text: msg,
-          icon: 'success',
-          timer: 1500,
-          showConfirmButton: false,
-        }),
-      showError: (msg) =>
-        Swal.fire({
-          title: 'Gagal!',
-          text: msg,
-          icon: 'error',
-          confirmButtonText: 'OK',
-          confirmButtonColor: '#483434',
-        }),
+      showSuccess: () => {},
+      showError: () => {},
     },
   });
 

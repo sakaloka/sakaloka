@@ -1,43 +1,72 @@
 import { saveSession } from '../../components/utils/auth';
 import { API_URL } from '../../constants/urlApi';
+import Swal from 'sweetalert2';
 
 export default class LoginPresenter {
-  #view;
-
-  constructor({ view }) {
-    this.#view = view;
-  }
-
   async handleLogin(email, password) {
     try {
       const response = await fetch(`${API_URL}/login`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
       });
 
+      // Jika email/password salah
       if (response.status === 401) {
-        throw new Error('Email atau password salah');
-      }
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Login gagal');
+        await Swal.fire({
+          title: 'Gagal!',
+          text: 'Email atau password salah',
+          icon: 'error',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#483434',
+        });
+        return this.redirectToLogin();
       }
 
       const result = await response.json();
 
+      // Jika response dari API gagal
       if (result.error === 'fail') {
-        this.#view.showError(result.message || 'Terjadi kesalahan saat login');
-        location.hash = '#/login';
-      } else {
-        saveSession(result.loginResult);
-        this.#view.showSuccess('Login berhasil');
-        location.hash = '#/home';
+        await Swal.fire({
+          title: 'Gagal!',
+          text: result.message || 'Terjadi kesalahan saat login',
+          icon: 'error',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#483434',
+        });
+        return this.redirectToLogin();
       }
+
+      // Simpan sesi dan arahkan ke home
+      saveSession(result.loginResult);
+
+      await Swal.fire({
+        title: 'Berhasil!',
+        text: 'Login berhasil',
+        icon: 'success',
+        timer: 1500,
+        showConfirmButton: false,
+      });
+
+      location.hash = '#/home';
     } catch (err) {
-      this.#view.showError(err.message || 'Terjadi kesalahan saat login');
-      location.hash = '#/login';
+      await Swal.fire({
+        title: 'Gagal!',
+        text: 'Terjadi kesalahan saat login',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#483434',
+      });
+      this.redirectToLogin();
     }
+  }
+
+  redirectToLogin() {
+    location.hash = '#/login';
   }
 }
