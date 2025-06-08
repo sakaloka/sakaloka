@@ -93,10 +93,12 @@ export function handleRoute() {
       navBackRender();
       render(
         html`
-          <section class="mt-20 w-full mx-auto px-5 py-5">
-            <h2 class="text-1xl font-semibold text-primary">🚧 Fitur Sedang Dikembangkan</h2>
+          <section class="mt-20 gap-3 flex flex-col text-center items-center justify-center w-full mx-auto px-5 py-5">
+            <h1 class="text-7xl font-bold">404</h1>
+            <h2 class="text-2xl font-semibold text-primary">🚧 Halaman tidak ditemukan 🚧</h2>
             <p class="text-sm text-gray-500">
-              Kami sedang menyelesaikan fitur ini. Nantikan update selanjutnya ya!
+              Mohon maaf kami tidak dapat menemukan halaman yang kamu cari. <br/>
+              Nantikan update selanjutnya ya!
             </p>
           </section>
         `,

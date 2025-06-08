@@ -8,25 +8,23 @@ export function renderLandingIndex(container) {
       <!-- Hero Section -->
       <section
         id="hero"
-        class="section-fade relative bg-cover bg-center text-white text-center flex flex-col items-center justify-center min-h-[90vh] px-4 py-30"
+        class="section-fade min-h-screen relative bg-cover bg-center text-white text-center flex flex-col items-center justify-center px-4 py-30"
         style="background-image: url('/images/bg-hero.svg');"
       >
         <div class="backdrop-brightness-75 absolute inset-0 z-0"></div>
-        <div class="z-10 max-w-4xl">
+        <div class="z-10 max-w-4xl mt-20">
           <h1 class="text-5xl md:text-6xl font-extrabold mb-4">SakaLoka</h1>
-          <h3 class="text-2xl font-semibold">Jelajahi Budaya & Wisata Lokal Jawa</h3>
+          <h3 class="text-2xl font-semibold">Jelajahi Budaya & Wisata Lokal Indonesia</h3>
           <p class="mt-4 text-xl mx-auto">
             Temukan acara budaya dan destinasi lokal sesuai minat dan lokasimu. Dengan smart map dan
             rekomendasi berbasis machine learning, kami menyediakan apa yang kamu cari.
           </p>
           <a
             href="#/login"
-            class="block mt-10 bg-[#dce8c4] px-6 py-4 text-xl mx-auto text-black rounded-full font-semibold hover:bg-[#c4d8a0] transition text-center w-fit"
+            class="group block mt-10 bg-[#dce8c4] px-6 py-4 text-xl mx-auto text-black rounded-full font-semibold hover:bg-[#c4d8a0] transition text-center w-fit"
           >
             Jelajahi Sekarang
-            <i
-              class="fa fa-arrow-right ml-2 transition-transform duration-300 group-hover:translate-x-1"
-            ></i>
+            <i class="fa fa-arrow-right ml-2 transition-transform duration-300 group-hover:translate-x-1"></i>
           </a>
         </div>
       </section>
@@ -36,28 +34,32 @@ export function renderLandingIndex(container) {
         id="features-section"
         class="section-fade bg-primary text-white py-20 px-4 text-center"
       >
-        <h2 class="text-3xl font-extrabold mb-6">Jelajahi Keindahan Jawa dalam Sekejap</h2>
+        <h2 class="text-3xl font-extrabold mb-6">Jelajahi Keindahan Indonesia dalam Sekejap</h2>
         <p class="text-xl mx-auto mb-10">
           Sakaloka hadir dengan dua fitur utama yang dirancang untuk menemani petualangan Anda dalam
-          menjelajahi budaya Jawa
+          menjelajahi budaya Indonesia
         </p>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-7xl mx-auto">
-          <div class="bg-[#dce8c4] text-black rounded-lg p-6 flex flex-col gap-4">
-            <div class="w-12 h-12 bg-[#1f1f1f] rounded"></div>
+        <div class="grid grid-cols-1 md:grid-cols-2 px-5 lg:px-16 gap-6 max-w-7xl mx-auto">
+          <div class="bg-[#dce8c4] text-black rounded-lg p-6 flex flex-col gap-4 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl hover:bg-[#cddbb1]">
+            <div class="w-12 h-12 flex items-center">
+              <i class="fas fa-calendar-days text-4xl"></i>
+            </div>
             <div class="text-left">
               <h3 class="font-bold text-xl">Kalender Budaya</h3>
               <p class="mt-1 text-md">
                 Cari dan ulas berbagai acara budaya menarik seperti festival, pertunjukan
-                tradisional, dan event khas dari berbagai kota di Jawa.
+                tradisional, dan event khas dari berbagai kota di Indonesia.
               </p>
             </div>
           </div>
-          <div class="bg-[#dce8c4] text-black rounded-lg p-6 flex flex-col gap-4">
-            <div class="w-12 h-12 bg-[#1f1f1f] rounded"></div>
+          <div class="bg-[#dce8c4] text-black rounded-lg p-6 flex flex-col gap-4 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl hover:bg-[#cddbb1]">
+            <div class="w-12 h-12 flex items-center">
+              <i class="fas fa-map-location-dot text-4xl"></i>
+            </div>
             <div class="text-left">
               <h3 class="font-bold text-xl">Peta Destinasi Personal</h3>
               <p class="mt-1 text-md">
-                Temukan tempat wisata terbaik di Jawa yang disesuaikan dengan minat dan interaksi
+                Temukan tempat wisata terbaik di Indonesia yang disesuaikan dengan minat dan interaksi
                 Anda.
               </p>
             </div>
@@ -72,7 +74,7 @@ export function renderLandingIndex(container) {
       >
         <h2 class="text-4xl font-bold mb-4">Destinasi Populer</h2>
         <p class="text-white mx-auto mb-12 text-base md:text-lg">
-          Jelajahi keindahan budaya dan alam di Pulau Jawa yang sedang digemari wisatawan.
+          Jelajahi keindahan budaya dan alam di Pulau Indonesia yang sedang digemari wisatawan.
         </p>
         <div
           id="destination-container"
@@ -87,9 +89,9 @@ export function renderLandingIndex(container) {
         <div class="max-w-7xl mx-auto">
           <h2 class="text-4xl font-bold text-center mb-6">Pertanyaan Umum (FAQ)</h2>
           <p class="text-center text-gray-600 mb-10 text-base md:text-lg">
-            Temukan jawaban atas pertanyaan yang sering diajukan tentang SakaLoka.
+            Temukan Indonesiaban atas pertanyaan yang sering diajukan tentang SakaLoka.
           </p>
-          <div class="flex flex-col gap-4">
+          <div class="flex flex-col px-20 gap-4">
             ${faqItems.map(
               (item) => html`
                 <div
@@ -219,7 +221,7 @@ export function renderLandingIndex(container) {
 const faqItems = [
   {
     q: 'Apa itu Sakaloka?',
-    a: 'SakaLoka adalah platform eksplorasi budaya Jawa yang memudahkanmu menemukan acara budaya dan destinasi menarik, lengkap dengan peta dan kalender interaktif.',
+    a: 'SakaLoka adalah platform eksplorasi budaya Indonesia yang memudahkanmu menemukan acara budaya dan destinasi menarik, lengkap dengan peta dan kalender interaktif.',
   },
   {
     q: 'Bagaimana Sakaloka bisa menemukan destinasi yang saya suka?',
