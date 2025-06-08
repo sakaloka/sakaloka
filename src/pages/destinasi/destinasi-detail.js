@@ -13,17 +13,15 @@ export async function renderDestinasiDetailPage(container, destinationId) {
   
   let ulasan = null;
   let existingReview = null;
-  // if (userId) {
-    //   existingReview = await presenter.getUserReview(destinationId, userId);
-    // }
+  // existingReview = await presenter.getUserReview(destinationId, userId);
     
-    if (!data) {
-      render(html`<p class="text-center text-red-500">Data tidak ditemukan.</p>`, container);
+  if (!data) {
+    render(html`<p class="text-center text-red-500">Data tidak ditemukan.</p>`, container);
     return;
   }
   
   let comment = existingReview?.comment || '';
-  let rating = existingReview?.rating || 5;
+  let rating = existingReview?.rating;
   let selectedTab = 'lokasi';
 
   async function handleAddBookmark(destinationId) {
@@ -60,6 +58,7 @@ export async function renderDestinasiDetailPage(container, destinationId) {
   const updateView = async () => {
     data = await presenter.loadData(destinationId);
     ulasan = await presenter.loadUlasan(destinationId);
+    console.log(ulasan);
     const template = html`
       <section class="max-w-5xl mx-auto px-4 py-6 mt-20">
         <div class="flex items-start justify-between gap-4">
@@ -199,12 +198,12 @@ export async function renderDestinasiDetailPage(container, destinationId) {
                           <div
                             class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-sm font-bold text-white"
                           >
-                            ${d.user_name?.[0]?.toUpperCase() || 'U'}
+                            ${d.name?.[0]?.toUpperCase() || 'U'}
                           </div>
                           <div class="flex-1">
                             <div class="flex justify-between items-center mb-1">
                               <h4 class="font-semibold text-sm text-gray-800">
-                                ${d.user_name || 'Pengguna'}
+                                ${d.name || 'Pengguna'}
                               </h4>
                               <span class="text-xs text-gray-500"
                                 >${new Date(d.created_at).toLocaleDateString()}</span

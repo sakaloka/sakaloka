@@ -11,7 +11,7 @@ const ENDPOINTS = {
 
   // Events
   EVENTS: (id) => `${API_URL}/events?userId=${id}`,
-  EVENT_DETAILS: (id) => `${API_URL}/events/${id}`,
+  EVENT_DETAILS: (id, userId) => `${API_URL}/events/${id}?userId=${userId}`,
 
   // Destinations
   DESTINATIONS: `${API_URL}/destinations`,
@@ -142,15 +142,11 @@ export async function getEvents() {
 
 export async function getEventById(id) {
   const session = getSession();
-  const response = await fetch(ENDPOINTS.EVENT_DETAILS(id), {
-    method: 'POST',
+  const response = await fetch(ENDPOINTS.EVENT_DETAILS(id, session.user.userId), {
+    method: 'GET',
     headers: {
-      'Content-Type': 'application/json',
       Authorization: `Bearer ${session?.accessToken}`,
     },
-    body: JSON.stringify ({
-      userId: session?.user?.userId,
-    }),
   });
   const json = await response.json();
 
