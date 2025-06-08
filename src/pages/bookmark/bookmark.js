@@ -47,7 +47,7 @@ class BookmarkPage {
                 : `#/destinasi/detail/${item.destination_id}`}
               >
                 <img
-                  src="${item.photo_url}"
+                  src="${item.photo_url ? item.photo_url : 'images/default.jpg'}"
                   alt="${item.name}"
                   class="w-16 h-12 object-cover rounded-md flex-shrink-0"
                 />
