@@ -176,6 +176,8 @@ export async function renderDestinasiDetailPage(container, destinationId) {
                                   if (confirmed) {
                                     await presenter.deleteReview(userReview.id);
                                     alert('Ulasan dihapus');
+                                    comment = '';
+                                    rating = 0;
                                     await updateView();
                                   }
                                 }}
