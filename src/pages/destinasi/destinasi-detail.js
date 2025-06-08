@@ -130,7 +130,7 @@ export async function renderDestinasiDetailPage(container, destinationId) {
           ? html`
               <div class="mt-6">
                 <h2 class="text-xl font-semibold mb-2">Galeri</h2>
-                <div class="grid grid-cols-3 gap-4">
+                <div class="grid md:grid-cols-3 gap-4">
                   ${(data.photo_urls || '')
                     .split(' || ')
                     .filter((url) => url.trim() !== '')
