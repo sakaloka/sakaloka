@@ -12,7 +12,7 @@ export default defineConfig({
       srcDir: '.',           
       filename: 'sw.js',     
       injectManifest: {
-        swSrc: 'dist/sw.js',   
+        swSrc: 'src/sw.js',   
       },
 
       registerType: 'autoUpdate',

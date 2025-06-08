@@ -317,7 +317,7 @@ export async function getUserBookmarks() {
     },
   });
   const json = await res.json();
-  return { ...json, ok: res.ok }; 
+  return { ...json, ok: res.ok };
 }
 
 export async function addDestinationBookmark(targetId) {
@@ -369,7 +369,7 @@ export async function removeBookmark(targetId) {
       bookmark_id: targetId,
     }),
   });
-  
+
   const json = await response.json();
   return { ...json, ok: response.ok };
 }

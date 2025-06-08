@@ -1,4 +1,4 @@
-export function renderLoadingIndicator () {
+export function renderLoadingIndicator() {
   return `
   `;
 }

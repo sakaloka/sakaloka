@@ -41,13 +41,14 @@ class BookmarkPage {
             <div
               class="flex items-center border border-black rounded-lg p-3 bg-white w-full max-w-xl"
             >
-              <a class="flex items-center w-full"
+              <a
+                class="flex items-center w-full"
                 href=${item.type === 'Acara Budaya'
-                ? `#/event/detail/${item.event_id}`
-                : `#/destinasi/detail/${item.destination_id}`}
+                  ? `#/event/detail/${item.event_id}`
+                  : `#/destinasi/detail/${item.destination_id}`}
               >
                 <img
-                  src="${item.photo_url ? item.photo_url : 'images/default.jpg'}"
+                  src="${item.photo_url || '/images/default.jpg'}"
                   alt="${item.name}"
                   class="w-16 h-12 object-cover rounded-md flex-shrink-0"
                 />
@@ -74,9 +75,9 @@ class BookmarkPage {
   async removeBookmark(id) {
     const res = await removeBookmark(id);
     if (res.ok) {
-      const result = await getUserBookmarks(); 
+      const result = await getUserBookmarks();
       this.#bookmarks = result?.data;
       this.displayBookmarks(this.#bookmarks);
     }
-  }  
+  }
 }

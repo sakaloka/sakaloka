@@ -1,6 +1,7 @@
 import { renderHeader } from '../../components/header.js';
 import { getSession } from '../../components/utils/auth.js';
 import { API_URL } from '../../constants/urlApi.js';
+import Swal from 'sweetalert2';
 
 export default class ProfilePresenter {
   #view;
@@ -25,7 +26,11 @@ export default class ProfilePresenter {
       const token = session?.accessToken;
 
       if (!userId || !token) {
-        this.#view.showError('Anda belum login');
+        Swal.fire({
+          icon: 'error',
+          title: 'Belum Login',
+          text: 'Anda belum login.',
+        });
         return;
       }
 
@@ -43,11 +48,23 @@ export default class ProfilePresenter {
       if (res.ok) {
         localStorage.setItem('user', JSON.stringify(updatedUser));
         this.#user = updatedUser;
-        this.#view.showSuccess('Profil berhasil diperbarui!');
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Berhasil!',
+          text: 'Profil berhasil diperbarui.',
+          timer: 1500,
+          showConfirmButton: false,
+        });
+
         renderHeader();
         this.loadProfile();
       } else {
-        this.#view.showError('Gagal memperbarui profil');
+        Swal.fire({
+          icon: 'error',
+          title: 'Gagal',
+          text: 'Gagal memperbarui profil.',
+        });
       }
     });
 
@@ -80,11 +97,22 @@ export default class ProfilePresenter {
         };
         localStorage.setItem('user', JSON.stringify(updatedUser));
         this.#user = updatedUser;
-        this.#view.showSuccess('Foto berhasil diperbarui!');
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Foto Berhasil Diperbarui!',
+          showConfirmButton: false,
+          timer: 1500,
+        });
+
         renderHeader();
         this.loadProfile();
       } else {
-        this.#view.showError('Gagal mengunggah foto');
+        Swal.fire({
+          icon: 'error',
+          title: 'Upload Gagal',
+          text: 'Gagal mengunggah foto.',
+        });
       }
     });
   }

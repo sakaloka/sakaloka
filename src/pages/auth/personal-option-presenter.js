@@ -1,5 +1,6 @@
 import { saveSession, getSession } from '../../components/utils/auth';
 import { API_URL } from '../../constants/urlApi';
+import Swal from 'sweetalert2';
 
 export default class PersonalOptionPresenter {
   #view;
@@ -10,14 +11,23 @@ export default class PersonalOptionPresenter {
 
   handleChange(checked, allCheckboxes) {
     if (checked.length > 5) {
-      this.#view.showError('Kamu hanya bisa memilih maksimal 5 destinasi favorit.');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Terlalu Banyak!',
+        text: 'Kamu hanya bisa memilih maksimal 5 destinasi favorit.',
+        confirmButtonColor: '#483434',
+      });
       checked[checked.length - 1].checked = false;
     }
   }
 
   async handleSubmit(selected, count) {
     if (!selected) {
-      this.#view.showError(`Pilih tepat 5 destinasi favorit. Sekarang baru ${count || 0}.`);
+      Swal.fire({
+        icon: 'warning',
+        title: 'Tidak Cukup!',
+        text: `Pilih tepat 5 destinasi favorit. Sekarang baru ${count || 0}.`,
+      });
       return;
     }
 
@@ -26,7 +36,11 @@ export default class PersonalOptionPresenter {
     const token = session?.accessToken;
 
     if (!userId || !token) {
-      this.#view.showError('Sesi tidak ditemukan. Silakan login kembali.');
+      Swal.fire({
+        icon: 'error',
+        title: 'Sesi Habis!',
+        text: 'Sesi tidak ditemukan. Silakan login kembali.',
+      });
       return;
     }
 
@@ -44,10 +58,20 @@ export default class PersonalOptionPresenter {
 
       if (!res.ok) throw new Error(data.message || 'Gagal menyimpan preferensi.');
 
-      this.#view.showSuccess('Preferensi berhasil disimpan.');
-      location.hash = '#/home';
+      Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        text: 'Preferensi berhasil disimpan.',
+        confirmButtonColor: '#483434',
+      }).then(() => {
+        location.hash = '#/home';
+      });
     } catch (err) {
-      this.#view.showError(err.message);
+      Swal.fire({
+        icon: 'error',
+        title: 'Gagal!',
+        text: err.message,
+      });
     }
   }
 }

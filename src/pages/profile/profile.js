@@ -16,12 +16,15 @@ export function renderProfile(container) {
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <!-- Form Profil -->
-              <form id="profile-form" class="bg-white border rounded-lg shadow-sm p-6 space-y-4">
-                <h3 class="text-lg font-semibold text-gray-700">Informasi Pengguna</h3>
+              <form
+                id="profile-form"
+                class="bg-white border border-black rounded-lg shadow-sm p-6 space-y-4"
+              >
+                <h3 class="text-lg font-semibold text-black-700">Informasi Pengguna</h3>
 
                 <div class="flex items-center gap-4">
                   <div
-                    class="w-16 h-16 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center text-white text-xl"
+                    class="w-16 h-16 rounded-full overflow-hidden bg-[#bea5a5] flex items-center justify-center text-white text-xl"
                   >
                     ${user.previewPhotoUrl
                       ? html`<img
@@ -29,7 +32,7 @@ export function renderProfile(container) {
                           class="w-full h-full object-cover"
                           alt="Avatar"
                         />`
-                      : html`<i class="fa fa-user"></i>`}
+                      : html`<i class="fa fa-user text-black "></i>`}
                   </div>
                   <div class="font-medium text-gray-800" id="display-name">${user.name || '-'}</div>
                 </div>
@@ -54,11 +57,14 @@ export function renderProfile(container) {
               </form>
 
               <!-- Form Foto -->
-              <form id="photo-form" class="bg-white border rounded-lg shadow-sm p-6 space-y-4">
-                <h3 class="text-lg font-semibold text-gray-700">Foto Profil</h3>
+              <form
+                id="photo-form"
+                class="bg-white border border-black rounded-lg shadow-sm p-6 space-y-4"
+              >
+                <h3 class="text-lg font-semibold text-black-700">Foto Profil</h3>
 
                 <div
-                  class="w-32 h-32 rounded-full bg-gray-100 overflow-hidden flex items-center justify-center mx-auto"
+                  class="w-32 h-32 rounded-full bg-[#bea5a5] overflow-hidden flex items-center justify-center mx-auto"
                 >
                   ${user.previewPhotoUrl
                     ? html`<img
@@ -66,7 +72,7 @@ export function renderProfile(container) {
                         class="w-full h-full object-cover"
                         alt="Foto Profil"
                       />`
-                    : html`<i class="fa fa-image text-4xl text-gray-400"></i>`}
+                    : html`<i class="fa fa-image text-4xl text-black-400"></i>`}
                 </div>
 
                 <div class="text-center mt-2">
