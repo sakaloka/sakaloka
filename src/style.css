@@ -61,6 +61,10 @@ body {
   font-family: 'Inter', sans-serif;
 }
 
+.scrollbar-none {
+  scrollbar-width: none;
+}
+
 #headerNavigasi {
   background: var(--primary-color) !important;
   color: var(--primary-text-color) !important;

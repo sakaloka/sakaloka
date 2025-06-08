@@ -41,14 +41,14 @@ class DestinasiView {
             </div>
 
             <!-- Tabs -->
-            <div class="flex gap-6 mt-4 border-b text-sm font-medium max-w-screen overflow-x-auto">
+            <div class="flex gap-6 mt-4 border-b text-sm font-medium max-w-screen overflow-x-auto scrollbar-none">
               <!-- Tab manual "Untuk Kamu" -->
               <button
                 @click=${(e) => this.searchKeyword(e, 'Untuk Kamu')}
-                class="min-w-fit pb-2 flex gap-2 items-center text-gray-600 hover:text-[#678337] category-tab"
+                class="min-w-fit pb-2 flex gap-1 items-center text-gray-600 hover:text-[#678337] category-tab"
               >
-                Untuk Kamu
                 <i class="fas fa-wand-magic-sparkles"></i>
+                Untuk Kamu
               </button>
 
               <!-- Tab kategori dinamis -->
