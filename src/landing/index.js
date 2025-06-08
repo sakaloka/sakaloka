@@ -71,7 +71,7 @@ export function renderLandingIndex(container) {
         class="section-fade flex flex-col min-h-screen bg-[#3c2626] text-white py-20 px-4  justify-center text-center"
       >
         <h2 class="text-4xl font-bold mb-4">Destinasi Populer</h2>
-        <p class="max-w-xl text-white mx-auto mb-12 text-base md:text-lg">
+        <p class="text-white mx-auto mb-12 text-base md:text-lg">
           Jelajahi keindahan budaya dan alam di Pulau Jawa yang sedang digemari wisatawan.
         </p>
         <div

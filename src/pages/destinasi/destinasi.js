@@ -41,11 +41,11 @@ class DestinasiView {
             </div>
 
             <!-- Tabs -->
-            <div class="flex gap-6 mt-4 border-b text-sm font-medium">
+            <div class="flex gap-6 mt-4 border-b text-sm font-medium max-w-screen overflow-x-auto">
               <!-- Tab manual "Untuk Kamu" -->
               <button
                 @click=${(e) => this.searchKeyword(e, 'Untuk Kamu')}
-                class="pb-2 text-gray-600 hover:text-[#678337] category-tab"
+                class="min-w-fit pb-2 text-gray-600 hover:text-[#678337] category-tab"
               >
                 Untuk Kamu
               </button>
@@ -55,7 +55,7 @@ class DestinasiView {
                 (tab) => html`
                   <button
                     @click=${(e) => this.searchCategory(e, tab.name)}
-                    class="pb-2 text-gray-600 hover:text-[#678337] category-tab"
+                    class="min-w-fit pb-2 text-gray-600 hover:text-[#678337] category-tab"
                   >
                     ${tab.name}
                   </button>

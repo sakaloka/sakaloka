@@ -20,16 +20,14 @@ const ENDPOINTS = {
   // Reviews
   REVIEWS: `${API_URL}/reviews`,
   REVIEWS_USER: (id) => `${API_URL}/reviews/user?userId=${id}`,
+  UPDATE_REVIEW: (id) => `${API_URL}/reviews/${id}`,
+  DELETE_REVIEW: (id) => `${API_URL}/reviews/${id}`,
   // Reviews - Event
   NEW_REVIEW_EVENT: `${API_URL}/reviews/events`,
-  UPDATE_REVIEW_EVENT: (id) => `${API_URL}/reviews/events/${id}`,
   REVIEWS_EVENT: (id) => `${API_URL}/reviews?type=event&targetId=${id}`,
-  REVIEWS_EVENT_STAT: (id) => `${API_URL}/reviews/event/${id}/stats`,
   // Reviews - Destination
   NEW_REVIEW_DESTINATION: `${API_URL}/reviews/destinations`,
-  UPDATE_REVIEW_DESTINATION: (id) => `${API_URL}/reviews/destinations/${id}`,
   REVIEWS_DESTINATION: (id) => `${API_URL}/reviews?type=destination&targetId=${id}`,
-  REVIEWS_DESTINATION_STAT: (id) => `${API_URL}/reviews/destination/${id}/stats`,
 
   DESTINATIONS_TOPS: `${API_URL}/destinations/top`,
   DESTINATIONS_RECOMMENDED: (id) => `${API_URL}/destinations/recommend/${id}`,
@@ -233,21 +231,6 @@ export async function addEventReview({ eventId, userId, comment, rating }) {
   return { ...json, ok: response.ok };
 }
 
-export async function updateEventReview(reviewId, { comment, rating }) {
-  const token = getAccessToken();
-  const data = JSON.stringify({ comment, rating });
-  const response = await fetch(ENDPOINTS.UPDATE_REVIEW_EVENT(reviewId), {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
-    },
-    body: data,
-  });
-  const json = await response.json();
-  return { ...json, ok: response.ok };
-}
-
 export async function addDestinationReview({ destinationId, userId, comment, rating }) {
   const token = getAccessToken();
   const data = JSON.stringify({ destination_id: destinationId, user_id: userId, comment, rating });
@@ -263,16 +246,28 @@ export async function addDestinationReview({ destinationId, userId, comment, rat
   return { ...json, ok: response.ok };
 }
 
-export async function updateDestinationReview(reviewId, { comment, rating }) {
+export async function updateReview(reviewId, { comment, rating }) {
   const token = getAccessToken();
   const data = JSON.stringify({ comment, rating });
-  const response = await fetch(ENDPOINTS.UPDATE_REVIEW_DESTINATION(reviewId), {
+  const response = await fetch(ENDPOINTS.UPDATE_REVIEW(reviewId), {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,
     },
     body: data,
+  });
+  const json = await response.json();
+  return { ...json, ok: response.ok };
+}
+
+export async function deleteReview(reviewId) {
+  const token = getAccessToken();
+  const response = await fetch(ENDPOINTS.DELETE_REVIEW(reviewId), {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
   });
   const json = await response.json();
   return { ...json, ok: response.ok };
