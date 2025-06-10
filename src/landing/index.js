@@ -24,7 +24,9 @@ export function renderLandingIndex(container) {
             class="group block mt-10 bg-[#dce8c4] px-6 py-4 text-xl mx-auto text-black rounded-full font-semibold hover:bg-[#c4d8a0] transition text-center w-fit"
           >
             Jelajahi Sekarang
-            <i class="fa fa-arrow-right ml-2 transition-transform duration-300 group-hover:translate-x-1"></i>
+            <i
+              class="fa fa-arrow-right ml-2 transition-transform duration-300 group-hover:translate-x-1"
+            ></i>
           </a>
         </div>
       </section>
@@ -37,10 +39,12 @@ export function renderLandingIndex(container) {
         <h2 class="text-3xl font-extrabold mb-6">Jelajahi Keindahan Indonesia dalam Sekejap</h2>
         <p class="text-xl mx-auto mb-10">
           Sakaloka hadir dengan dua fitur utama yang dirancang untuk menemani petualangan Anda dalam
-          menjelajahi budaya Indonesia
+          menjelajahi budaya Indonesia.
         </p>
         <div class="grid grid-cols-1 md:grid-cols-2 px-5 lg:px-16 gap-6 max-w-7xl mx-auto">
-          <div class="bg-[#dce8c4] text-black rounded-lg p-6 flex flex-col gap-4 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl hover:bg-[#cddbb1]">
+          <div
+            class="bg-[#dce8c4] text-black rounded-lg p-6 flex flex-col gap-4 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl hover:bg-[#cddbb1]"
+          >
             <div class="w-12 h-12 flex items-center">
               <i class="fas fa-calendar-days text-4xl"></i>
             </div>
@@ -52,15 +56,17 @@ export function renderLandingIndex(container) {
               </p>
             </div>
           </div>
-          <div class="bg-[#dce8c4] text-black rounded-lg p-6 flex flex-col gap-4 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl hover:bg-[#cddbb1]">
+          <div
+            class="bg-[#dce8c4] text-black rounded-lg p-6 flex flex-col gap-4 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl hover:bg-[#cddbb1]"
+          >
             <div class="w-12 h-12 flex items-center">
               <i class="fas fa-map-location-dot text-4xl"></i>
             </div>
             <div class="text-left">
               <h3 class="font-bold text-xl">Peta Destinasi Personal</h3>
               <p class="mt-1 text-md">
-                Temukan tempat wisata terbaik di Indonesia yang disesuaikan dengan minat dan interaksi
-                Anda.
+                Temukan tempat wisata terbaik di Indonesia yang disesuaikan dengan minat dan
+                interaksi Anda.
               </p>
             </div>
           </div>
@@ -89,9 +95,9 @@ export function renderLandingIndex(container) {
         <div class="max-w-7xl mx-auto">
           <h2 class="text-4xl font-bold text-center mb-6">Pertanyaan Umum (FAQ)</h2>
           <p class="text-center text-gray-600 mb-10 text-base md:text-lg">
-            Temukan Indonesiaban atas pertanyaan yang sering diajukan tentang SakaLoka.
+            Temukan Jawaban atas pertanyaan yang sering diajukan tentang SakaLoka.
           </p>
-          <div class="flex flex-col px-20 gap-4">
+          <div class="flex flex-col gap-4">
             ${faqItems.map(
               (item) => html`
                 <div
