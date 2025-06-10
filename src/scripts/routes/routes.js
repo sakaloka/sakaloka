@@ -9,6 +9,7 @@ import LandingPage from '../pages/landing/landing-page';
 import ProfilePage from '../pages/profile/profile-page';
 import { checkAuthenticatedRoute, checkUnauthenticatedRouteOnly } from '../utils/auth';
 import PersonalOptionPage from '../pages/auth/option/personal-option-page'; 
+import BookmarkPage from '../pages/bookmark/bookmark-page';
 
 export const routes = {
   '/': () => new LandingPage(),

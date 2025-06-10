@@ -84,7 +84,9 @@ export default class App {
   }
   async renderPage() {
     const url = getActiveRoute();
+  
     const route = routes[url];
+    if (!route) return;
 
     // Get page instance
     const page = route();

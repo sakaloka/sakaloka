@@ -9,18 +9,15 @@ export default class HomePage {
       <div class="flex min-h-screen bg-gray-100">
         <!-- Sidebar -->
         <aside id="sidebar" class="w-64 bg-white shadow-md hidden md:block">
-          <div class="p-4 border-b">
-            <h1 class="text-2xl font-bold text-[#483434]">SakaLoka</h1>
-          </div>
           <div class="p-4 text-center">
             <div class="w-16 h-16 bg-gray-300 rounded-full mx-auto"></div>
             <p class="mt-2 font-semibold">Hai Marta</p>
           </div>
           <nav class="mt-4 px-4 space-y-2">
-            <a href="#/" class="block px-4 py-2 rounded hover:bg-gray-200">Dasbor</a>
+            <a href="#/home" class="block px-4 py-2 rounded hover:bg-gray-200">Dasbor</a>
             <a href="#/destinations" class="block px-4 py-2 rounded hover:bg-gray-200">Tujuan</a>
             <a href="#/events" class="block px-4 py-2 rounded hover:bg-gray-200">Peristiwa</a>
-            <a href="#/bookmarks" class="block px-4 py-2 rounded hover:bg-gray-200">Penanda buku</a>
+            <a href="#/bookmark" class="block px-4 py-2 rounded hover:bg-gray-200">Penanda buku</a>
           </nav>
         </aside>
 

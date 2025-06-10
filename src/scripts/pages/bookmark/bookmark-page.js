@@ -1,4 +1,3 @@
-import { generateLoaderAbsoluteTemplate } from '../../templates';
 import BookmarkPresenter from './bookmark-presenter';
 import Database from '../../data/database';
 import Map from '../../utils/map';
@@ -26,10 +25,10 @@ export default class BookmarkPage {
   }
 
   showMapLoading() {
-    document.getElementById('map-loading-container').innerHTML = generateLoaderAbsoluteTemplate();
+    // document.getElementById('map-loading-container').innerHTML = generateLoaderAbsoluteTemplate();
   }
 
   hideMapLoading() {
-    document.getElementById('map-loading-container').innerHTML = '';
+    // document.getElementById('map-loading-container').innerHTML = '';
   }
 }
