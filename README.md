@@ -32,10 +32,11 @@ SakaLoka adalah platform peta pintar berbasis AI yang menghadirkan rekomendasi a
   cd sakaloka-frontend
   ```
 
-- Pasang seluruh dependensi:
+- Buat bundle produksi:
   ```bash
-  npm i
+  npm run build
   ```
+  Perintah ini akan menghasilkan folder dist/ berisi file hasil kompilasi, termasuk manifest.webmanifest dan aset siap deploy lainnya.
 
 ## Scripts
 
