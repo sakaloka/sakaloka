@@ -44,7 +44,9 @@ class DestinasiView {
             </div>
 
             <!-- Tabs -->
-            <div class="flex gap-6 mt-4 border-b text-sm font-medium max-w-screen overflow-x-auto scrollbar-none">
+            <div
+              class="flex gap-6 mt-4 border-b text-sm font-medium max-w-screen overflow-x-auto scrollbar-none"
+            >
               <!-- Tab manual "Untuk Kamu" -->
               <button
                 @click=${(e) => this.searchKeyword(e, 'Untuk Kamu')}
@@ -125,9 +127,11 @@ class DestinasiView {
       const name = d.name?.toLowerCase() || '';
       const location = d.location?.toLowerCase() || '';
       const description = d.description?.toLowerCase() || '';
-  
+
       return (
-        name.includes(lowerKeyword) || location.includes(lowerKeyword) || description.includes(lowerKeyword)
+        name.includes(lowerKeyword) ||
+        location.includes(lowerKeyword) ||
+        description.includes(lowerKeyword)
       );
     });
 
