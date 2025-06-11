@@ -3,6 +3,7 @@ import { clearSession } from './utils/auth';
 
 export function renderHeader(containerId = 'header') {
   const header = document.getElementById(containerId);
+  const currentPath = window.location.hash.replace('#/', '').split('/')[0];
 
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   if (typeof window.__isProfileDropdownOpen === 'undefined') {
@@ -80,18 +81,18 @@ export function renderHeader(containerId = 'header') {
 </div>
 
       <nav class="mt-6 space-y-2 px-4 border-t pb-5">
-        <a href="#/home" class="block px-4 py-2 rounded hover:bg-blue-100 mt-4"
+        <a href="#/home" class="block px-4 py-2 rounded hover:bg-blue-100 mt-4  ${ currentPath === 'home' ? 'bg-blue-100 font-semibold' : ''}"
           >Dashboard</a
         >
         <a
           href="#/destinasi"
-          class="block px-4 py-2 rounded hover:bg-blue-100"
+          class="block px-4 py-2 rounded hover:bg-blue-100 ${ currentPath === 'destinasi' ? 'bg-blue-100 font-semibold' : ''}"
           >Destination</a
         >
-        <a href="#/event" class="block px-4 py-2 rounded hover:bg-blue-100"
+        <a href="#/event" class="block px-4 py-2 rounded hover:bg-blue-100 ${ currentPath === 'event' ? 'bg-blue-100 font-semibold' : ''}"
           >Event</a
         >
-        <a href="#/bookmark" class="block px-4 py-2 rounded hover:bg-blue-100"
+        <a href="#/bookmark" class="block px-4 py-2 rounded hover:bg-blue-100 ${ currentPath === 'bookmark' ? 'bg-blue-100 font-semibold' : ''}"
           >Bookmark</a
         >
       </nav>

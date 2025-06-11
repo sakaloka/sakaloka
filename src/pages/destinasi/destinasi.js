@@ -27,7 +27,8 @@ class DestinasiView {
           <div class="mt-[1px]">
             <h2 class="text-2xl font-bold text-black">Destinasi</h2>
             <p class="text-sm text-gray-500 mt-1">
-              Klik provinsi manapun untuk memulai perjalananmu
+              <i class="fas fa-circle-info"></i>
+              Klik kategori manapun untuk memulai perjalananmu
             </p>
 
             <!-- Search -->

@@ -5,9 +5,11 @@ import { navigateTo } from '../../components/utils/navigateTo.js';
 export async function renderHome(container) {
   const presenter = new HomePresenter({ view: { showDashboard } });
   const summary = await presenter.getSummary();
-  showDashboard(summary);
+  const recommendedDestinations = await presenter.getRecommendedDestinations();
+  showDashboard({...summary, recommendedDestinations});
 
-  function showDashboard({ totalFavorit, totalDestinasi, totalEvent }) {
+  function showDashboard({ totalFavorit, totalDestinasi, totalEvent, totalRatingDestinasi, recommendedDestinations }) {
+    
     const template = html`
       <section class="px-4 transition-all duration-300">
         <!-- Judul Dashboard -->
@@ -84,6 +86,32 @@ export async function renderHome(container) {
             </div>
           </div>
         </div>
+        ${totalRatingDestinasi > 0
+        ? html`
+            <div>
+              <h3 class="text-xl font-semibold text-black my-4">
+                Kamu Mungkin Suka
+                <i class="fas fa-lightbulb text-yellow-500"></i>
+              </h3>
+              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                ${recommendedDestinations.map(
+                  (dest) => html`
+                    <a href="#/destinasi/detail/${dest.id}" class="bg-white border border-gray-300 rounded-xl overflow-hidden shadow hover:shadow-md transition">
+                      <img src=${dest.photo_url} alt=${dest.name} class="w-full h-40 object-cover" />
+                      <div class="p-4">
+                        <h4 class="text-lg font-semibold text-black mb-1">${dest.name}</h4>
+                        <p class="flex items-center gap-2 text-sm text-gray-600">
+                          <i class="fas fa-location-dot"></i>
+                          ${dest.location}
+                        </p>
+                      </div>
+                    </a>
+                  `
+                )}           
+              </div>
+            </div>
+          `
+        : ''}
       </section>
     `;
 

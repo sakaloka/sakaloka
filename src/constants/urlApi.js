@@ -31,6 +31,7 @@ const ENDPOINTS = {
 
   DESTINATIONS_TOPS: `${API_URL}/destinations/top`,
   DESTINATIONS_RECOMMENDED: (id) => `${API_URL}/destinations/recommend/${id}`,
+  DESTINATIONS_PREDICT: (id) => `${API_URL}/destinations/recommend/rating/${id}`,
   DESTINATION_CATEGORIES: `${API_URL}/destinations/categories`,
 
   // Bookmark
@@ -106,6 +107,7 @@ export async function updateUser(id, { email, name }) {
 }
 
 export async function getUserSummary() {
+  console.log('sedang fetch')
   const session = getSession();
 
   const response = await fetch(ENDPOINTS.USER_SUMMARY(session.user.userId), {
@@ -302,6 +304,19 @@ export async function getRecommendedDestinations(userId) {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,
+    },
+  });
+  const json = await response.json();
+  return { ...json, ok: response.ok };
+}
+
+export async function getRecommendedDestinationsByRating() {
+  const session = getSession();
+  const response = await fetch(ENDPOINTS.DESTINATIONS_PREDICT(session.user.userId), {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${session.accessToken}`,
     },
   });
   const json = await response.json();
