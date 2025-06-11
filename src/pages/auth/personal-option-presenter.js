@@ -23,20 +23,22 @@ export default class PersonalOptionPresenter {
 
   async handleSubmit(selected, count) {
     if (!selected) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Tidak Cukup!',
-        text: `Pilih maksimal 5 destinasi favorit.`,
-      });
-      return;
-    } else if (count == 0) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Wajib Diisi!',
-        text: `Pilih minimal 1 destinasi favorit.`,
-      });
-      return;
-    }
+      if (count > 5) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Tidak Cukup!',
+          text: `Pilih maksimal 5 destinasi favorit.`,
+        });
+        return;
+      } else if (count == 0) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Wajib Diisi!',
+          text: `Pilih minimal 1 destinasi favorit.`,
+        });
+        return;
+      }
+    } 
 
     const session = getSession();
     const userId = session?.user?.userId;
