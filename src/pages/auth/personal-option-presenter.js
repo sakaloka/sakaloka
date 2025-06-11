@@ -26,7 +26,14 @@ export default class PersonalOptionPresenter {
       Swal.fire({
         icon: 'warning',
         title: 'Tidak Cukup!',
-        text: `Pilih tepat 5 destinasi favorit. Sekarang baru ${count || 0}.`,
+        text: `Pilih maksimal 5 destinasi favorit.`,
+      });
+      return;
+    } else if (count == 0) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Wajib Diisi!',
+        text: `Pilih minimal 1 destinasi favorit.`,
       });
       return;
     }

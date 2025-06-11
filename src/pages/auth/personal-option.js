@@ -75,9 +75,12 @@ export function renderPersonalOption(container) {
       (el) => el.value,
     );
 
-    if (selectedArray.length !== 5) {
+    if (selectedArray.length > 5) {
       presenter.handleSubmit(null, selectedArray.length);
       return;
+    } else if (selectedArray.length <= 0) {
+      presenter.handleSubmit(selectedArray, 0);
+
     }
 
     const selectedString = selectedArray.join(',');

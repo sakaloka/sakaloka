@@ -27,7 +27,8 @@ class DestinasiView {
           <div class="mt-[1px]">
             <h2 class="text-2xl font-bold text-black">Destinasi</h2>
             <p class="text-sm text-gray-500 mt-1">
-              Klik provinsi manapun untuk memulai perjalananmu
+              <i class="fas fa-circle-info"></i>
+              Klik kategori manapun untuk memulai perjalananmu
             </p>
 
             <!-- Search -->
@@ -47,7 +48,7 @@ class DestinasiView {
                 @click=${(e) => this.searchKeyword(e, 'Untuk Kamu')}
                 class="min-w-fit pb-2 flex gap-1 items-center text-gray-600 hover:text-[#678337] category-tab"
               >
-                <i class="fas fa-wand-magic-sparkles"></i>
+                <i class="fas fa-wand-magic-sparkles text-yellow-400"></i>
                 Untuk Kamu
               </button>
 

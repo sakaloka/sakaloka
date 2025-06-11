@@ -53,15 +53,19 @@ sakaloka-frontend
 ├── package-lock.json       # File lock untuk dependensi
 ├── README.md               # Dokumentasi proyek
 ├── vite.config.js          # Konfigurasi Vite
-├── public                  # Direktori aset publik
-│   └── images              # Gambar yang digunakan dalam proyek
 └── src                     # Direktori utama untuk kode sumber
+    ├── public              # Direktori aset publik
+    │   └── images          # Gambar yang digunakan dalam proyek
+    │   └── _redirects      # Berkas untuk redirect deployment
+    │   └── favicon.ico     # Icon utama aplikasi
     ├── components          # Direktori komponen JavaScript
     │   └── utils           # Helper dan utilitas
+    ├── constants           # Direktori fetch API 
     ├── pages               # Halaman-halaman utama
     ├── routes              # Pengaturan routing
     ├── config.js           # Konfigurasi proyek
     ├── index.html          # Berkas HTML utama
     ├── main.js             # Berkas JavaScript utama
     └── style.css           # Gaya CSS umum
+    └── sw.js               # Berkas Service Worker
 ```
