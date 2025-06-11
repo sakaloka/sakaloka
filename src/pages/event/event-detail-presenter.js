@@ -18,10 +18,10 @@ export class EventDetailPresenter {
       return [];
     }
   }
-  
-  async updateReview (reviewId, comment, rating) {
+
+  async updateReview(reviewId, comment, rating) {
     try {
-      const res = await updateReview(reviewId, {comment, rating});
+      const res = await updateReview(reviewId, { comment, rating });
       return res.ok;
     } catch (err) {
       console.error('[updateReview] Error:', err);
@@ -29,7 +29,7 @@ export class EventDetailPresenter {
     }
   }
 
-  async deleteReview (reviewId) {
+  async deleteReview(reviewId) {
     try {
       const res = await deleteReview(reviewId);
       return res.ok;

@@ -32,11 +32,14 @@ class DestinasiView {
             </p>
 
             <!-- Search -->
-            <div class="mt-4">
+            <div class="mt-4 relative">
+              <i
+                class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"
+              ></i>
               <input
                 type="text"
                 placeholder="Cari destinasi..."
-                class="flex-1 border w-full px-4 py-3 rounded-lg shadow-sm text-lg"
+                class="pl-10 pr-4 py-3 w-full border rounded-lg shadow-sm text-lg"
                 @input=${(e) => this.filterDestinations(e.target.value)}
               />
             </div>
@@ -118,21 +121,19 @@ class DestinasiView {
 
   filterDestinations(keyword) {
     const lowerKeyword = keyword.toLowerCase();
-  
+
     this.filteredDestinations = this.originalDestinations.filter((d) => {
       const name = d.name?.toLowerCase() || '';
       const location = d.location?.toLowerCase() || '';
       const description = d.description?.toLowerCase() || '';
   
       return (
-        name.includes(lowerKeyword) ||
-        location.includes(lowerKeyword) ||
-        description.includes(lowerKeyword)
+        name.includes(lowerKeyword) || location.includes(lowerKeyword) || description.includes(lowerKeyword)
       );
     });
-  
+
     this.updateView();
-  }  
+  }
 
   initMap(destinations) {
     if (!destinations.length) return;
@@ -220,7 +221,6 @@ class DestinasiView {
         } else {
           return location.includes(lowerKeyword);
         }
-
       });
     }
 

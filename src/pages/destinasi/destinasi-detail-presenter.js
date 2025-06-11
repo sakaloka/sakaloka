@@ -5,12 +5,15 @@ export class DestinasiDetailPresenter {
   async loadData(destinationId) {
     try {
       const session = getSession();
-      const res = await fetch(`${API_URL}/destinations/${destinationId}?userId=${session.user.userId}`, {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${session?.accessToken}`,
-        },  
-      }); 
+      const res = await fetch(
+        `${API_URL}/destinations/${destinationId}?userId=${session.user.userId}`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${session?.accessToken}`,
+          },
+        },
+      );
       if (!res.ok) throw new Error('Gagal memuat destinasi');
       const json = await res.json();
       return json.data;
@@ -58,9 +61,9 @@ export class DestinasiDetailPresenter {
     return await res.json();
   }
 
-  async updateReview (reviewId, comment, rating) {
+  async updateReview(reviewId, comment, rating) {
     try {
-      const res = await updateReview(reviewId, {comment, rating});
+      const res = await updateReview(reviewId, { comment, rating });
       return res.ok;
     } catch (err) {
       console.error('[updateReview] Error:', err);
@@ -68,7 +71,7 @@ export class DestinasiDetailPresenter {
     }
   }
 
-  async deleteReview (reviewId) {
+  async deleteReview(reviewId) {
     try {
       const res = await deleteReview(reviewId);
       return res.ok;

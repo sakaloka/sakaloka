@@ -37,32 +37,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('hashchange', handleRoute);
 
-  // Auto inject token ke fetch
-  const originalFetch = window.fetch;
-  window.fetch = async (input, init = {}) => {
-    const token = localStorage.getItem('accessToken');
-    const authInit = {
-      ...init,
-      headers: { ...init.headers, Authorization: `Bearer ${token}` },
-    };
+  const token = localStorage.getItem('accessToken');
+  if (token) {
+    const originalFetch = window.fetch;
+    window.fetch = async (input, init = {}) => {
+      const authInit = {
+        ...init,
+        headers: { ...init.headers, Authorization: `Bearer ${token}` },
+      };
 
-    let response = await originalFetch(input, authInit);
-    // akun minta refresh token
-    if (response.status === 401) {
-      toast('Refresh token failed, redirecting to login.');
-      window.location.href = '/login';
-      return;
-    }
-    // Akun di inactive
-    if (response.status === 403) {
-      localStorage.clear();
-      sessionStorage.clear();
-      toast('Akun anda telah di Nonaktifkan', 'error');
-      navigateTo('login');
-      return;
-    }
-    return response;
-  };
+      const res = await originalFetch(input, authInit);
+      if (res.status === 401) {
+        toast('Refresh token failed, redirecting to login.');
+        window.location.href = '/login';
+        return;
+      }
+      if (res.status === 403) {
+        localStorage.clear();
+        sessionStorage.clear();
+        toast('Akun anda telah di Nonaktifkan', 'error');
+        navigateTo('login');
+        return;
+      }
+      return res;
+    };
+  }
 });
 
 export function handleRoute() {
@@ -72,25 +71,25 @@ export function handleRoute() {
   const content = document.getElementById('pageWrapper');
   if (!content) return;
 
+  showLoader();
+
   if (!isModalOpen) {
     content.classList.add('opacity-0', 'translate-y-2', 'transition-all', 'duration-300');
   }
 
   setTimeout(() => {
-    // Kosongkan konten secara aman
     render(html``, content);
 
     if (route && typeof route.render === 'function') {
       proceedToRoute(route, param, routeKey, content, accessToken);
     } else {
-      // Deteksi jika layar kecil (misalnya mobile)
       window.__isSidebarOpen = false;
       if (window.__isSidebarOpen) {
         document.querySelector('main')?.classList.add('pl-64');
       } else {
         document.querySelector('main')?.classList.remove('pl-64');
       }
-      // fallback jika route tidak ditemukan
+
       navBackRender();
       render(
         html`
@@ -108,12 +107,13 @@ export function handleRoute() {
       document.title = '404 - Not Found';
     }
 
-    // Pastikan efek animasi di-reset
     requestAnimationFrame(() => {
       content.classList.remove('transition-all', 'duration-300', 'opacity-0', 'translate-y-2');
       content.classList.add('opacity-100', 'translate-y-0');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
+
+    hideLoader();
   }, 150);
 }
 
@@ -168,7 +168,7 @@ function proceedToRoute(route, param, routeKey, content, accessToken) {
   if (route.protectedRoute && !accessToken) {
     toast('Kamu harus login untuk mengakses halaman ini.', 'error');
     const container = document.getElementById('pageWrapper');
-    if (container) render(nothing, container); // cara aman hapus isi halaman
+    if (container) render(nothing, container);
     const main = document.querySelector('main');
     main?.classList.remove('pl-64');
 
@@ -190,7 +190,7 @@ function proceedToRoute(route, param, routeKey, content, accessToken) {
 
 function renderNavbar(route, routeKey) {
   const header = document.getElementById('header');
-  if (header) render(null, header); // Selalu clear dulu
+  if (header) render(null, header);
   if (route?.showNavbar) {
     if (route?.backNav) {
       navBackRender(routeKey);
@@ -239,6 +239,14 @@ export function navigateTo(path) {
   } else {
     location.hash = `#/${path}`;
   }
+}
+
+export function showLoader() {
+  document.getElementById('loadingIndicator')?.classList.remove('hidden');
+}
+
+export function hideLoader() {
+  document.getElementById('loadingIndicator')?.classList.add('hidden');
 }
 
 let isModalOpen = false;
